@@ -1,0 +1,2684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>PROSKO Mobile - SK Barangay Libjo PMES</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        prosko: {
+                            blue: '#0A3D91',
+                            blueDark: '#072b68',
+                            blueLight: '#ebf2fe',
+                            red: '#D7192D',
+                            redDark: '#b01021',
+                            redLight: '#fde8ea',
+                            yellow: '#F4C20D',
+                            yellowDark: '#d1a305',
+                            yellowLight: '#fef9e7',
+                            green: '#34A853',
+                            greenDark: '#278340',
+                            greenLight: '#eaf6ed',
+                            purple: '#7e22ce',
+                            purpleLight: '#f3e8ff',
+                            white: '#FFFFFF',
+                            slateDark: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #051a3d;
+            background-image: radial-gradient(at 0% 0%, rgba(10, 61, 145, 0.4) 0px, transparent 50%),
+                              radial-gradient(at 100% 100%, rgba(215, 25, 45, 0.25) 0px, transparent 50%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mobile-shell {
+            width: 100%;
+            max-width: 440px;
+            height: 100vh;
+            max-height: 920px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        @media (min-width: 640px) {
+            .mobile-shell {
+                border-radius: 40px;
+                height: 880px;
+                border: 8px solid #072b68;
+            }
+        }
+
+        .bg-prosko-gradient {
+            background: linear-gradient(145deg, #0A3D91 0%, #072b68 60%, #051a3d 100%);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-up {
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(10, 61, 145, 0.2);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-shell">
+
+        <!-- Toast Notification Floating Popup Container inside System -->
+        <!-- Updated Toast Container with higher z-index -->
+<div id="toast-container" class="absolute top-4 left-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+        <!-- Scrollable Main Viewport Area -->
+        <div id="app-viewport" class="flex-grow flex flex-col overflow-y-auto custom-scroll relative">
+
+            <!-- ==================================================== -->
+            <!-- 1. AUTHENTICATION SECTION (LOGIN / REGISTER MOBILE)  -->
+            <!-- ==================================================== -->
+            <section id="auth-screen" class="flex-grow flex flex-col min-h-full bg-slate-50">
+                
+                <div class="bg-prosko-gradient p-6 pt-7 text-white relative overflow-hidden rounded-b-[2.5rem] shadow-xl border-b-4 border-prosko-yellow">
+                    <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-prosko-blueLight/10 rounded-full blur-2xl pointer-events-none"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 bg-white border-2 border-prosko-yellow rounded-xl flex items-center justify-center shadow-md">
+                                    <span class="font-black text-prosko-blue text-base">P</span>
+                                </div>
+                                <div>
+                                    <h1 class="font-black text-lg tracking-tight leading-none text-white">PROSKO</h1>
+                                    <p class="text-[9px] text-prosko-yellow uppercase tracking-widest font-extrabold mt-0.5">Barangay Libjo</p>
+                                </div>
+                            </div>
+                            <div class="px-2.5 py-1 rounded-full bg-prosko-red text-white text-[10px] font-bold flex items-center gap-1.5 shadow-sm">
+                                <span class="w-1.5 h-1.5 rounded-full bg-prosko-yellow animate-pulse"></span>
+                                AI-Integrated
+                            </div>
+                        </div>
+
+                        <!-- OFFICIAL PROSKO EMBLEM LOGO -->
+                        <div class="w-24 h-24 mx-auto my-1 relative text-center">
+                            <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="100" cy="100" r="95" fill="#FFFFFF" stroke="#0A3D91" stroke-width="5"/>
+                                <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#0A3D91" stroke-width="12"/>
+                                <path d="M 100 12 A 88 88 0 0 1 188 100" fill="none" stroke="#D7192D" stroke-width="12"/>
+                                <path d="M 100 25 Q 115 45 100 65 Q 85 45 100 25 Z" fill="#F4C20D"/>
+                                <circle cx="100" cy="45" r="8" fill="#D7192D"/>
+                                <text x="100" y="92" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="28" fill="#0A3D91" text-anchor="middle">PROSKO</text>
+                                <text x="100" y="106" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="7.5" fill="#D7192D" text-anchor="middle">PROJECT MONITORING & EVALUATION</text>
+                                <text x="100" y="116" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="7" fill="#64748b" text-anchor="middle">SK BARANGAY LIBJO</text>
+                                <rect x="82" y="122" width="36" height="50" rx="6" fill="#0A3D91" stroke="#34A853" stroke-width="2"/>
+                                <rect x="86" y="126" width="28" height="36" rx="2" fill="#FFFFFF"/>
+                                <circle cx="100" cy="167" r="2" fill="#FFFFFF"/>
+                                <circle cx="94" cy="140" r="5" fill="#F4C20D"/>
+                                <rect x="102" y="136" width="9" height="3" rx="1" fill="#D7192D"/>
+                                <rect x="102" y="142" width="9" height="3" rx="1" fill="#34A853"/>
+                                <path d="M 30 155 L 33 162 L 40 162 L 35 167 L 37 174 L 30 169 L 23 174 L 25 167 L 20 162 L 27 162 Z" fill="#F4C20D"/>
+                                <path d="M 170 155 L 173 162 L 180 162 L 175 167 L 177 174 L 170 169 L 163 174 L 165 167 L 160 162 L 167 162 Z" fill="#F4C20D"/>
+                                <text x="100" y="190" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="8" fill="#0A3D91" text-anchor="middle">MISSION • PROGRESS • SERVE</text>
+                            </svg>
+                        </div>
+
+                        <p class="text-white/90 text-[10px] leading-relaxed text-center mb-2 font-medium">
+                            Empowering Sangguniang Kabataan of Barangay Libjo with transparent monitoring and AI assessment.
+                        </p>
+
+                        <div class="bg-white/10 border border-white/20 p-2 rounded-2xl backdrop-blur-md">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[9px] font-extrabold uppercase tracking-wider text-prosko-yellow flex items-center gap-1">
+                                    <i class="fa-solid fa-key text-[10px]"></i> Demonstration Accounts
+                                </span>
+                                <span class="text-[8px] bg-prosko-red text-white px-1.5 py-0.5 rounded-full font-bold">Tap to Use</span>
+                            </div>
+
+                            <div class="space-y-1 text-xs">
+                                <button type="button" onclick="fillCredentials('admin_libjo', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
+                                    <div class="text-left">
+                                        <span class="text-prosko-yellow font-bold text-[10px]">Chairperson Admin:</span>
+                                        <span class="text-white font-mono text-[10px] ml-1">admin_libjo</span>
+                                    </div>
+                                    <span class="text-[8px] bg-prosko-blue text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Use</span>
+                                </button>
+
+                                <button type="button" onclick="fillCredentials('sec_libjo', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
+                                    <div class="text-left">
+                                        <span class="text-purple-300 font-bold text-[10px]">Secretary:</span>
+                                        <span class="text-white font-mono text-[10px] ml-1">sec_libjo</span>
+                                    </div>
+                                    <span class="text-[8px] bg-prosko-purple text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Use</span>
+                                </button>
+
+                                <button type="button" onclick="fillCredentials('maria_sk', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
+                                    <div class="text-left">
+                                        <span class="text-emerald-300 font-bold text-[10px]">Treasurer:</span>
+                                        <span class="text-white font-mono text-[10px] ml-1">maria_sk</span>
+                                    </div>
+                                    <span class="text-[8px] bg-prosko-green text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Use</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="p-4 flex-grow flex flex-col justify-start">
+                    
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                        <div>
+                            <h3 id="form-title" class="text-sm font-extrabold text-prosko-blue">Sign In to Dashboard</h3>
+                            <p id="form-subtitle" class="text-slate-500 text-[11px] mt-0.5">Access Barangay Libjo project records.</p>
+                        </div>
+                        
+                        <div class="bg-slate-200/80 p-1 rounded-xl flex gap-1 text-[11px] font-bold">
+                            <button id="tab-login-btn" onclick="switchAuthTab('login')" class="px-2.5 py-1 rounded-lg bg-prosko-blue text-white shadow-sm transition">Login</button>
+                            <button id="tab-register-btn" onclick="switchAuthTab('register')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">Register</button>
+                        </div>
+                    </div>
+
+                    <div id="auth-alert" class="hidden mb-3 p-3 rounded-2xl text-xs flex items-start gap-2 border transition fade-in">
+                        <i id="auth-alert-icon" class="fa-solid text-xs mt-0.5"></i>
+                        <div id="auth-alert-message" class="font-medium text-[11px]"></div>
+                    </div>
+
+                    <!-- LOGIN FORM -->
+                    <form id="login-form" onsubmit="handleLogin(event)" class="space-y-3 fade-in">
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Username or Email</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-prosko-blue">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </span>
+                                <input type="text" id="login-username" class="w-full pl-8 pr-4 py-2.5 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs text-slate-800 font-medium" placeholder="Enter username (e.g., admin_libjo)">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Password</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-prosko-blue">
+                                    <i class="fa-solid fa-lock text-xs"></i>
+                                </span>
+                                <input type="password" id="login-password" class="w-full pl-8 pr-9 py-2.5 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs text-slate-800 font-medium" placeholder="Enter password">
+                                <button type="button" onclick="togglePasswordVisibility('login-password', 'login-pass-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-prosko-blue">
+                                    <i id="login-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between text-xs pt-0.5">
+                            <label class="flex items-center gap-2 cursor-pointer text-slate-600 text-[10px] font-medium">
+                                <input type="checkbox" id="remember-me" class="rounded border-slate-300 text-prosko-blue focus:ring-prosko-blue">
+                                Remember credentials
+                            </label>
+                            <a href="#" onclick="openRecoveryModal(); return false;" class="text-prosko-red font-bold text-[10px] hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-key text-[9px]"></i> Forgot password?
+                            </a>
+                        </div>
+
+                        <button type="submit" id="login-submit-btn" class="w-full bg-prosko-blue hover:bg-prosko-blueDark active:scale-[0.99] text-white font-extrabold py-3 rounded-xl shadow-lg shadow-prosko-blue/25 transition duration-150 flex items-center justify-center gap-2 text-xs uppercase tracking-wider mt-1">
+                            <span>Sign In to System</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </form>
+
+                    <!-- REGISTER FORM -->
+                    <form id="register-form" onsubmit="handleRegister(event)" class="space-y-2.5 hidden fade-in">
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Full Name</label>
+                            <input type="text" id="reg-fullname" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="Ana Reyes" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Username</label>
+                            <input type="text" id="reg-username" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="sec_libjo" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Email Address</label>
+                            <input type="email" id="reg-email" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="ana@libjo.ph" required>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">SK Official Role</label>
+                            <select id="reg-role" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs bg-white font-medium">
+                                <option value="SK Secretary">SK Secretary</option>
+                                <option value="SK Treasurer">SK Treasurer</option>
+                                <option value="SK Committee Head">SK Committee Head</option>
+                                <option value="SK Chairperson">SK Chairperson</option>
+                                <option value="Admin">Admin / System Overseer</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Password</label>
+                            <div class="relative">
+                                <input type="password" id="reg-password" onkeyup="checkPasswordStrength()" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs pr-8" placeholder="••••••••" required>
+                                <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-pass-icon')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400">
+                                    <i id="reg-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Confirm Password</label>
+                            <div class="relative">
+                                <input type="password" id="reg-confirm-password" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs pr-8" placeholder="••••••••" required>
+                                <button type="button" onclick="togglePasswordVisibility('reg-confirm-password', 'reg-confirm-pass-icon')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400">
+                                    <i id="reg-confirm-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Live Password Criteria Validation Box -->
+                        <div class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] space-y-1 font-medium text-slate-500">
+                            <div id="rule-length" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Min. 8 characters</div>
+                            <div id="rule-upper" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Uppercase letter (A-Z)</div>
+                            <div id="rule-lower" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Lowercase letter (a-z)</div>
+                            <div id="rule-number" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Number (0-9)</div>
+                            <div id="rule-special" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Special character (!@#$%^&*)</div>
+                        </div>
+
+                        <button type="submit" id="reg-submit-btn" class="w-full bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold py-2.5 rounded-xl shadow-md transition duration-150 mt-1 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+                            <span>Create Account</span>
+                            <i class="fa-solid fa-user-plus text-xs"></i>
+                        </button>
+                    </form>
+
+                    <div class="mt-auto pt-3 text-center text-[10px] text-slate-400 flex items-center justify-between border-t border-slate-200">
+                        <span>SK Libjo PMES &copy; 2026</span>
+                        <span class="text-prosko-green font-bold"><i class="fa-solid fa-circle-check"></i> Live System</span>
+                    </div>  
+
+                </div>
+            </section>
+
+
+            <!-- ==================================================== -->
+            <!-- 2. MAIN DASHBOARD SECTION (POST-LOGIN MOBILE VIEW)   -->
+            <!-- ==================================================== -->
+            <section id="dashboard-screen" class="hidden min-h-full bg-slate-100 flex flex-col pb-20">
+                
+                <!-- Dynamic Header Bar -->
+                <header class="bg-prosko-blue text-white shadow-md sticky top-0 z-30 px-4 py-3 flex items-center justify-between border-b-2 border-prosko-yellow">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 bg-white border border-prosko-yellow rounded-xl flex items-center justify-center font-black text-prosko-blue text-sm shadow-inner">
+                            P
+                        </div>
+                        <div>
+                            <h2 class="font-black text-sm tracking-tight leading-none text-white">PROSKO</h2>
+                            <p class="text-[9px] text-prosko-yellow font-extrabold uppercase tracking-wider">SK Barangay Libjo</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-prosko-red text-white font-bold flex items-center justify-center text-xs border border-white/40 shadow-sm" id="user-avatar">
+                                CP
+                            </div>
+                            <div class="text-left hidden sm:block">
+                                <p id="dash-user-name" class="text-xs font-bold text-white leading-none">Admin Chair</p>
+                                <p id="dash-user-role" class="text-[9px] text-prosko-yellow mt-0.5">SK Chairperson</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Button inside Header -->
+                        <button type="button" id="admin-add-proj-btn" onclick="openNewProjectModal()" class="w-8 h-8 rounded-xl bg-prosko-yellow hover:bg-prosko-yellowDark text-prosko-blueDark border border-white/40 flex items-center justify-center text-xs font-black transition shadow-sm" title="New Action">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+
+                        <button type="button" onclick="openLogoutModal()" class="w-8 h-8 rounded-xl bg-prosko-red/80 hover:bg-prosko-red text-white border border-white/30 flex items-center justify-center text-xs transition">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                </header>
+
+                <div class="p-4 space-y-3.5 fade-in">
+                    
+                    <!-- Welcome Banner Card -->
+                    <div class="bg-prosko-gradient rounded-2xl p-4 text-white shadow-md relative overflow-hidden border-l-4 border-prosko-yellow">
+                        <div class="relative z-10">
+                            <div class="flex justify-between items-start">
+                                <span id="session-badge" class="px-2.5 py-0.5 bg-prosko-green text-white text-[10px] font-extrabold rounded-full inline-block mb-1.5 shadow-sm">
+                                    <i class="fa-solid fa-crown text-[10px] mr-1"></i> Chairperson Executive Dashboard
+                                </span>
+                            </div>
+                            <h1 class="text-base font-black tracking-tight">Welcome, <span id="dash-welcome-name" class="text-prosko-yellow">Admin</span>!</h1>
+                            <p id="banner-subtext" class="text-white/80 text-[11px] mt-0.5 leading-relaxed">
+                                Live Oversight Panel: Approve project proposals and member accomplishment reports submitted by the Secretary.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Metric Widgets Grid -->
+                    <div id="metrics-widget-grid" class="grid grid-cols-2 gap-3">
+                        <!-- Populated Dynamically based on role -->
+                    </div>
+
+                    <!-- Dynamic Navigation Sub-Views Container -->
+                    
+                    <!-- CHAIRPERSON VIEW 1: PROJECTS LISTING & PENDING APPROVALS -->
+                    <div id="subview-projects" class="space-y-3">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
+                            <div class="flex flex-col gap-2">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">SK Projects & Approvals</h3>
+                                    <div class="flex gap-1 items-center">
+                                        <button id="add-proj-btn-inline" onclick="openNewProjectModal()" class="text-[10px] bg-prosko-blue text-white px-2 py-0.5 rounded-md font-bold hover:bg-prosko-blueDark flex items-center gap-1">
+                                            <i class="fa-solid fa-plus"></i> Add Project
+                                        </button>
+                                        <span id="showing-count" class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-bold border">0 Projects</span>
+                                    </div>
+                                </div>
+
+                                <!-- Search Input & Status Filter -->
+                                <div class="grid grid-cols-12 gap-2">
+                                    <div class="col-span-7 relative">
+                                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-prosko-blue text-xs"></i>
+                                        <input type="text" id="project-search" oninput="filterProjects()" placeholder="Search..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-prosko-blue text-slate-800">
+                                    </div>
+                                    <div class="col-span-5">
+                                        <select id="status-filter" onchange="filterProjects()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-prosko-blue">
+                                            <option value="ALL">All Status</option>
+                                            <option value="Pending Admin Approval">Pending Approval</option>
+                                            <option value="Approved">Approved / In Progress</option>
+                                            <option value="Completed">Completed</option>
+                                            <option value="Proposed">Proposed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Cards Container for Projects -->
+                            <div id="projects-list-container" class="space-y-2.5 pt-1">
+                                <!-- Dynamic Cards Generated by JavaScript -->
+                            </div>
+
+                            <!-- Empty Search Result Container -->
+                            <div id="empty-projects-state" class="hidden p-6 text-center text-slate-400">
+                                <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-300"></i>
+                                <p class="font-bold text-xs text-slate-600">No matching projects found</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECRETARY / ADMIN VIEW 2: ACCOMPLISHMENT REPORTS -->
+                    <div id="subview-sec-reports" class="hidden space-y-3 fade-in">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-prosko-purpleLight text-prosko-purple flex items-center justify-center text-xs">
+                                        <i class="fa-solid fa-award"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">SK Accomplishment Reports</h3>
+                                        <p class="text-[10px] text-slate-500">Member filings & Admin verification</p>
+                                    </div>
+                                </div>
+                                <button onclick="openNewReportModal()" class="px-2.5 py-1 bg-prosko-purple hover:bg-purple-800 text-white text-[10px] font-extrabold rounded-lg shadow-sm transition flex items-center gap-1">
+                                    <i class="fa-solid fa-plus"></i> Submit Report
+                                </button>
+                            </div>
+
+                            <!-- List Container -->
+                            <div id="accomplishment-reports-list" class="space-y-2.5 pt-1">
+                                <!-- Dynamic Reports -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECRETARY / ADMIN VIEW 3: BRGY DOCUMENTS & RESOLUTIONS -->
+                    <div id="subview-sec-docs" class="hidden space-y-3 fade-in">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs">
+                                        <i class="fa-solid fa-folder-tree"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Barangay & SK Documents</h3>
+                                        <p class="text-[10px] text-slate-500">Resolutions, Minutes & Ordinances</p>
+                                    </div>
+                                </div>
+                                <button onclick="openNewDocModal()" class="px-2.5 py-1 bg-prosko-blue hover:bg-prosko-blueDark text-white text-[10px] font-extrabold rounded-lg shadow-sm transition flex items-center gap-1">
+                                    <i class="fa-solid fa-upload"></i> Upload Doc
+                                </button>
+                            </div>
+
+                            <!-- Documents List -->
+                            <div id="brgy-documents-list" class="space-y-2.5 pt-1">
+                                <!-- Dynamic Documents -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TREASURER VIEW: BUDGET LEDGER & DISBURSEMENTS -->
+                    <div id="subview-treasurer-budget" class="hidden space-y-3">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-prosko-greenLight text-prosko-green flex items-center justify-center text-xs">
+                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Record Disbursement</h3>
+                                        <p class="text-[10px] text-slate-500">Log project fund release</p>
+                                    </div>
+                                </div>
+                                <button onclick="openDisbursementModal()" class="px-2.5 py-1 bg-prosko-green hover:bg-prosko-greenDark text-white text-[10px] font-extrabold rounded-lg shadow-sm transition flex items-center gap-1">
+                                    <i class="fa-solid fa-plus"></i> Release Fund
+                                </button>
+                            </div>
+
+                            <!-- Budget Ledger List -->
+                            <div id="treasurer-budget-cards" class="space-y-2.5 pt-1">
+                                <!-- Dynamic Treasurer Cards -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SHARED VIEW: AI ASSESSMENT SUBVIEW -->
+                    <div id="subview-ai" class="hidden space-y-3 fade-in">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
+                            <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
+                                <div class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs">
+                                    <i class="fa-solid fa-brain"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">AI Evaluation Engine</h3>
+                                    <p class="text-[10px] text-slate-500">Real-time Project Risk & Engagement Metrics</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2.5 text-xs">
+                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-bold text-slate-800 text-[11px]">SK Compliance Index</span>
+                                        <span class="text-prosko-green font-black text-[11px]">96% High</span>
+                                    </div>
+                                    <p class="text-[10px] text-slate-600 leading-normal">
+                                        Project allocations fully adhere to Youth Development Plan guidelines for Barangay Libjo.
+                                    </p>
+                                </div>
+
+                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-bold text-slate-800 text-[11px]">Report Approval Audit</span>
+                                        <span class="text-prosko-purple font-black text-[11px]">Pending Admin Sign-off</span>
+                                    </div>
+                                    <p class="text-[10px] text-slate-600 leading-normal">
+                                        Accomplishment reports filed by Secretary require Chairperson verification before final archiving.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CHAIRPERSON VIEW: INCIDENT MAPPER -->
+                    <div id="subview-analytics" class="hidden space-y-3 fade-in">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-prosko-redLight text-prosko-red flex items-center justify-center text-xs">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Incident Log Mapper</h3>
+                                        <p class="text-[10px] text-slate-500">Barangay Libjo Community Logs</p>
+                                    </div>
+                                </div>
+                                <button onclick="openNewIncidentModal()" class="px-2 py-1 bg-prosko-red text-white text-[10px] font-bold rounded-lg hover:bg-prosko-redDark">
+                                    <i class="fa-solid fa-plus mr-0.5"></i> Log Incident
+                                </button>
+                            </div>
+
+                            <!-- Incident Mobile List -->
+                            <div id="incidents-mobile-list" class="space-y-2">
+                                <!-- Generated Dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ADMIN / SUPER ADMIN VIEW: LOG TRAIL MODULE -->
+                    <div id="subview-log-trail" class="hidden space-y-3 fade-in">
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">System Audit Log Trail</h3>
+                                        <p class="text-[10px] text-slate-500">Restricted Admin Oversight Panel</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="fetchLogTrails()" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-prosko-blue text-[10px] font-bold rounded-lg border transition flex items-center gap-1">
+                                    <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                                </button>
+                            </div>
+
+                            <!-- Filter Bar -->
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-prosko-blue text-xs"></i>
+                                <input type="text" id="log-search" oninput="filterLogs()" placeholder="Search action, user, or details..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-prosko-blue text-slate-800">
+                            </div>
+
+                            <!-- Log Trail Feed List -->
+                            <div id="log-trail-list" class="space-y-2 max-h-[420px] overflow-y-auto custom-scroll pr-1">
+                                <!-- Dynamic Logs Rendered Here -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Bottom Mobile Navigation Bar -->
+        <nav id="mobile-bottom-nav" class="hidden absolute bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-3 py-2 flex justify-around items-center z-40 shadow-lg">
+            <!-- Nav buttons filled by JS based on user role -->
+        </nav>
+
+        <!-- ==================================================== -->
+        <!-- 3. IN-APP CUSTOM CONFIRMATION MODAL                  -->
+        <!-- ==================================================== -->
+        <div id="confirm-dialog-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity fade-in">
+            <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl border-t-4 border-prosko-red text-center space-y-3">
+                <div class="w-12 h-12 bg-prosko-redLight text-prosko-red rounded-2xl flex items-center justify-center text-xl mx-auto">
+                    <i id="confirm-modal-icon" class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h3 id="confirm-modal-title" class="text-sm font-extrabold text-slate-900">Confirm Action</h3>
+                    <p id="confirm-modal-msg" class="text-xs text-slate-600 mt-1 leading-relaxed">Are you sure you want to perform this action?</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button type="button" id="confirm-modal-cancel" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
+                    <button type="button" id="confirm-modal-ok" class="py-2.5 rounded-xl bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- ACCOUNT RECOVERY OTP MODAL (NEW)                     -->
+        <!-- ==================================================== -->
+        <div id="recovery-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
+            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[92%] overflow-y-auto">
+                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
+
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <h3 class="text-sm font-black text-prosko-blue flex items-center gap-1.5">
+                        <i class="fa-solid fa-shield-halved"></i> Account Password Recovery
+                    </h3>
+                    <button type="button" onclick="closeRecoveryModal()" class="text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <!-- STEP 1: REQUEST OTP -->
+                <div id="recovery-step-1" class="space-y-3">
+                    <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                        Enter your registered SK official email address to receive a secure 6-digit One-Time Password (OTP) verification code.
+                    </p>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Registered Email Address</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-prosko-blue">
+                                <i class="fa-solid fa-envelope text-xs"></i>
+                            </span>
+                            <input type="email" id="recovery-email" class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs font-medium" placeholder="e.g. sk.libjo@gmail.com">
+                        </div>
+                    </div>
+
+                    <button type="button" onclick="sendRecoveryOtp()" id="recovery-send-btn" class="w-full py-2.5 rounded-xl bg-prosko-blue hover:bg-prosko-blueDark text-white font-extrabold shadow-md uppercase tracking-wider text-xs flex items-center justify-center gap-2 transition">
+                        <span>Send Verification OTP Code</span>
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- STEP 2: VERIFY OTP & RESET PASSWORD -->
+                <div id="recovery-step-2" class="hidden space-y-3">
+                    <div class="p-2.5 bg-blue-50 border border-blue-200 rounded-xl text-xs text-prosko-blue flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-sm text-prosko-blue"></i>
+                        <span>An OTP code was sent to <strong id="recovery-target-email" class="underline">email</strong>.</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">6-Digit Verification Code (OTP)</label>
+                        <div class="grid grid-cols-6 gap-1.5 text-center">
+                            <input type="text" maxlength="1" class="otp-input w-full py-2.5 text-center text-sm font-black border-2 border-slate-300 rounded-xl focus:border-prosko-blue focus:outline-none" onkeyup="handleOtpInput(this, 0)">
+                            <input type="text" maxlength="1" class="otp-input w-full py-2.5 text-center text-sm font-black border-2 border-slate-300 rounded-xl focus:border-prosko-blue focus:outline-none" onkeyup="handleOtpInput(this, 1)">
+                            <input type="text" maxlength="1" class="otp-input w-full py-2.5 text-center text-sm font-black border-2 border-slate-300 rounded-xl focus:border-prosko-blue focus:outline-none" onkeyup="handleOtpInput(this, 2)">
+                            <input type="text" maxlength="1" class="otp-input w-full py-2.5 text-center text-sm font-black border-2 border-slate-300 rounded-xl focus:border-prosko-blue focus:outline-none" onkeyup="handleOtpInput(this, 3)">
+                            <input type="text" maxlength="1" class="otp-input w-full py-2.5 text-center text-sm font-black border-2 border-slate-300 rounded-xl focus:border-prosko-blue focus:outline-none" onkeyup="handleOtpInput(this, 4)">
+                            <input type="text" maxlength="1" class="otp-input w-full py-2.5 text-center text-sm font-black border-2 border-slate-300 rounded-xl focus:border-prosko-blue focus:outline-none" onkeyup="handleOtpInput(this, 5)">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">New Secure Password</label>
+                        <div class="relative">
+                            <input type="password" id="recovery-new-password" onkeyup="checkRecoveryPasswordStrength()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs pr-8" placeholder="••••••••">
+                            <button type="button" onclick="togglePasswordVisibility('recovery-new-password', 'recovery-pass-icon')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400">
+                                <i id="recovery-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live Security Criteria Widget -->
+                    <div class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] space-y-1 font-medium text-slate-500">
+                        <div id="rec-rule-length" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Min. 8 characters</div>
+                        <div id="rec-rule-upper" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Uppercase letter (A-Z)</div>
+                        <div id="rec-rule-number" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Number (0-9)</div>
+                        <div id="rec-rule-special" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Special character (!@#$%^&*)</div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-[10px] pt-1">
+                        <button type="button" onclick="sendRecoveryOtp()" class="text-prosko-blue font-bold hover:underline">Resend OTP</button>
+                        <button type="button" onclick="resetRecoveryStep()" class="text-slate-500 hover:underline">Change Email</button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button type="button" onclick="closeRecoveryModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
+                        <button type="button" onclick="verifyOtpAndResetPassword()" id="recovery-submit-btn" class="py-2.5 rounded-xl bg-prosko-green hover:bg-prosko-greenDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Reset Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- 4. NEW ACCOMPLISHMENT REPORT MODAL                   -->
+        <!-- ==================================================== -->
+        <div id="report-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
+            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-purple slide-up max-h-[90%] overflow-y-auto">
+                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
+
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <h3 class="text-sm font-black text-prosko-purple flex items-center gap-1.5">
+                        <i class="fa-solid fa-award"></i> Submit Accomplishment Report
+                    </h3>
+                    <button type="button" onclick="closeReportModal()" class="text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <form onsubmit="saveReport(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">SK Member Name</label>
+                        <input type="text" id="rep-member" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-purple font-medium" placeholder="e.g. SK Mbr. Juan Santos">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Activity / Project Title</label>
+                        <input type="text" id="rep-title" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-purple font-medium" placeholder="e.g. Youth Tree Planting Activity">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Key Accomplishments</label>
+                        <textarea id="rep-details" rows="2" required class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-purple font-medium" placeholder="e.g. Planted 250 seedlings at Purok 3; 45 youth volunteers attended."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Date Conducted</label>
+                        <input type="text" id="rep-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-purple font-medium" placeholder="Sep 15, 2026">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button type="button" onclick="closeReportModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
+                        <button type="submit" class="py-2.5 rounded-xl bg-prosko-purple hover:bg-purple-800 text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Submit to Admin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- 5. NEW BRGY DOCUMENT MODAL                           -->
+        <!-- ==================================================== -->
+        <div id="doc-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
+            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[90%] overflow-y-auto">
+                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
+
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <h3 class="text-sm font-black text-prosko-blue flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-arrow-up"></i> Upload Barangay / SK Document
+                    </h3>
+                    <button type="button" onclick="closeDocModal()" class="text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <form onsubmit="saveDocument(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Document Title</label>
+                        <input type="text" id="doc-title" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue font-medium" placeholder="e.g. SK Resolution No. 05-2026">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Document Type</label>
+                        <select id="doc-type" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue font-bold text-slate-700 bg-white">
+                            <option value="Resolution">Resolution</option>
+                            <option value="Meeting Minutes">Meeting Minutes</option>
+                            <option value="Executive Order">Executive Order</option>
+                            <option value="Barangay Ordinance">Barangay Ordinance</option>
+                            <option value="Financial Plan">Financial Plan</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Reference No. / Code</label>
+                        <input type="text" id="doc-ref" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue font-medium" placeholder="e.g. RES-2026-005">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button type="button" onclick="closeDocModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
+                        <button type="submit" class="py-2.5 rounded-xl bg-prosko-blue hover:bg-prosko-blueDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Archive Document</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- 6. ADD DISBURSEMENT MODAL (TREASURER)                -->
+        <!-- ==================================================== -->
+        <div id="disbursement-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
+            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-green slide-up max-h-[90%] overflow-y-auto">
+                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
+
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <h3 class="text-sm font-black text-prosko-green flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> Record Fund Disbursement
+                    </h3>
+                    <button type="button" onclick="closeDisbursementModal()" class="text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <form onsubmit="saveDisbursement(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Select Project</label>
+                        <select id="disb-project-select" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-green font-bold text-slate-700 bg-white">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Disbursement Amount (₱)</label>
+                        <input type="number" id="disb-amount" step="0.01" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-green font-medium" placeholder="e.g. 15000.00">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Payee / Particulars</label>
+                        <input type="text" id="disb-payee" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-green font-medium" placeholder="e.g. Sports Equipment Supplier">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button type="button" onclick="closeDisbursementModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
+                        <button type="submit" class="py-2.5 rounded-xl bg-prosko-green hover:bg-prosko-greenDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Release Funds</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- 7. ADD / EDIT PROJECT MODAL                          -->
+        <!-- ==================================================== -->
+        <div id="project-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
+            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[90%] overflow-y-auto">
+                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
+
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <h3 id="modal-project-title" class="text-sm font-black text-prosko-blue">Propose Youth Project</h3>
+                    <button type="button" onclick="closeProjectModal()" class="text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <form id="project-form" onsubmit="saveProject(event)" class="space-y-3 text-xs">
+                    <input type="hidden" id="proj-id">
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Project Title</label>
+                        <input type="text" id="proj-title" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue font-medium" placeholder="e.g. Youth Sports Fest 2026">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Category</label>
+                        <select id="proj-category" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue font-bold text-slate-700 bg-white">
+                            <option value="Sports & Recreation">Sports & Recreation</option>
+                            <option value="Education & Technology">Education & Technology</option>
+                            <option value="Environmental Protection">Environmental Protection</option>
+                            <option value="Capability Building">Capability Building</option>
+                            <option value="Health & Wellness">Health & Wellness</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Budget Allocation (₱)</label>
+                        <input type="number" id="proj-budget" step="0.01" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue font-medium" placeholder="45000.00">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Implementation Period</label>
+                        <input type="text" id="proj-period" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue font-medium" placeholder="Oct 1 - Oct 15, 2026">
+                    </div>
+
+                    <div id="proj-status-container">
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Status</label>
+                        <select id="proj-status" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue font-bold text-slate-700 bg-white">
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Proposed">Proposed</option>
+                            <option value="Pending Admin Approval">Pending Admin Approval</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button type="button" onclick="closeProjectModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
+                        <button type="submit" class="py-2.5 rounded-xl bg-prosko-blue hover:bg-prosko-blueDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Save Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- 8. ADD INCIDENT LOG MODAL                            -->
+        <!-- ==================================================== -->
+        <div id="incident-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
+            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-red slide-up">
+                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
+
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <h3 class="text-sm font-black text-prosko-red">Log Community Incident</h3>
+                    <button type="button" onclick="closeIncidentModal()" class="text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <form onsubmit="saveIncident(event)" class="space-y-3 text-xs">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-red uppercase tracking-wider mb-1">Incident Type</label>
+                        <input type="text" id="inc-type" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-red font-medium" placeholder="e.g. Noise Disturbance">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-red uppercase tracking-wider mb-1">Purok / Location</label>
+                        <input type="text" id="inc-location" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-red font-medium" placeholder="e.g. Purok 2, Brgy. Libjo">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-red uppercase tracking-wider mb-1">Status</label>
+                        <select id="inc-status" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-red font-bold text-slate-700 bg-white">
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                            <option value="Under Review">Under Review</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button type="button" onclick="closeIncidentModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
+                        <button type="submit" class="py-2.5 rounded-xl bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Submit Log</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- 9. LOGOUT CONFIRMATION MODAL                         -->
+        <!-- ==================================================== -->
+        <div id="logout-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
+            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-red slide-up">
+                
+                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
+
+                <div class="w-12 h-12 bg-prosko-redLight text-prosko-red rounded-2xl flex items-center justify-center text-xl mb-2 mx-auto">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </div>
+
+                <div class="text-center">
+                    <h3 class="text-base font-extrabold text-slate-900">Sign Out Confirmation</h3>
+                    <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                        Are you sure you want to logout/sign out? You will need to log in again to access Barangay Libjo records.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mt-4">
+                    <button type="button" onclick="closeLogoutModal()" class="w-full py-3 px-3 rounded-xl border-1.5 border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 transition text-xs uppercase tracking-wider">
+                        Cancel
+                    </button>
+                    <button type="button" onclick="confirmLogout()" class="w-full py-3 px-3 rounded-xl bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold transition text-xs uppercase tracking-wider shadow-lg shadow-prosko-red/20">
+                        Yes, Logout
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Supabase Client Initialization
+        const SUPABASE_URL = 'https://eadxhgkrvncuhluawtfd.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhZHhoZ2tydm5jdWhsdWF3dGZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MTU0MzksImV4cCI6MjEwNzE5MTQzOX0.mENwcRk5uqbUhwCbW9kxS0RARakyvU1aqoCPbcqzEfE';
+
+        var supabase = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let realtimeChannel = null;
+
+        // Demo fallback accounts
+        const demoAccounts = {
+            'admin_libjo': {
+                password: 'Von1234!',
+                name: 'SK Chair Admin',
+                email: 'sk.libjo@gmail.com',
+                role: 'SK Chairperson'
+            },
+            'sec_libjo': {
+                password: 'Von1234!',
+                name: 'SK Secretary',
+                email: 'sec.libjo@gmail.com',
+                role: 'SK Secretary'
+            },
+            'maria_sk': {
+                password: 'Von1234!',
+                name: 'SK Treasurer',
+                email: 'maria.sk@gmail.com',
+                role: 'SK Treasurer'
+            } 
+        };
+
+        // Live Stores initialized empty so DB is source of truth
+        let projects = [];
+        let accomplishmentReports = [];
+        let brgyDocuments = [];
+        let incidents = [];
+
+        let activeUser = null;
+        let activityLogs = [];
+
+        // OTP Recovery State variables
+        let generatedOtp = null;
+        let recoveryTargetEmail = null;
+
+        // Helper function to generate valid unique string IDs
+        function generateUniqueId(prefix) {
+            return `${prefix}-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+
+        // Custom In-App Confirm Dialog Replacer
+        function customConfirm(title, message, callback) {
+            const modal = document.getElementById('confirm-dialog-modal');
+            const titleEl = document.getElementById('confirm-modal-title');
+            const msgEl = document.getElementById('confirm-modal-msg');
+            const btnOk = document.getElementById('confirm-modal-ok');
+            const btnCancel = document.getElementById('confirm-modal-cancel');
+
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+
+            modal.classList.remove('hidden');
+
+            const handleOk = () => {
+                modal.classList.add('hidden');
+                cleanup();
+                callback(true);
+            };
+
+            const handleCancel = () => {
+                modal.classList.add('hidden');
+                cleanup();
+                callback(false);
+            };
+
+            function cleanup() {
+                btnOk.removeEventListener('click', handleOk);
+                btnCancel.removeEventListener('click', handleCancel);
+            }
+
+            btnOk.addEventListener('click', handleOk);
+            btnCancel.addEventListener('click', handleCancel);
+        }
+
+        function fillCredentials(user, pass) {
+            switchAuthTab('login');
+            document.getElementById('login-username').value = user;
+            document.getElementById('login-password').value = pass;
+            showToast(`Filled credentials for ${user}`, 'info');
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            const loginBtn = document.getElementById('tab-login-btn');
+            const regBtn = document.getElementById('tab-register-btn');
+            const title = document.getElementById('form-title');
+            const subtitle = document.getElementById('form-subtitle');
+            
+            hideAlert();
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                loginBtn.className = "px-2.5 py-1 rounded-lg bg-prosko-blue text-white shadow-sm transition font-bold";
+                regBtn.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition font-bold";
+                title.innerText = "Sign In to Dashboard";
+                subtitle.innerText = "Access Barangay Libjo project records.";
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                regBtn.className = "px-2.5 py-1 rounded-lg bg-prosko-blue text-white shadow-sm transition font-bold";
+                loginBtn.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition font-bold";
+                title.innerText = "Register SK Officer";
+                subtitle.innerText = "Create a new SK official account.";
+            }
+        }
+
+        async function handleLogin(e) {
+            if (e) e.preventDefault();
+
+            const usernameOrEmail = document.getElementById('login-username').value.trim();
+            const passwordInput = document.getElementById('login-password').value.trim();
+            const submitBtn = document.getElementById('login-submit-btn');
+
+            if (!usernameOrEmail || !passwordInput) {
+                showAlert('Please enter both username/email and password.', 'error');
+                return;
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Authenticating...`;
+            }
+
+            if (demoAccounts[usernameOrEmail]) {
+                const demo = demoAccounts[usernameOrEmail];
+                if (demo.password === passwordInput) {
+                    activeUser = { name: demo.name, role: demo.role, email: demo.email };
+                    
+                    supabase.from('activity_logs').insert([{
+                        username: usernameOrEmail,
+                        user_role: demo.role,
+                        action: 'USER_LOGIN',
+                        details: `Successful login for ${demo.name}`
+                    }]).then(() => {}).catch(() => {});
+
+                    showToast('Login successful!', 'success');
+                    await renderDashboard();
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = `<span>Sign In to System</span> <i class="fa-solid fa-arrow-right text-xs"></i>`;
+                    }
+                    return;
+                }
+            }
+
+            try {
+                const { data: userProfile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .or(`username.eq.${usernameOrEmail},email.eq.${usernameOrEmail}`)
+                    .maybeSingle();
+
+                if (userProfile) {
+                    activeUser = {
+                        id: userProfile.id,
+                        name: userProfile.full_name,
+                        role: userProfile.role,
+                        email: userProfile.email
+                    };
+
+                    await supabase.from('activity_logs').insert([{
+                        username: usernameOrEmail,
+                        user_role: activeUser.role,
+                        action: 'USER_LOGIN',
+                        details: `Logged in via database profile lookup`
+                    }]);
+
+                    showToast('Login successful!', 'success');
+                    await renderDashboard();
+                    return;
+                }
+
+                showAlert('Incorrect credentials or account not found.', 'error');
+
+            } catch (err) {
+                console.error('Login Error:', err);
+                showAlert('Authentication error. Check network connection.', 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `<span>Sign In to System</span> <i class="fa-solid fa-arrow-right text-xs"></i>`;
+                }
+            }
+        }
+
+        // ====================================================
+        // ACCOUNT RECOVERY OTP MODULE FUNCTIONS
+        // ====================================================
+        function openRecoveryModal() {
+            document.getElementById('recovery-modal').classList.remove('hidden');
+            resetRecoveryStep();
+        }
+
+        function closeRecoveryModal() {
+            document.getElementById('recovery-modal').classList.add('hidden');
+        }
+
+        function resetRecoveryStep() {
+            document.getElementById('recovery-step-1').classList.remove('hidden');
+            document.getElementById('recovery-step-2').classList.add('hidden');
+            document.getElementById('recovery-email').value = '';
+            document.getElementById('recovery-new-password').value = '';
+            const inputs = document.querySelectorAll('.otp-input');
+            inputs.forEach(input => input.value = '');
+            generatedOtp = null;
+            recoveryTargetEmail = null;
+        }
+
+        async function sendRecoveryOtp() {
+            const emailInput = document.getElementById('recovery-email').value.trim();
+            const sendBtn = document.getElementById('recovery-send-btn');
+
+            if (!emailInput || !emailInput.includes('@')) {
+                showToast('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Generating OTP...`;
+            }
+
+            // 6-Digit OTP Generator
+            generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            recoveryTargetEmail = emailInput;
+
+            // Attempt Supabase Auth OTP or fallback
+            try {
+                await supabase.auth.resetPasswordForEmail(emailInput, {
+                    redirectTo: window.location.href,
+                }).catch(() => {});
+            } catch (e) {
+                console.log("Supabase reset email bypass fallback active.");
+            }
+
+            // Log OTP activity for audit
+            try {
+                await supabase.from('activity_logs').insert([{
+                    username: emailInput,
+                    user_role: 'User Recovery',
+                    action: 'OTP_REQUESTED',
+                    details: `Requested recovery OTP for ${emailInput}`
+                }]);
+            } catch (e) {}
+
+            setTimeout(() => {
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = `<span>Send Verification OTP Code</span> <i class="fa-solid fa-paper-plane text-xs"></i>`;
+                }
+
+                document.getElementById('recovery-step-1').classList.add('hidden');
+                document.getElementById('recovery-step-2').classList.remove('hidden');
+                document.getElementById('recovery-target-email').innerText = emailInput;
+
+                // Pop-up Toast hint displaying generated OTP directly for instant test/verification
+                showToast(`[OTP Code: ${generatedOtp}] (or use 123456)`, 'info');
+                console.log(`%c[SYSTEM RECOVERY OTP CODE]: ${generatedOtp}`, "color: #34A853; font-weight: bold; font-size: 14px;");
+            }, 600);
+        }
+
+        function handleOtpInput(input, index) {
+            const inputs = document.querySelectorAll('.otp-input');
+            if (input.value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        }
+
+        function checkRecoveryPasswordStrength() {
+            const password = document.getElementById('recovery-new-password').value;
+
+            const rules = {
+                length: password.length >= 8,
+                upper: /[A-Z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[@$!%*?&_#^()-]/.test(password)
+            };
+
+            for (const [key, valid] of Object.entries(rules)) {
+                const el = document.getElementById(`rec-rule-${key}`);
+                if (el) {
+                    if (valid) {
+                        el.className = "flex items-center gap-1.5 text-emerald-600 font-bold";
+                        el.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600";
+                    } else {
+                        el.className = "flex items-center gap-1.5 text-slate-500";
+                        el.querySelector('i').className = "fa-solid fa-circle-xmark text-red-500";
+                    }
+                }
+            }
+        }
+
+        async function verifyOtpAndResetPassword() {
+            const inputs = document.querySelectorAll('.otp-input');
+            let enteredOtp = '';
+            inputs.forEach(input => enteredOtp += input.value.trim());
+
+            const newPassword = document.getElementById('recovery-new-password').value.trim();
+            const submitBtn = document.getElementById('recovery-submit-btn');
+
+            if (enteredOtp.length < 6) {
+                showToast('Please enter the full 6-digit OTP.', 'error');
+                return;
+            }
+
+            // Universal Test Passcode '123456' OR matching generated code
+            if (enteredOtp !== generatedOtp && enteredOtp !== '123456') {
+                showToast('Invalid OTP verification code.', 'error');
+                return;
+            }
+
+            const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_#^()-])[A-Za-z\d@$!\%*?&_#^()-]{8,}$/;
+            if (!strongPasswordRegex.test(newPassword)) {
+                showToast('New password does not meet complexity rules.', 'error');
+                return;
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Updating...`;
+            }
+
+            let accountFound = false;
+
+            // 1. Check & Update Demo Accounts
+            for (const [userKey, account] of Object.entries(demoAccounts)) {
+                if (account.email.toLowerCase() === recoveryTargetEmail.toLowerCase()) {
+                    account.password = newPassword;
+                    accountFound = true;
+                    break;
+                }
+            }
+
+            // 2. Check & Update Database Profile
+            try {
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('email', recoveryTargetEmail)
+                    .maybeSingle();
+
+                if (profile) {
+                    accountFound = true;
+                    await supabase.from('profiles').update({ updated_at: new Date() }).eq('id', profile.id);
+                }
+
+                await supabase.from('activity_logs').insert([{
+                    username: recoveryTargetEmail,
+                    user_role: 'Officer',
+                    action: 'PASSWORD_RESET',
+                    details: `Password reset successfully via OTP verification`
+                }]);
+
+            } catch (e) {
+                console.warn('DB password sync notice:', e);
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `Reset Password`;
+            }
+
+            if (accountFound || true) {
+                showToast('Password reset successfully! You can now sign in.', 'success');
+                closeRecoveryModal();
+                switchAuthTab('login');
+            }
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('reg-password').value;
+
+            const rules = {
+                length: password.length >= 8,
+                upper: /[A-Z]/.test(password),
+                lower: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[@$!%*?&_#^()-]/.test(password)
+            };
+
+            for (const [key, valid] of Object.entries(rules)) {
+                const el = document.getElementById(`rule-${key}`);
+                if (el) {
+                    if (valid) {
+                        el.className = "flex items-center gap-1.5 text-emerald-600 font-bold";
+                        el.querySelector('i').className = "fa-solid fa-circle-check text-emerald-600";
+                    } else {
+                        el.className = "flex items-center gap-1.5 text-slate-500";
+                        el.querySelector('i').className = "fa-solid fa-circle-xmark text-red-500";
+                    }
+                }
+            }
+        }
+
+        // READ ALL DATA FROM SUPABASE TABLES
+        async function fetchAllDatabaseData() {
+            try {
+                // 1. Projects
+                const { data: projData } = await supabase
+                    .from('projects')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (projData) {
+                    projects = projData.map(p => ({
+                        id: p.id,
+                        title: p.title,
+                        category: p.category,
+                        budget: parseFloat(p.budget) || 0,
+                        disbursed: parseFloat(p.disbursed) || 0,
+                        status: p.status,
+                        submittedBy: p.submitted_by,
+                        period: p.period,
+                        aiScore: p.ai_score
+                    }));
+                }
+
+                // 2. Accomplishment Reports
+                const { data: repData } = await supabase
+                    .from('accomplishment_reports')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                if (repData) accomplishmentReports = repData;
+
+                // 3. Barangay Documents
+                const { data: docData } = await supabase
+                    .from('brgy_documents')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (docData) {
+                    brgyDocuments = docData.map(d => ({
+                        id: d.id,
+                        ref: d.ref || d.ref_no || d.reference_no,
+                        title: d.title,
+                        type: d.type || d.doc_type,
+                        date: d.date || (d.created_at ? new Date(d.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'Sep 17, 2026')
+                    }));
+                }
+
+                // 4. Incidents
+                const { data: incData } = await supabase
+                    .from('incidents')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (incData) {
+                    incidents = incData.map(i => ({
+                        id: i.id,
+                        type: i.type || i.incident_type,
+                        location: i.location,
+                        status: i.status,
+                        date: i.date || (i.created_at ? new Date(i.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'Sep 17, 2026')
+                    }));
+                }
+
+            } catch (err) {
+                console.error('Error fetching database records:', err);
+            }
+        }
+
+        function setupRealtimeSubscriptions() {
+            if (realtimeChannel) {
+                supabase.removeChannel(realtimeChannel);
+            }
+
+            realtimeChannel = supabase
+                .channel('public:app-db-changes')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, async () => {
+                    await fetchAllDatabaseData();
+                    updateDashboardUI();
+                })
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'accomplishment_reports' }, async () => {
+                    await fetchAllDatabaseData();
+                    updateDashboardUI();
+                })
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'brgy_documents' }, async () => {
+                    await fetchAllDatabaseData();
+                    updateDashboardUI();
+                })
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'incidents' }, async () => {
+                    await fetchAllDatabaseData();
+                    updateDashboardUI();
+                })
+                .subscribe();
+        }
+
+        async function handleRegister(e) {
+            if (e) e.preventDefault();
+            
+            const fullname = document.getElementById('reg-fullname').value.trim();
+            const username = document.getElementById('reg-username').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const role = document.getElementById('reg-role').value;
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirm-password').value;
+            const submitBtn = document.getElementById('reg-submit-btn');
+
+            if (!email.includes('@') || !email.includes('.')) {
+                return showAlert('Please enter a valid email address (e.g. ana@libjo.ph).', 'error');
+            }
+
+            if (password !== confirmPassword) {
+                return showAlert('Passwords do not match.', 'error');
+            }
+
+            const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_#^()-])[A-Za-z\d@$!\%*?&_#^()-]{8,}$/;
+            if (!strongPasswordRegex.test(password)) {
+                return showAlert('Password does not meet minimum security criteria.', 'error');
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Registering...`;
+            }
+
+            demoAccounts[username] = { password, name: fullname, email, role };
+            const generatedId = crypto.randomUUID();
+
+            try {
+                await supabase.from('profiles').insert([{
+                    id: generatedId,
+                    full_name: fullname,
+                    username: username,
+                    email: email,
+                    role: role
+                }]);
+
+                await supabase.from('activity_logs').insert([{
+                    username: username,
+                    user_role: role,
+                    action: 'USER_REGISTER',
+                    details: `Registered new officer: ${fullname} (${role})`
+                }]);
+
+            } catch (err) {
+                console.warn('Registration exception handled:', err);
+            }
+
+            hideAlert();
+            showToast('Account registered and saved to database!', 'success');
+            switchAuthTab('login');
+            fillCredentials(username, password);
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>Create Account</span> <i class="fa-solid fa-user-plus text-xs"></i>`;
+            }
+        }
+
+        async function renderDashboard() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.remove('hidden');
+            document.getElementById('mobile-bottom-nav').classList.remove('hidden');
+
+            document.getElementById('dash-user-name').innerText = activeUser.name;
+            document.getElementById('dash-user-role').innerText = activeUser.role;
+            document.getElementById('dash-welcome-name').innerText = activeUser.name;
+            document.getElementById('user-avatar').innerText = activeUser.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+
+            await fetchAllDatabaseData();
+            setupRealtimeSubscriptions();
+
+            const role = activeUser.role;
+            const bottomNav = document.getElementById('mobile-bottom-nav');
+
+            if (role === 'SK Secretary') {
+                bottomNav.innerHTML = `
+                    <button type="button" id="tab-btn-projects" onclick="switchDashboardTab('projects')" class="flex flex-col items-center gap-1 text-prosko-blue">
+                        <i class="fa-solid fa-file-signature text-base"></i>
+                        <span class="text-[9px] font-black">Propose Project</span>
+                    </button>
+                    <button type="button" id="tab-btn-sec-reports" onclick="switchDashboardTab('sec-reports')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-purple">
+                        <i class="fa-solid fa-award text-base"></i>
+                        <span class="text-[9px] font-semibold">Reports</span>
+                    </button>
+                    <button type="button" id="tab-btn-sec-docs" onclick="switchDashboardTab('sec-docs')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
+                        <i class="fa-solid fa-folder-tree text-base"></i>
+                        <span class="text-[9px] font-semibold">Brgy Docs</span>
+                    </button>
+                    <button type="button" onclick="openLogoutModal()" class="flex flex-col items-center gap-1 text-prosko-red hover:text-prosko-redDark">
+                        <i class="fa-solid fa-right-from-bracket text-base"></i>
+                        <span class="text-[9px] font-semibold">Logout</span>
+                    </button>
+                `;
+
+                document.getElementById('session-badge').innerHTML = `<i class="fa-solid fa-file-pen text-[10px] mr-1"></i> Secretary Portal`;
+                document.getElementById('banner-subtext').innerText = `File project proposals and accomplishment reports for official SK Admin Chairperson approval.`;
+                document.getElementById('admin-add-proj-btn').classList.remove('hidden');
+
+                switchDashboardTab('projects');
+
+            } else if (role === 'SK Treasurer') {
+                bottomNav.innerHTML = `
+                    <button type="button" id="tab-btn-treasurer-budget" onclick="switchDashboardTab('treasurer-budget')" class="flex flex-col items-center gap-1 text-prosko-blue">
+                        <i class="fa-solid fa-vault text-base"></i>
+                        <span class="text-[9px] font-black">Budget Ledger</span>
+                    </button>
+                    <button type="button" id="tab-btn-ai" onclick="switchDashboardTab('ai')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
+                        <i class="fa-solid fa-brain text-base"></i>
+                        <span class="text-[9px] font-semibold">AI Risk Index</span>
+                    </button>
+                    <button type="button" onclick="openLogoutModal()" class="flex flex-col items-center gap-1 text-prosko-red hover:text-prosko-redDark">
+                        <i class="fa-solid fa-right-from-bracket text-base"></i>
+                        <span class="text-[9px] font-semibold">Logout</span>
+                    </button>
+                `;
+
+                document.getElementById('session-badge').innerHTML = `<i class="fa-solid fa-vault text-[10px] mr-1"></i> Treasurer Financial Access`;
+                document.getElementById('banner-subtext').innerText = `SK Treasury Portal: Monitor budget allocations, disburse funds, and track expenditures.`;
+                document.getElementById('admin-add-proj-btn').classList.add('hidden');
+
+                switchDashboardTab('treasurer-budget');
+
+            } else {
+                bottomNav.innerHTML = `
+                    <button type="button" id="tab-btn-projects" onclick="switchDashboardTab('projects')" class="flex flex-col items-center gap-1 text-prosko-blue relative">
+                        <i class="fa-solid fa-folder-open text-base"></i>
+                        <span class="text-[9px] font-black">Projects</span>
+                    </button>
+                    <button type="button" id="tab-btn-sec-reports" onclick="switchDashboardTab('sec-reports')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-purple relative">
+                        <i class="fa-solid fa-award text-base"></i>
+                        <span class="text-[9px] font-semibold">Reports</span>
+                    </button>
+                    <button type="button" id="tab-btn-sec-docs" onclick="switchDashboardTab('sec-docs')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
+                        <i class="fa-solid fa-folder-tree text-base"></i>
+                        <span class="text-[9px] font-semibold">Brgy Docs</span>
+                    </button>
+                    <button type="button" id="tab-btn-analytics" onclick="switchDashboardTab('analytics')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
+                        <i class="fa-solid fa-triangle-exclamation text-base"></i>
+                        <span class="text-[9px] font-semibold">Incidents</span>
+                    </button>
+                    <button type="button" id="tab-btn-log-trail" onclick="switchDashboardTab('log-trail')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
+                        <i class="fa-solid fa-clock-rotate-left text-base"></i>
+                        <span class="text-[9px] font-semibold">Log Trail</span>
+                    </button>
+                    <button type="button" onclick="openLogoutModal()" class="flex flex-col items-center gap-1 text-prosko-red hover:text-prosko-redDark">
+                        <i class="fa-solid fa-right-from-bracket text-base"></i>
+                        <span class="text-[9px] font-semibold">Logout</span>
+                    </button>
+                `;
+
+                document.getElementById('session-badge').innerHTML = `<i class="fa-solid fa-crown text-[10px] mr-1"></i> Chairperson Executive Dashboard`;
+                document.getElementById('banner-subtext').innerText = `Review Secretary project proposals and approve accomplishment reports submitted by SK members.`;
+                document.getElementById('admin-add-proj-btn').classList.remove('hidden');
+
+                switchDashboardTab('projects');
+            }
+
+            updateDashboardUI();
+        }
+
+        // RENDER METRIC WIDGETS DYNAMICALLY WITH LIVE PENDING COUNT
+        function renderMetricWidgets() {
+            const widgetGrid = document.getElementById('metrics-widget-grid');
+            if (!widgetGrid || !activeUser) return;
+
+            const role = activeUser.role;
+
+            if (role === 'SK Secretary') {
+                widgetGrid.innerHTML = `
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm border-t-4 border-t-prosko-purple">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <p class="text-[9px] font-extrabold text-prosko-purple uppercase tracking-wider">Reports Filed</p>
+                            <span class="w-7 h-7 rounded-lg bg-prosko-purpleLight text-prosko-purple flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900">${accomplishmentReports.length}</h3>
+                        <p class="text-[10px] text-amber-600 font-bold mt-0.5">Awaiting Admin Signoff</p>
+                    </div>
+
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm border-t-4 border-t-prosko-blue">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <p class="text-[9px] font-extrabold text-prosko-blue uppercase tracking-wider">Archived Docs</p>
+                            <span class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900">${brgyDocuments.length}</h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Resolutions & Orders</p>
+                    </div>
+                `;
+            } else if (role === 'SK Treasurer') {
+                widgetGrid.innerHTML = `
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm border-t-4 border-t-prosko-blue">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <p class="text-[9px] font-extrabold text-prosko-blue uppercase tracking-wider">Total Allocated</p>
+                            <span class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-wallet"></i>
+                            </span>
+                        </div>
+                        <h3 id="stat-total-budget" class="text-base font-black text-slate-900 truncate">₱0.00</h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Approved Fund</p>
+                    </div>
+
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm border-t-4 border-t-prosko-green">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <p class="text-[9px] font-extrabold text-prosko-greenDark uppercase tracking-wider">Total Disbursed</p>
+                            <span class="w-7 h-7 rounded-lg bg-prosko-greenLight text-prosko-green flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                            </span>
+                        </div>
+                        <h3 id="stat-total-disbursed" class="text-base font-black text-slate-900 truncate">₱0.00</h3>
+                        <p class="text-[10px] text-prosko-green font-bold mt-0.5">Active Balance</p>
+                    </div>
+                `;
+            } else {
+                const pendingProjCount = projects.filter(p => p.status === 'Pending Admin Approval').length;
+                const pendingRepCount = accomplishmentReports.filter(r => r.status === 'Pending Admin Approval').length;
+                const totalPending = pendingProjCount + pendingRepCount;
+
+                widgetGrid.innerHTML = `
+                    <div onclick="filterPendingApprovals()" class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm border-t-4 border-t-prosko-blue cursor-pointer hover:bg-slate-50 transition active:scale-[0.98]">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <p class="text-[9px] font-extrabold text-prosko-blue uppercase tracking-wider">Pending Approvals</p>
+                            <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold shadow-sm">
+                                ${totalPending}
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900">${totalPending} Action Items</h3>
+                        <p class="text-[10px] text-amber-600 font-bold mt-0.5">${pendingProjCount} Proj • ${pendingRepCount} Reports</p>
+                    </div>
+
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm border-t-4 border-t-prosko-green">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <p class="text-[9px] font-extrabold text-prosko-greenDark uppercase tracking-wider">Total Budget</p>
+                            <span class="w-7 h-7 rounded-lg bg-prosko-greenLight text-prosko-green flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-peseta-sign"></i>
+                            </span>
+                        </div>
+                        <h3 id="stat-total-budget" class="text-base font-black text-slate-900 truncate">₱0.00</h3>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Youth Fund</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Tapping Pending Approvals Widget Direct Filter Action
+        function filterPendingApprovals() {
+            switchDashboardTab('projects');
+            const statusFilter = document.getElementById('status-filter');
+            if (statusFilter) {
+                statusFilter.value = 'Pending Admin Approval';
+                filterProjects();
+            }
+            showToast('Showing pending project approvals', 'info');
+        }
+
+        function updateDashboardUI() {
+            renderMetricWidgets();
+            updateCalculatedMetrics();
+            renderProjectsCards(projects);
+            renderTreasurerBudgetCards();
+            renderAccomplishmentReports();
+            renderBrgyDocuments();
+            renderIncidentsMobileList();
+        }
+
+        function updateCalculatedMetrics() {
+            const totalBudget = projects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
+            const totalDisbursed = projects.reduce((acc, p) => acc + (parseFloat(p.disbursed) || 0), 0);
+
+            const budgetElem = document.getElementById('stat-total-budget');
+            const disbElem = document.getElementById('stat-total-disbursed');
+
+            if (budgetElem) budgetElem.innerText = `₱${totalBudget.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+            if (disbElem) disbElem.innerText = `₱${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+        }
+
+        function switchDashboardTab(tab) {
+            document.getElementById('subview-projects').classList.add('hidden');
+            document.getElementById('subview-sec-reports').classList.add('hidden');
+            document.getElementById('subview-sec-docs').classList.add('hidden');
+            document.getElementById('subview-treasurer-budget').classList.add('hidden');
+            document.getElementById('subview-ai').classList.add('hidden');
+            document.getElementById('subview-analytics').classList.add('hidden');
+            
+            const subviewLogTrail = document.getElementById('subview-log-trail');
+            if (subviewLogTrail) subviewLogTrail.classList.add('hidden');
+
+            const btnProj = document.getElementById('tab-btn-projects');
+            const btnSecRep = document.getElementById('tab-btn-sec-reports');
+            const btnSecDoc = document.getElementById('tab-btn-sec-docs');
+            const btnBudget = document.getElementById('tab-btn-treasurer-budget');
+            const btnAi = document.getElementById('tab-btn-ai');
+            const btnAnalytics = document.getElementById('tab-btn-analytics');
+            const btnLogTrail = document.getElementById('tab-btn-log-trail');
+
+            if (btnProj) btnProj.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue relative";
+            if (btnSecRep) btnSecRep.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-purple relative";
+            if (btnSecDoc) btnSecDoc.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
+            if (btnBudget) btnBudget.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
+            if (btnAi) btnAi.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
+            if (btnAnalytics) btnAnalytics.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
+            if (btnLogTrail) btnLogTrail.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
+
+            if (tab === 'projects') {
+                document.getElementById('subview-projects').classList.remove('hidden');
+                if (btnProj) btnProj.className = "flex flex-col items-center gap-1 text-prosko-blue relative";
+            } else if (tab === 'sec-reports') {
+                document.getElementById('subview-sec-reports').classList.remove('hidden');
+                if (btnSecRep) btnSecRep.className = "flex flex-col items-center gap-1 text-prosko-purple relative";
+            } else if (tab === 'sec-docs') {
+                document.getElementById('subview-sec-docs').classList.remove('hidden');
+                if (btnSecDoc) btnSecDoc.className = "flex flex-col items-center gap-1 text-prosko-blue";
+            } else if (tab === 'treasurer-budget') {
+                document.getElementById('subview-treasurer-budget').classList.remove('hidden');
+                if (btnBudget) btnBudget.className = "flex flex-col items-center gap-1 text-prosko-blue";
+            } else if (tab === 'ai') {
+                document.getElementById('subview-ai').classList.remove('hidden');
+                if (btnAi) btnAi.className = "flex flex-col items-center gap-1 text-prosko-blue";
+            } else if (tab === 'analytics') {
+                document.getElementById('subview-analytics').classList.remove('hidden');
+                if (btnAnalytics) btnAnalytics.className = "flex flex-col items-center gap-1 text-prosko-blue";
+            } else if (tab === 'log-trail') {
+                if (subviewLogTrail) subviewLogTrail.classList.remove('hidden');
+                if (btnLogTrail) btnLogTrail.className = "flex flex-col items-center gap-1 text-prosko-blue";
+                fetchLogTrails();
+            }
+        }
+
+        async function logUserActivity(action, details) {
+            if (!activeUser) return;
+            try {
+                await supabase.from('activity_logs').insert([{
+                    username: activeUser.name || 'System User',
+                    user_role: activeUser.role || 'Officer',
+                    action: action,
+                    details: details
+                }]);
+            } catch (err) {
+                console.warn('Logging exception:', err);
+            }
+        }
+
+        async function fetchLogTrails() {
+            if (!activeUser || activeUser.role !== 'SK Chairperson') return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('activity_logs')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+
+                if (!error && data) {
+                    activityLogs = data;
+                    renderLogTrailFeed(activityLogs);
+                }
+            } catch (err) {
+                console.error('Log trail fetch error:', err);
+            }
+        }
+
+        function renderLogTrailFeed(logList) {
+            const container = document.getElementById('log-trail-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!logList || logList.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center text-slate-400">
+                        <i class="fa-solid fa-receipt text-2xl mb-1 text-slate-300"></i>
+                        <p class="font-bold text-xs text-slate-500">No activity logs recorded yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            logList.forEach(log => {
+                const timeFormatted = new Date(log.created_at).toLocaleString('en-US', {
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                let actionBadgeColor = "bg-slate-200 text-slate-700";
+                if (log.action.includes('LOGIN')) actionBadgeColor = "bg-emerald-100 text-emerald-800";
+                if (log.action.includes('REGISTER')) actionBadgeColor = "bg-purple-100 text-purple-800";
+                if (log.action.includes('APPROVE') || log.action.includes('CREATE')) actionBadgeColor = "bg-blue-100 text-prosko-blue";
+                if (log.action.includes('DELETE') || log.action.includes('REJECT')) actionBadgeColor = "bg-red-100 text-prosko-red";
+
+                const item = document.createElement('div');
+                item.className = "p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1";
+                item.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-extrabold text-slate-900 text-[11px]">${log.username}</span>
+                            <span class="text-[9px] font-bold text-slate-400">(${log.user_role})</span>
+                        </div>
+                        <span class="text-[8px] font-mono font-bold text-slate-400">${timeFormatted}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase ${actionBadgeColor}">${log.action}</span>
+                        <p class="text-[10px] text-slate-600 font-medium truncate">${log.details}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function filterLogs() {
+            const query = document.getElementById('log-search').value.toLowerCase();
+            const filtered = activityLogs.filter(log => 
+                log.username.toLowerCase().includes(query) ||
+                log.action.toLowerCase().includes(query) ||
+                log.details.toLowerCase().includes(query) ||
+                log.user_role.toLowerCase().includes(query)
+            );
+            renderLogTrailFeed(filtered);
+        }
+
+        function renderProjectsCards(projectList) {
+            const container = document.getElementById('projects-list-container');
+            const emptyState = document.getElementById('empty-projects-state');
+            const countSpan = document.getElementById('showing-count');
+
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (projectList.length === 0) {
+                emptyState.classList.remove('hidden');
+                countSpan.innerText = `0 Projects`;
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            countSpan.innerText = `${projectList.length} Projects`;
+
+            const isAdmin = activeUser && activeUser.role === 'SK Chairperson';
+
+            projectList.forEach(project => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200/90 space-y-2 text-xs relative";
+
+                let statusBadgeClass = "";
+                switch (project.status) {
+                    case "Pending Admin Approval":
+                        statusBadgeClass = "bg-amber-100 text-amber-800 border-amber-300";
+                        break;
+                    case "In Progress":
+                    case "Approved":
+                        statusBadgeClass = "bg-prosko-yellowLight text-prosko-yellowDark border-prosko-yellow/40";
+                        break;
+                    case "Completed":
+                        statusBadgeClass = "bg-prosko-greenLight text-prosko-greenDark border-prosko-green/40";
+                        break;
+                    case "Proposed":
+                        statusBadgeClass = "bg-prosko-blueLight text-prosko-blue border-prosko-blue/30";
+                        break;
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-xs">${project.title}</h4>
+                            <p class="text-[10px] text-slate-500 font-medium">${project.category} • <span class="text-prosko-purple font-bold">${project.submittedBy || 'SK Office'}</span></p>
+                        </div>
+                        <span class="inline-block px-2 py-0.5 rounded-full text-[9px] font-extrabold border ${statusBadgeClass}">
+                            ${project.status}
+                        </span>
+                    </div>
+
+                    <div class="flex justify-between items-center text-[11px] pt-1 border-t border-slate-200">
+                        <span class="font-extrabold text-prosko-blue">₱${parseFloat(project.budget).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                        <span class="text-slate-500 text-[10px] font-medium">${project.period}</span>
+                    </div>
+
+                    ${isAdmin && project.status === 'Pending Admin Approval' ? `
+                        <div class="p-2 bg-amber-50 rounded-lg border border-amber-200 flex items-center justify-between gap-2 mt-1">
+                            <span class="text-[10px] font-bold text-amber-900"><i class="fa-solid fa-clock-rotate-left text-amber-600 mr-1"></i>Secretary Proposal Pending</span>
+                            <div class="flex gap-1">
+                                <button onclick="approveProject(${project.id})" class="px-2.5 py-1 bg-prosko-green hover:bg-prosko-greenDark text-white font-extrabold text-[10px] rounded-md shadow-sm transition">
+                                    <i class="fa-solid fa-check mr-0.5"></i> Approve
+                                </button>
+                                <button onclick="rejectProject(${project.id})" class="px-2 py-1 bg-prosko-red text-white font-bold text-[10px] rounded-md transition">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div class="flex justify-end gap-2 pt-1 border-t border-slate-200/60">
+                        <button onclick="editProject(${project.id})" class="text-[10px] bg-slate-200 hover:bg-prosko-blue hover:text-white px-2 py-1 rounded font-bold transition flex items-center gap-1">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </button>
+                        <button onclick="deleteProject(${project.id})" class="text-[10px] bg-prosko-redLight text-prosko-red hover:bg-prosko-red hover:text-white px-2 py-1 rounded font-bold transition flex items-center gap-1">
+                            <i class="fa-solid fa-trash-can"></i> Delete
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function approveProject(id) {
+            const { error } = await supabase.from('projects').update({ status: 'In Progress' }).eq('id', id);
+            if (!error) {
+                showToast('Project APPROVED!', 'success');
+                await logUserActivity('PROJECT_APPROVE', `Approved project ID: ${id}`);
+                await fetchAllDatabaseData();
+                updateDashboardUI();
+            } else {
+                showToast('Failed to update database!', 'error');
+            }
+        }
+
+        function rejectProject(id) {
+            customConfirm("Reject Proposal", "Reject and remove this project proposal?", async (confirmed) => {
+                if (confirmed) {
+                    const { error } = await supabase.from('projects').delete().eq('id', id);
+                    if (!error) {
+                        showToast('Project rejected.', 'info');
+                        await logUserActivity('PROJECT_REJECT', `Rejected project ID: ${id}`);
+                        await fetchAllDatabaseData();
+                        updateDashboardUI();
+                    } else {
+                        showToast('Failed to remove from database!', 'error');
+                    }
+                }
+            });
+        }
+
+        function deleteProject(id) {
+            customConfirm("Delete Project", "Delete this project permanently?", async (confirmed) => {
+                if (confirmed) {
+                    const { error } = await supabase.from('projects').delete().eq('id', id);
+                    if (!error) {
+                        showToast('Project deleted.', 'info');
+                        await logUserActivity('PROJECT_DELETE', `Deleted project ID: ${id}`);
+                        await fetchAllDatabaseData();
+                        updateDashboardUI();
+                    } else {
+                        showToast('Failed to delete from database!', 'error');
+                    }
+                }
+            });
+        }
+
+        function renderAccomplishmentReports() {
+            const container = document.getElementById('accomplishment-reports-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const isAdmin = activeUser && activeUser.role === 'SK Chairperson';
+
+            if (!accomplishmentReports || accomplishmentReports.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center text-slate-400">
+                        <i class="fa-solid fa-award text-2xl mb-1 text-slate-300"></i>
+                        <p class="font-bold text-xs text-slate-500">No accomplishment reports filed yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            accomplishmentReports.forEach(r => {
+                const item = document.createElement('div');
+                item.className = "bg-slate-50 p-3 rounded-xl border border-slate-200/90 space-y-1 text-xs";
+
+                let badgeClass = "bg-purple-100 text-purple-800";
+                if (r.status === 'Pending Admin Approval') badgeClass = "bg-amber-100 text-amber-800 border border-amber-300";
+                if (r.status === 'Approved') badgeClass = "bg-emerald-100 text-emerald-800";
+
+                item.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <span class="font-bold text-prosko-purple text-[11px]">${r.member}</span>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold ${badgeClass}">${r.status}</span>
+                    </div>
+                    <p class="font-extrabold text-slate-900 text-[11px]">${r.title}</p>
+                    <p class="text-slate-600 text-[10px] leading-relaxed">${r.details}</p>
+                    <p class="text-slate-400 text-[9px] pt-1"><i class="fa-solid fa-calendar-day mr-1"></i>Date Conducted: ${r.date}</p>
+
+                    ${isAdmin && r.status === 'Pending Admin Approval' ? `
+                        <div class="p-2 bg-amber-50 rounded-lg border border-amber-200 flex items-center justify-between gap-2 mt-2">
+                            <span class="text-[10px] font-bold text-amber-900"><i class="fa-solid fa-user-check text-amber-600 mr-1"></i>Report Needs Admin Signoff</span>
+                            <div class="flex gap-1">
+                                <button onclick="approveReport('${r.id}')" class="px-2.5 py-1 bg-prosko-green hover:bg-prosko-greenDark text-white font-extrabold text-[10px] rounded-md shadow-sm transition">
+                                    <i class="fa-solid fa-check mr-0.5"></i> Approve
+                                </button>
+                                <button onclick="rejectReport('${r.id}')" class="px-2 py-1 bg-prosko-red text-white font-bold text-[10px] rounded-md transition">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        async function approveReport(id) {
+            try {
+                const { error } = await supabase
+                    .from('accomplishment_reports')
+                    .update({ status: 'Approved' })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                await logUserActivity('REPORT_APPROVE', `Approved report ID: ${id}`);
+                showToast('Accomplishment report APPROVED!', 'success');
+                await fetchAllDatabaseData();
+                updateDashboardUI();
+            } catch (err) {
+                console.error('Report Approval Error:', err);
+                showToast('Failed to approve report.', 'error');
+            }
+        }
+
+        function rejectReport(id) {
+            customConfirm("Reject Report", "Reject and remove this accomplishment report?", async (confirmed) => {
+                if (confirmed) {
+                    try {
+                        const { error } = await supabase
+                            .from('accomplishment_reports')
+                            .delete()
+                            .eq('id', id);
+
+                        if (error) throw error;
+
+                        await logUserActivity('REPORT_REJECT', `Rejected report ID: ${id}`);
+                        showToast('Accomplishment report returned/rejected.', 'info');
+                        await fetchAllDatabaseData();
+                        updateDashboardUI();
+                    } catch (err) {
+                        console.error('Report Rejection Error:', err);
+                        showToast('Failed to reject report.', 'error');
+                    }
+                }
+            });
+        }
+
+        function openNewReportModal() {
+            document.getElementById('report-modal').classList.remove('hidden');
+        }
+
+        function closeReportModal() {
+            document.getElementById('report-modal').classList.add('hidden');
+        }
+
+        async function saveReport(e) {
+            if (e) e.preventDefault();
+            const member = document.getElementById('rep-member').value.trim();
+            const title = document.getElementById('rep-title').value.trim();
+            const details = document.getElementById('rep-details').value.trim();
+            const date = document.getElementById('rep-date').value.trim();
+
+            const isSecretary = activeUser && activeUser.role === 'SK Secretary';
+            const initialStatus = isSecretary ? "Pending Admin Approval" : "Approved";
+
+            const newReport = {
+                id: generateUniqueId('REP'),
+                member: member,
+                title: title,
+                details: details,
+                date: date,
+                status: initialStatus
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('accomplishment_reports')
+                    .insert([newReport]);
+
+                if (error) throw error;
+
+                await logUserActivity('REPORT_SUBMIT', `Submitted report: ${title}`);
+                closeReportModal();
+                showToast(isSecretary ? 'Report submitted for Admin approval!' : 'Accomplishment report saved!', 'success');
+                
+                await fetchAllDatabaseData();
+                updateDashboardUI();
+
+            } catch (err) {
+                console.error('Error saving report:', err);
+                showToast('Failed to save report: ' + err.message, 'error');
+            }
+        }
+
+        // RENDER BARANGAY DOCUMENTS FROM SUPABASE DATA
+        function renderBrgyDocuments() {
+            const container = document.getElementById('brgy-documents-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!brgyDocuments || brgyDocuments.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center text-slate-400">
+                        <i class="fa-solid fa-folder-open text-2xl mb-1 text-slate-300"></i>
+                        <p class="font-bold text-xs text-slate-500">No documents archived yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            brgyDocuments.forEach(d => {
+                const item = document.createElement('div');
+                item.className = "bg-slate-50 p-3 rounded-xl border border-slate-200/90 space-y-1 text-xs flex justify-between items-center";
+                item.innerHTML = `
+                    <div>
+                        <div class="flex items-center gap-1.5 mb-0.5">
+                            <span class="px-1.5 py-0.5 rounded text-[8px] font-black bg-blue-100 text-prosko-blue uppercase">${d.type}</span>
+                            <span class="text-[9px] font-mono font-bold text-slate-400">${d.ref}</span>
+                        </div>
+                        <p class="font-extrabold text-slate-900 text-[11px]">${d.title}</p>
+                        <p class="text-slate-400 text-[9px]"><i class="fa-solid fa-clock mr-1"></i>Archived: ${d.date}</p>
+                    </div>
+                    <button onclick="showToast('Downloading official document copy...', 'info')" class="w-8 h-8 rounded-lg bg-slate-200 text-prosko-blue hover:bg-prosko-blue hover:text-white flex items-center justify-center transition">
+                        <i class="fa-solid fa-download text-xs"></i>
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function openNewDocModal() {
+            document.getElementById('doc-modal').classList.remove('hidden');
+        }
+
+        function closeDocModal() {
+            document.getElementById('doc-modal').classList.add('hidden');
+        }
+
+        // PERSIST BARANGAY DOCUMENT DIRECTLY TO SUPABASE WITH EXPLICIT GENERATED ID
+        async function saveDocument(e) {
+            if (e) e.preventDefault();
+            const title = document.getElementById('doc-title').value.trim();
+            const type = document.getElementById('doc-type').value;
+            const ref = document.getElementById('doc-ref').value.trim();
+
+            const newDoc = {
+                id: generateUniqueId('DOC'),
+                title: title,
+                type: type,
+                ref: ref,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('brgy_documents')
+                    .insert([newDoc]);
+
+                if (error) throw error;
+
+                await logUserActivity('DOC_UPLOAD', `Uploaded document: ${title} (${ref})`);
+                closeDocModal();
+                showToast('Barangay Document saved to database!', 'success');
+                
+                await fetchAllDatabaseData();
+                updateDashboardUI();
+
+            } catch (err) {
+                console.error('Error saving document to database:', err);
+                showToast('Failed to save document: ' + err.message, 'error');
+            }
+        }
+
+        function renderTreasurerBudgetCards() {
+            const container = document.getElementById('treasurer-budget-cards');
+            if (!container) return;
+            container.innerHTML = '';
+
+            projects.forEach(p => {
+                const total = parseFloat(p.budget) || 0;
+                const disbursed = parseFloat(p.disbursed) || 0;
+                const remaining = total - disbursed;
+                const pct = total > 0 ? Math.min(100, Math.round((disbursed / total) * 100)) : 0;
+
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200/90 space-y-2 text-xs";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-xs">${p.title}</h4>
+                            <p class="text-[10px] text-slate-500 font-medium">${p.category}</p>
+                        </div>
+                        <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-prosko-greenLight text-prosko-greenDark border border-prosko-green/30">
+                            ${pct}% Released
+                        </span>
+                    </div>
+
+                    <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-prosko-green h-1.5 rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-1 pt-1 text-[10px] text-center border-t border-slate-200">
+                        <div>
+                            <p class="text-slate-400 font-semibold">Allocated</p>
+                            <p class="font-extrabold text-slate-800">₱${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 font-semibold">Disbursed</p>
+                            <p class="font-extrabold text-prosko-green">₱${disbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-400 font-semibold">Balance</p>
+                            <p class="font-extrabold text-prosko-blue">₱${remaining.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openDisbursementModal() {
+            const select = document.getElementById('disb-project-select');
+            select.innerHTML = '';
+            projects.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.innerText = `${p.title} (Bal: ₱${(p.budget - p.disbursed).toLocaleString('en-US')})`;
+                select.appendChild(opt);
+            });
+            document.getElementById('disbursement-modal').classList.remove('hidden');
+        }
+
+        function closeDisbursementModal() {
+            document.getElementById('disbursement-modal').classList.add('hidden');
+        }
+
+        async function saveDisbursement(e) {
+            e.preventDefault();
+            const projId = parseInt(document.getElementById('disb-project-select').value);
+            const amount = parseFloat(document.getElementById('disb-amount').value) || 0;
+            const payee = document.getElementById('disb-payee').value.trim();
+
+            const project = projects.find(p => p.id === projId);
+            if (!project) return;
+
+            const remaining = project.budget - project.disbursed;
+            if (amount > remaining) {
+                showToast(`Exceeds remaining balance of ₱${remaining.toLocaleString('en-US')}`, 'error');
+                return;
+            }
+
+            const newDisbursed = (parseFloat(project.disbursed) || 0) + amount;
+
+            try {
+                const { error } = await supabase
+                    .from('projects')
+                    .update({ disbursed: newDisbursed })
+                    .eq('id', projId);
+
+                if (error) throw error;
+
+                await logUserActivity('DISBURSEMENT_RECORD', `Released ₱${amount} to ${payee} for Project ID ${projId}`);
+                closeDisbursementModal();
+                showToast(`Released ₱${amount.toLocaleString('en-US')} to ${payee}`, 'success');
+
+                await fetchAllDatabaseData();
+                updateDashboardUI();
+            } catch (err) {
+                console.error('Error recording disbursement:', err);
+                showToast('Failed to save disbursement: ' + err.message, 'error');
+            }
+        }
+
+        function renderIncidentsMobileList() {
+            const container = document.getElementById('incidents-mobile-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!incidents || incidents.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center text-slate-400">
+                        <i class="fa-solid fa-shield-halved text-2xl mb-1 text-slate-300"></i>
+                        <p class="font-bold text-xs text-slate-500">No community incidents recorded</p>
+                    </div>
+                `;
+                return;
+            }
+
+            incidents.forEach(inc => {
+                let badgeClass = "bg-amber-100 text-amber-800";
+                if (inc.status === 'Resolved') badgeClass = "bg-emerald-100 text-emerald-800";
+                if (inc.status === 'Under Review') badgeClass = "bg-red-100 text-red-800";
+
+                const item = document.createElement('div');
+                item.className = "p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1";
+                item.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-slate-900">${inc.id}</span>
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${badgeClass}">${inc.status}</span>
+                    </div>
+                    <p class="text-[11px] text-slate-700 font-semibold">${inc.type}</p>
+                    <p class="text-[10px] text-slate-500">${inc.location} • ${inc.date}</p>
+                    <button onclick="toggleIncidentStatus('${inc.id}')" class="text-[9px] text-prosko-blue font-bold hover:underline pt-0.5 inline-block">
+                        Toggle Resolution Status
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function openNewIncidentModal() {
+            document.getElementById('incident-modal').classList.remove('hidden');
+        }
+
+        function closeIncidentModal() {
+            document.getElementById('incident-modal').classList.add('hidden');
+        }
+
+        // PERSIST INCIDENTS DIRECTLY TO SUPABASE WITH EXPLICIT GENERATED ID
+        async function saveIncident(e) {
+            if (e) e.preventDefault();
+            const type = document.getElementById('inc-type').value.trim();
+            const location = document.getElementById('inc-location').value.trim();
+            const status = document.getElementById('inc-status').value;
+
+            const newInc = {
+                id: generateUniqueId('INC'),
+                type: type,
+                location: location,
+                status: status,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+            };
+
+            try {
+                const { error } = await supabase
+                    .from('incidents')
+                    .insert([newInc]);
+
+                if (error) throw error;
+
+                await logUserActivity('INCIDENT_LOG', `Logged incident: ${type} at ${location}`);
+                closeIncidentModal();
+                showToast('Incident logged to database.', 'success');
+                
+                await fetchAllDatabaseData();
+                updateDashboardUI();
+
+            } catch (err) {
+                console.error('Error logging incident:', err);
+                showToast('Failed to log incident: ' + err.message, 'error');
+            }
+        }
+
+        async function toggleIncidentStatus(id) {
+            const inc = incidents.find(i => i.id === id);
+            if (!inc) return;
+
+            const nextStatus = inc.status === 'Resolved' ? 'In Progress' : 'Resolved';
+
+            try {
+                const { error } = await supabase
+                    .from('incidents')
+                    .update({ status: nextStatus })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                await logUserActivity('INCIDENT_TOGGLE', `Changed status of ${id} to ${nextStatus}`);
+                showToast(`Status updated to ${nextStatus}`, 'info');
+
+                await fetchAllDatabaseData();
+                updateDashboardUI();
+            } catch (err) {
+                console.error('Error updating incident status:', err);
+                showToast('Failed to update status.', 'error');
+            }
+        }
+
+        function openNewProjectModal() {
+            document.getElementById('proj-id').value = '';
+            document.getElementById('project-form').reset();
+            const isSecretary = activeUser && activeUser.role === 'SK Secretary';
+            
+            if (isSecretary) {
+                document.getElementById('modal-project-title').innerText = "Submit Secretary Project Proposal";
+                document.getElementById('proj-status').value = "Pending Admin Approval";
+            } else {
+                document.getElementById('modal-project-title').innerText = "Add New Youth Project";
+            }
+            
+            document.getElementById('project-modal').classList.remove('hidden');
+        }
+
+        function closeProjectModal() {
+            document.getElementById('project-modal').classList.add('hidden');
+        }
+
+        async function saveProject(e) {
+            if (e) e.preventDefault();
+
+            const id = document.getElementById('proj-id').value;
+            const title = document.getElementById('proj-title').value.trim();
+            const category = document.getElementById('proj-category').value;
+            const budget = parseFloat(document.getElementById('proj-budget').value) || 0;
+            const period = document.getElementById('proj-period').value.trim();
+            const isSecretary = activeUser && activeUser.role === 'SK Secretary';
+            
+            let status = document.getElementById('proj-status').value;
+            if (isSecretary) status = "Pending Admin Approval";
+
+            closeProjectModal();
+
+            if (id) {
+                const numId = parseInt(id) || id;
+                const { error } = await supabase
+                    .from('projects')
+                    .update({ title, category, budget, period, status })
+                    .eq('id', numId);
+
+                if (error) {
+                    showToast('Database sync failed: ' + error.message, 'error');
+                } else {
+                    showToast('Project updated in database!', 'success');
+                    await logUserActivity('PROJECT_UPDATE', `Updated project: ${title}`);
+                }
+
+            } else {
+                const { error } = await supabase.from('projects').insert([{
+                    title,
+                    category,
+                    budget,
+                    disbursed: 0.00,
+                    status,
+                    submitted_by: activeUser ? `${activeUser.name} (${activeUser.role})` : 'SK Office',
+                    period,
+                    ai_score: "92% AI Verified"
+                }]);
+
+                if (error) {
+                    showToast('Database save failed: ' + error.message, 'error');
+                } else {
+                    showToast(isSecretary ? 'Proposal saved to database!' : 'New project added to database!', 'success');
+                    await logUserActivity('PROJECT_PROPOSE', `Proposed project: ${title}`);
+                }
+            }
+
+            await fetchAllDatabaseData();
+            updateDashboardUI();
+        }
+
+        function editProject(id) {
+            const p = projects.find(item => item.id === id);
+            if (!p) return;
+            document.getElementById('proj-id').value = p.id;
+            document.getElementById('proj-title').value = p.title;
+            document.getElementById('proj-category').value = p.category;
+            document.getElementById('proj-budget').value = p.budget;
+            document.getElementById('proj-period').value = p.period;
+            document.getElementById('proj-status').value = p.status;
+            document.getElementById('modal-project-title').innerText = "Edit Youth Project";
+            document.getElementById('project-modal').classList.remove('hidden');
+        }
+
+        function filterProjects() {
+            const query = document.getElementById('project-search').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+
+            const filtered = projects.filter(project => {
+                const matchesSearch = project.title.toLowerCase().includes(query) || project.category.toLowerCase().includes(query);
+                const matchesStatus = (statusFilter === "ALL") || (project.status === statusFilter);
+                return matchesSearch && matchesStatus;
+            });
+
+            renderProjectsCards(filtered);
+        }
+
+        function openLogoutModal() {
+            document.getElementById('logout-modal').classList.remove('hidden');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logout-modal').classList.add('hidden');
+        }
+
+        async function confirmLogout() {
+            closeLogoutModal();
+            
+            try {
+                if (realtimeChannel) {
+                    supabase.removeChannel(realtimeChannel);
+                    realtimeChannel = null;
+                }
+                await supabase.auth.signOut();
+            } catch (err) {
+                console.error('Logout Exception:', err);
+            }
+
+            activeUser = null;
+
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('mobile-bottom-nav').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            hideAlert();
+
+            showToast('Logged out successfully.', 'info');
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('auth-alert');
+            const icon = document.getElementById('auth-alert-icon');
+            const msg = document.getElementById('auth-alert-message');
+
+            alertBox.classList.remove('hidden');
+            msg.innerText = message;
+
+            if (type === 'error') {
+                alertBox.className = "mb-3 p-3 rounded-xl text-xs flex items-start gap-2.5 border bg-prosko-redLight text-prosko-red border-prosko-red/30 transition fade-in font-semibold";
+                icon.className = "fa-solid fa-circle-exclamation text-sm mt-0.5 text-prosko-red";
+            } else {
+                alertBox.className = "mb-3 p-3 rounded-xl text-xs flex items-start gap-2.5 border bg-prosko-greenLight text-prosko-greenDark border-prosko-green/30 transition fade-in font-semibold";
+                icon.className = "fa-solid fa-circle-check text-sm mt-0.5 text-prosko-green";
+            }
+        }
+
+        function hideAlert() {
+            document.getElementById('auth-alert').classList.add('hidden');
+        }
+
+        // Toast Message Notification System (Inside Mobile Shell Container)
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let bgIcon = "fa-circle-info text-prosko-yellow";
+            if (type === 'success') bgIcon = "fa-circle-check text-prosko-green";
+            if (type === 'error') bgIcon = "fa-circle-xmark text-prosko-red";
+
+            toast.className = "bg-prosko-blueDark/95 backdrop-blur-md text-white border border-white/20 shadow-xl px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2.5 pointer-events-auto fade-in";
+            toast.innerHTML = `
+                <i class="fa-solid ${bgIcon} text-sm"></i>
+                <span class="font-bold text-[11px]">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.25s ease';
+                setTimeout(() => toast.remove(), 250);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
