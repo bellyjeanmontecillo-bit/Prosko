@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>PROSKO Mobile - SK Barangay Libjo PMES</title>
+    <title>PROSKO - SK Barangay Libjo PMES</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Supabase JS Client -->
@@ -60,12 +60,10 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        .mobile-shell {
+        /* Mobile Container Mode */
+        .mode-mobile-shell {
             width: 100%;
             max-width: 440px;
             height: 100vh;
@@ -76,14 +74,29 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            margin: 0 auto;
         }
 
         @media (min-width: 640px) {
-            .mobile-shell {
+            .mode-mobile-shell {
                 border-radius: 40px;
                 height: 880px;
                 border: 8px solid #072b68;
             }
+        }
+
+        /* Desktop Web Admin Mode */
+        .mode-web-admin {
+            width: 100%;
+            min-height: 100vh;
+            background: #f8fafc;
+            display: flex;
+            position: relative;
+            border-radius: 0;
+            border: none;
+            max-width: 100%;
+            max-height: 100%;
+            box-shadow: none;
         }
 
         .bg-prosko-gradient {
@@ -109,528 +122,693 @@
         }
 
         .custom-scroll::-webkit-scrollbar {
-            width: 4px;
+            width: 5px;
+            height: 5px;
         }
         .custom-scroll::-webkit-scrollbar-track {
             background: transparent;
         }
         .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(10, 61, 145, 0.2);
+            background: rgba(10, 61, 145, 0.25);
             border-radius: 4px;
         }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen">
 
-    <div class="mobile-shell">
+    <!-- System Outer Shell Container (Dynamically switches between .mode-mobile-shell and .mode-web-admin) -->
+    <div id="main-shell" class="mode-mobile-shell transition-all duration-300">
 
-        <!-- Toast Notification Floating Popup Container inside System -->
-        <!-- Updated Toast Container with higher z-index -->
-<div id="toast-container" class="absolute top-4 left-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+        <!-- Toast Notification Popup Container -->
+        <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-full max-w-sm px-4 flex flex-col gap-2 pointer-events-none"></div>
 
-        <!-- Scrollable Main Viewport Area -->
-        <div id="app-viewport" class="flex-grow flex flex-col overflow-y-auto custom-scroll relative">
-
-            <!-- ==================================================== -->
-            <!-- 1. AUTHENTICATION SECTION (LOGIN / REGISTER MOBILE)  -->
-            <!-- ==================================================== -->
-            <section id="auth-screen" class="flex-grow flex flex-col min-h-full bg-slate-50">
+        <!-- ==================================================== -->
+        <!-- 1. AUTHENTICATION SECTION (MOBILE / DESKTOP SIGN IN) -->
+        <!-- ==================================================== -->
+        <section id="auth-screen" class="w-full flex-grow flex flex-col min-h-full bg-slate-50 overflow-y-auto custom-scroll">
+            
+            <div class="bg-prosko-gradient p-6 pt-7 text-white relative overflow-hidden rounded-b-[2.5rem] shadow-xl border-b-4 border-prosko-yellow">
+                <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-prosko-blueLight/10 rounded-full blur-2xl pointer-events-none"></div>
                 
-                <div class="bg-prosko-gradient p-6 pt-7 text-white relative overflow-hidden rounded-b-[2.5rem] shadow-xl border-b-4 border-prosko-yellow">
-                    <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-prosko-blueLight/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 bg-white border-2 border-prosko-yellow rounded-xl flex items-center justify-center shadow-md">
+                                <span class="font-black text-prosko-blue text-base">P</span>
+                            </div>
+                            <div>
+                                <h1 class="font-black text-lg tracking-tight leading-none text-white">PROSKO</h1>
+                                <p class="text-[9px] text-prosko-yellow uppercase tracking-widest font-extrabold mt-0.5">Barangay Libjo</p>
+                            </div>
+                        </div>
+                        <div class="px-2.5 py-1 rounded-full bg-prosko-red text-white text-[10px] font-bold flex items-center gap-1.5 shadow-sm">
+                            <span class="w-1.5 h-1.5 rounded-full bg-prosko-yellow animate-pulse"></span>
+                            AI-Integrated
+                        </div>
+                    </div>
+
+                    <!-- OFFICIAL PROSKO EMBLEM LOGO -->
+                    <div class="w-24 h-24 mx-auto my-1 relative text-center">
+                        <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="100" cy="100" r="95" fill="#FFFFFF" stroke="#0A3D91" stroke-width="5"/>
+                            <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#0A3D91" stroke-width="12"/>
+                            <path d="M 100 12 A 88 88 0 0 1 188 100" fill="none" stroke="#D7192D" stroke-width="12"/>
+                            <path d="M 100 25 Q 115 45 100 65 Q 85 45 100 25 Z" fill="#F4C20D"/>
+                            <circle cx="100" cy="45" r="8" fill="#D7192D"/>
+                            <text x="100" y="92" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="28" fill="#0A3D91" text-anchor="middle">PROSKO</text>
+                            <text x="100" y="106" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="7.5" fill="#D7192D" text-anchor="middle">PROJECT MONITORING & EVALUATION</text>
+                            <text x="100" y="116" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="7" fill="#64748b" text-anchor="middle">SK BARANGAY LIBJO</text>
+                            <rect x="82" y="122" width="36" height="50" rx="6" fill="#0A3D91" stroke="#34A853" stroke-width="2"/>
+                            <rect x="86" y="126" width="28" height="36" rx="2" fill="#FFFFFF"/>
+                            <circle cx="100" cy="167" r="2" fill="#FFFFFF"/>
+                            <circle cx="94" cy="140" r="5" fill="#F4C20D"/>
+                            <rect x="102" y="136" width="9" height="3" rx="1" fill="#D7192D"/>
+                            <rect x="102" y="142" width="9" height="3" rx="1" fill="#34A853"/>
+                            <path d="M 30 155 L 33 162 L 40 162 L 35 167 L 37 174 L 30 169 L 23 174 L 25 167 L 20 162 L 27 162 Z" fill="#F4C20D"/>
+                            <path d="M 170 155 L 173 162 L 180 162 L 175 167 L 177 174 L 170 169 L 163 174 L 165 167 L 160 162 L 167 162 Z" fill="#F4C20D"/>
+                            <text x="100" y="190" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="8" fill="#0A3D91" text-anchor="middle">MISSION • PROGRESS • SERVE</text>
+                        </svg>
+                    </div>
+
+                    <p class="text-white/90 text-[10px] leading-relaxed text-center mb-2 font-medium">
+                        Empowering Sangguniang Kabataan of Barangay Libjo with transparent monitoring and AI assessment.
+                    </p>
+
+                    <div class="bg-white/10 border border-white/20 p-2 rounded-2xl backdrop-blur-md">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-[9px] font-extrabold uppercase tracking-wider text-prosko-yellow flex items-center gap-1">
+                                <i class="fa-solid fa-key text-[10px]"></i> Demonstration Accounts
+                            </span>
+                            <span class="text-[8px] bg-prosko-red text-white px-1.5 py-0.5 rounded-full font-bold">Tap to Use</span>
+                        </div>
+
+                        <div class="space-y-1 text-xs">
+                            <button type="button" onclick="fillCredentials('admin_libjo', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
+                                <div class="text-left">
+                                    <span class="text-prosko-yellow font-bold text-[10px]">Web Admin Chair:</span>
+                                    <span class="text-white font-mono text-[10px] ml-1">admin_libjo</span>
+                                </div>
+                                <span class="text-[8px] bg-prosko-blue text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Web Admin</span>
+                            </button>
+
+                            <button type="button" onclick="fillCredentials('sec_libjo', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
+                                <div class="text-left">
+                                    <span class="text-purple-300 font-bold text-[10px]">Mobile Secretary:</span>
+                                    <span class="text-white font-mono text-[10px] ml-1">sec_libjo</span>
+                                </div>
+                                <span class="text-[8px] bg-prosko-purple text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Mobile App</span>
+                            </button>
+
+                            <button type="button" onclick="fillCredentials('maria_sk', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
+                                <div class="text-left">
+                                    <span class="text-emerald-300 font-bold text-[10px]">Mobile Treasurer:</span>
+                                    <span class="text-white font-mono text-[10px] ml-1">maria_sk</span>
+                                </div>
+                                <span class="text-[8px] bg-prosko-green text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Mobile App</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="p-4 flex-grow flex flex-col justify-start">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <div>
+                        <h3 id="form-title" class="text-sm font-extrabold text-prosko-blue">Sign In to Dashboard</h3>
+                        <p id="form-subtitle" class="text-slate-500 text-[11px] mt-0.5">Access Barangay Libjo project records.</p>
+                    </div>
                     
-                    <div class="relative z-10">
-                        <div class="flex items-center justify-between mb-3">
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-9 h-9 bg-white border-2 border-prosko-yellow rounded-xl flex items-center justify-center shadow-md">
-                                    <span class="font-black text-prosko-blue text-base">P</span>
-                                </div>
-                                <div>
-                                    <h1 class="font-black text-lg tracking-tight leading-none text-white">PROSKO</h1>
-                                    <p class="text-[9px] text-prosko-yellow uppercase tracking-widest font-extrabold mt-0.5">Barangay Libjo</p>
-                                </div>
-                            </div>
-                            <div class="px-2.5 py-1 rounded-full bg-prosko-red text-white text-[10px] font-bold flex items-center gap-1.5 shadow-sm">
-                                <span class="w-1.5 h-1.5 rounded-full bg-prosko-yellow animate-pulse"></span>
-                                AI-Integrated
-                            </div>
-                        </div>
-
-                        <!-- OFFICIAL PROSKO EMBLEM LOGO -->
-                        <div class="w-24 h-24 mx-auto my-1 relative text-center">
-                            <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="100" cy="100" r="95" fill="#FFFFFF" stroke="#0A3D91" stroke-width="5"/>
-                                <path d="M 12 100 A 88 88 0 0 1 188 100" fill="none" stroke="#0A3D91" stroke-width="12"/>
-                                <path d="M 100 12 A 88 88 0 0 1 188 100" fill="none" stroke="#D7192D" stroke-width="12"/>
-                                <path d="M 100 25 Q 115 45 100 65 Q 85 45 100 25 Z" fill="#F4C20D"/>
-                                <circle cx="100" cy="45" r="8" fill="#D7192D"/>
-                                <text x="100" y="92" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="28" fill="#0A3D91" text-anchor="middle">PROSKO</text>
-                                <text x="100" y="106" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="7.5" fill="#D7192D" text-anchor="middle">PROJECT MONITORING & EVALUATION</text>
-                                <text x="100" y="116" font-family="'Plus Jakarta Sans', sans-serif" font-weight="600" font-size="7" fill="#64748b" text-anchor="middle">SK BARANGAY LIBJO</text>
-                                <rect x="82" y="122" width="36" height="50" rx="6" fill="#0A3D91" stroke="#34A853" stroke-width="2"/>
-                                <rect x="86" y="126" width="28" height="36" rx="2" fill="#FFFFFF"/>
-                                <circle cx="100" cy="167" r="2" fill="#FFFFFF"/>
-                                <circle cx="94" cy="140" r="5" fill="#F4C20D"/>
-                                <rect x="102" y="136" width="9" height="3" rx="1" fill="#D7192D"/>
-                                <rect x="102" y="142" width="9" height="3" rx="1" fill="#34A853"/>
-                                <path d="M 30 155 L 33 162 L 40 162 L 35 167 L 37 174 L 30 169 L 23 174 L 25 167 L 20 162 L 27 162 Z" fill="#F4C20D"/>
-                                <path d="M 170 155 L 173 162 L 180 162 L 175 167 L 177 174 L 170 169 L 163 174 L 165 167 L 160 162 L 167 162 Z" fill="#F4C20D"/>
-                                <text x="100" y="190" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="8" fill="#0A3D91" text-anchor="middle">MISSION • PROGRESS • SERVE</text>
-                            </svg>
-                        </div>
-
-                        <p class="text-white/90 text-[10px] leading-relaxed text-center mb-2 font-medium">
-                            Empowering Sangguniang Kabataan of Barangay Libjo with transparent monitoring and AI assessment.
-                        </p>
-
-                        <div class="bg-white/10 border border-white/20 p-2 rounded-2xl backdrop-blur-md">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-[9px] font-extrabold uppercase tracking-wider text-prosko-yellow flex items-center gap-1">
-                                    <i class="fa-solid fa-key text-[10px]"></i> Demonstration Accounts
-                                </span>
-                                <span class="text-[8px] bg-prosko-red text-white px-1.5 py-0.5 rounded-full font-bold">Tap to Use</span>
-                            </div>
-
-                            <div class="space-y-1 text-xs">
-                                <button type="button" onclick="fillCredentials('admin_libjo', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
-                                    <div class="text-left">
-                                        <span class="text-prosko-yellow font-bold text-[10px]">Chairperson Admin:</span>
-                                        <span class="text-white font-mono text-[10px] ml-1">admin_libjo</span>
-                                    </div>
-                                    <span class="text-[8px] bg-prosko-blue text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Use</span>
-                                </button>
-
-                                <button type="button" onclick="fillCredentials('sec_libjo', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
-                                    <div class="text-left">
-                                        <span class="text-purple-300 font-bold text-[10px]">Secretary:</span>
-                                        <span class="text-white font-mono text-[10px] ml-1">sec_libjo</span>
-                                    </div>
-                                    <span class="text-[8px] bg-prosko-purple text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Use</span>
-                                </button>
-
-                                <button type="button" onclick="fillCredentials('maria_sk', 'Von1234!')" class="w-full flex justify-between items-center p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition active:scale-[0.98]">
-                                    <div class="text-left">
-                                        <span class="text-emerald-300 font-bold text-[10px]">Treasurer:</span>
-                                        <span class="text-white font-mono text-[10px] ml-1">maria_sk</span>
-                                    </div>
-                                    <span class="text-[8px] bg-prosko-green text-white px-1.5 py-0.5 rounded-lg border border-white/30 font-bold">Use</span>
-                                </button>
-                            </div>
-                        </div>
-
+                    <div class="bg-slate-200/80 p-1 rounded-xl flex gap-1 text-[11px] font-bold">
+                        <button id="tab-login-btn" onclick="switchAuthTab('login')" class="px-2.5 py-1 rounded-lg bg-prosko-blue text-white shadow-sm transition">Login</button>
+                        <button id="tab-register-btn" onclick="switchAuthTab('register')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">Register</button>
                     </div>
                 </div>
 
-                <div class="p-4 flex-grow flex flex-col justify-start">
-                    
-                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
-                        <div>
-                            <h3 id="form-title" class="text-sm font-extrabold text-prosko-blue">Sign In to Dashboard</h3>
-                            <p id="form-subtitle" class="text-slate-500 text-[11px] mt-0.5">Access Barangay Libjo project records.</p>
-                        </div>
-                        
-                        <div class="bg-slate-200/80 p-1 rounded-xl flex gap-1 text-[11px] font-bold">
-                            <button id="tab-login-btn" onclick="switchAuthTab('login')" class="px-2.5 py-1 rounded-lg bg-prosko-blue text-white shadow-sm transition">Login</button>
-                            <button id="tab-register-btn" onclick="switchAuthTab('register')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">Register</button>
-                        </div>
-                    </div>
-
-                    <div id="auth-alert" class="hidden mb-3 p-3 rounded-2xl text-xs flex items-start gap-2 border transition fade-in">
-                        <i id="auth-alert-icon" class="fa-solid text-xs mt-0.5"></i>
-                        <div id="auth-alert-message" class="font-medium text-[11px]"></div>
-                    </div>
-
-                    <!-- LOGIN FORM -->
-                    <form id="login-form" onsubmit="handleLogin(event)" class="space-y-3 fade-in">
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Username or Email</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-prosko-blue">
-                                    <i class="fa-solid fa-user text-xs"></i>
-                                </span>
-                                <input type="text" id="login-username" class="w-full pl-8 pr-4 py-2.5 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs text-slate-800 font-medium" placeholder="Enter username (e.g., admin_libjo)">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Password</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-prosko-blue">
-                                    <i class="fa-solid fa-lock text-xs"></i>
-                                </span>
-                                <input type="password" id="login-password" class="w-full pl-8 pr-9 py-2.5 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs text-slate-800 font-medium" placeholder="Enter password">
-                                <button type="button" onclick="togglePasswordVisibility('login-password', 'login-pass-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-prosko-blue">
-                                    <i id="login-pass-icon" class="fa-solid fa-eye text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between text-xs pt-0.5">
-                            <label class="flex items-center gap-2 cursor-pointer text-slate-600 text-[10px] font-medium">
-                                <input type="checkbox" id="remember-me" class="rounded border-slate-300 text-prosko-blue focus:ring-prosko-blue">
-                                Remember credentials
-                            </label>
-                            <a href="#" onclick="openRecoveryModal(); return false;" class="text-prosko-red font-bold text-[10px] hover:underline flex items-center gap-1">
-                                <i class="fa-solid fa-key text-[9px]"></i> Forgot password?
-                            </a>
-                        </div>
-
-                        <button type="submit" id="login-submit-btn" class="w-full bg-prosko-blue hover:bg-prosko-blueDark active:scale-[0.99] text-white font-extrabold py-3 rounded-xl shadow-lg shadow-prosko-blue/25 transition duration-150 flex items-center justify-center gap-2 text-xs uppercase tracking-wider mt-1">
-                            <span>Sign In to System</span>
-                            <i class="fa-solid fa-arrow-right text-xs"></i>
-                        </button>
-                    </form>
-
-                    <!-- REGISTER FORM -->
-                    <form id="register-form" onsubmit="handleRegister(event)" class="space-y-2.5 hidden fade-in">
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Full Name</label>
-                            <input type="text" id="reg-fullname" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="Ana Reyes" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Username</label>
-                            <input type="text" id="reg-username" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="sec_libjo" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Email Address</label>
-                            <input type="email" id="reg-email" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="ana@libjo.ph" required>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">SK Official Role</label>
-                            <select id="reg-role" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs bg-white font-medium">
-                                <option value="SK Secretary">SK Secretary</option>
-                                <option value="SK Treasurer">SK Treasurer</option>
-                                <option value="SK Committee Head">SK Committee Head</option>
-                                <option value="SK Chairperson">SK Chairperson</option>
-                                <option value="Admin">Admin / System Overseer</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Password</label>
-                            <div class="relative">
-                                <input type="password" id="reg-password" onkeyup="checkPasswordStrength()" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs pr-8" placeholder="••••••••" required>
-                                <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-pass-icon')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400">
-                                    <i id="reg-pass-icon" class="fa-solid fa-eye text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Confirm Password</label>
-                            <div class="relative">
-                                <input type="password" id="reg-confirm-password" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs pr-8" placeholder="••••••••" required>
-                                <button type="button" onclick="togglePasswordVisibility('reg-confirm-password', 'reg-confirm-pass-icon')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400">
-                                    <i id="reg-confirm-pass-icon" class="fa-solid fa-eye text-xs"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Live Password Criteria Validation Box -->
-                        <div class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] space-y-1 font-medium text-slate-500">
-                            <div id="rule-length" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Min. 8 characters</div>
-                            <div id="rule-upper" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Uppercase letter (A-Z)</div>
-                            <div id="rule-lower" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Lowercase letter (a-z)</div>
-                            <div id="rule-number" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Number (0-9)</div>
-                            <div id="rule-special" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Special character (!@#$%^&*)</div>
-                        </div>
-
-                        <button type="submit" id="reg-submit-btn" class="w-full bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold py-2.5 rounded-xl shadow-md transition duration-150 mt-1 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
-                            <span>Create Account</span>
-                            <i class="fa-solid fa-user-plus text-xs"></i>
-                        </button>
-                    </form>
-
-                    <div class="mt-auto pt-3 text-center text-[10px] text-slate-400 flex items-center justify-between border-t border-slate-200">
-                        <span>SK Libjo PMES &copy; 2026</span>
-                        <span class="text-prosko-green font-bold"><i class="fa-solid fa-circle-check"></i> Live System</span>
-                    </div>  
-
+                <div id="auth-alert" class="hidden mb-3 p-3 rounded-2xl text-xs flex items-start gap-2 border transition fade-in">
+                    <i id="auth-alert-icon" class="fa-solid text-xs mt-0.5"></i>
+                    <div id="auth-alert-message" class="font-medium text-[11px]"></div>
                 </div>
-            </section>
 
-
-            <!-- ==================================================== -->
-            <!-- 2. MAIN DASHBOARD SECTION (POST-LOGIN MOBILE VIEW)   -->
-            <!-- ==================================================== -->
-            <section id="dashboard-screen" class="hidden min-h-full bg-slate-100 flex flex-col pb-20">
-                
-                <!-- Dynamic Header Bar -->
-                <header class="bg-prosko-blue text-white shadow-md sticky top-0 z-30 px-4 py-3 flex items-center justify-between border-b-2 border-prosko-yellow">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 bg-white border border-prosko-yellow rounded-xl flex items-center justify-center font-black text-prosko-blue text-sm shadow-inner">
-                            P
-                        </div>
-                        <div>
-                            <h2 class="font-black text-sm tracking-tight leading-none text-white">PROSKO</h2>
-                            <p class="text-[9px] text-prosko-yellow font-extrabold uppercase tracking-wider">SK Barangay Libjo</p>
+                <!-- LOGIN FORM -->
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-3 fade-in">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Username or Email</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-prosko-blue">
+                                <i class="fa-solid fa-user text-xs"></i>
+                            </span>
+                            <input type="text" id="login-username" class="w-full pl-8 pr-4 py-2.5 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs text-slate-800 font-medium" placeholder="Enter username (e.g., admin_libjo)">
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-prosko-red text-white font-bold flex items-center justify-center text-xs border border-white/40 shadow-sm" id="user-avatar">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-prosko-blue">
+                                <i class="fa-solid fa-lock text-xs"></i>
+                            </span>
+                            <input type="password" id="login-password" class="w-full pl-8 pr-9 py-2.5 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs text-slate-800 font-medium" placeholder="Enter password">
+                            <button type="button" onclick="togglePasswordVisibility('login-password', 'login-pass-icon')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-prosko-blue">
+                                <i id="login-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs pt-0.5">
+                        <label class="flex items-center gap-2 cursor-pointer text-slate-600 text-[10px] font-medium">
+                            <input type="checkbox" id="remember-me" class="rounded border-slate-300 text-prosko-blue focus:ring-prosko-blue">
+                            Remember credentials
+                        </label>
+                        <a href="#" onclick="openRecoveryModal(); return false;" class="text-prosko-red font-bold text-[10px] hover:underline flex items-center gap-1">
+                            <i class="fa-solid fa-key text-[9px]"></i> Forgot password?
+                        </a>
+                    </div>
+
+                    <button type="submit" id="login-submit-btn" class="w-full bg-prosko-blue hover:bg-prosko-blueDark active:scale-[0.99] text-white font-extrabold py-3 rounded-xl shadow-lg shadow-prosko-blue/25 transition duration-150 flex items-center justify-center gap-2 text-xs uppercase tracking-wider mt-1">
+                        <span>Sign In to System</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </form>
+
+                <!-- REGISTER FORM -->
+                <form id="register-form" onsubmit="handleRegister(event)" class="space-y-2.5 hidden fade-in">
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Full Name</label>
+                        <input type="text" id="reg-fullname" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="Ana Reyes" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Username</label>
+                        <input type="text" id="reg-username" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="sec_libjo" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Email Address</label>
+                        <input type="email" id="reg-email" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs" placeholder="ana@libjo.ph" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">SK Official Role</label>
+                        <select id="reg-role" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs bg-white font-medium">
+                            <option value="SK Secretary">SK Secretary</option>
+                            <option value="SK Treasurer">SK Treasurer</option>
+                            <option value="SK Committee Head">SK Committee Head</option>
+                            <option value="SK Chairperson">SK Chairperson (Web Admin)</option>
+                            <option value="Admin">Admin / System Overseer</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Password</label>
+                        <div class="relative">
+                            <input type="password" id="reg-password" onkeyup="checkPasswordStrength()" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs pr-8" placeholder="••••••••" required>
+                            <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-pass-icon')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400">
+                                <i id="reg-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Confirm Password</label>
+                        <div class="relative">
+                            <input type="password" id="reg-confirm-password" class="w-full px-3 py-2 rounded-xl border-1.5 border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-prosko-blue text-xs pr-8" placeholder="••••••••" required>
+                            <button type="button" onclick="togglePasswordVisibility('reg-confirm-password', 'reg-confirm-pass-icon')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400">
+                                <i id="reg-confirm-pass-icon" class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Live Password Criteria Validation Box -->
+                    <div class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-[10px] space-y-1 font-medium text-slate-500">
+                        <div id="rule-length" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Min. 8 characters</div>
+                        <div id="rule-upper" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Uppercase letter (A-Z)</div>
+                        <div id="rule-lower" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Lowercase letter (a-z)</div>
+                        <div id="rule-number" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Number (0-9)</div>
+                        <div id="rule-special" class="flex items-center gap-1.5"><i class="fa-solid fa-circle-xmark text-red-500"></i> Special character (!@#$%^&*)</div>
+                    </div>
+
+                    <button type="submit" id="reg-submit-btn" class="w-full bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold py-2.5 rounded-xl shadow-md transition duration-150 mt-1 flex items-center justify-center gap-2 text-xs uppercase tracking-wider">
+                        <span>Create Account</span>
+                        <i class="fa-solid fa-user-plus text-xs"></i>
+                    </button>
+                </form>
+
+                <div class="mt-auto pt-3 text-center text-[10px] text-slate-400 flex items-center justify-between border-t border-slate-200">
+                    <span>SK Libjo PMES &copy; 2026</span>
+                    <span class="text-prosko-green font-bold"><i class="fa-solid fa-circle-check"></i> Live System</span>
+                </div>  
+            </div>
+        </section>
+
+
+        <!-- ==================================================== -->
+        <!-- 2. WEB DESKTOP ADMIN UI (CHAIRPERSON / ADMIN ONLY)    -->
+        <!-- ==================================================== -->
+        <div id="web-admin-dashboard" class="hidden w-full flex-grow flex min-h-screen bg-slate-100">
+            <!-- Sidebar Navigation -->
+            <aside class="w-64 bg-prosko-blueDark text-white flex flex-col flex-shrink-0 shadow-2xl border-r border-slate-800">
+                <div class="p-5 border-b border-white/10 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-white border-2 border-prosko-yellow rounded-xl flex items-center justify-center shadow-lg">
+                        <span class="font-black text-prosko-blue text-lg">P</span>
+                    </div>
+                    <div>
+                        <h2 class="font-black text-base tracking-tight text-white leading-none">PROSKO ADMIN</h2>
+                        <p class="text-[10px] text-prosko-yellow font-bold uppercase tracking-widest mt-1">SK Barangay Libjo</p>
+                    </div>
+                </div>
+
+                <nav class="p-4 space-y-1.5 flex-grow text-xs font-semibold">
+                    <div class="px-3 py-1.5 text-[10px] font-black uppercase text-slate-400 tracking-wider">Management Views</div>
+                    
+                    <button onclick="switchDashboardTab('projects')" id="admin-nav-projects" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-white bg-prosko-blue hover:bg-prosko-blue transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-folder-open w-4 text-center text-sm"></i>
+                            <span>Youth Projects</span>
+                        </div>
+                        <span id="admin-badge-pending-proj" class="px-2 py-0.5 rounded-full bg-prosko-yellow text-prosko-blue font-black text-[10px]">0</span>
+                    </button>
+
+                    <button onclick="switchDashboardTab('sec-reports')" id="admin-nav-sec-reports" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-white/10 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-award w-4 text-center text-sm"></i>
+                            <span>Accomplishment Reports</span>
+                        </div>
+                        <span id="admin-badge-pending-rep" class="px-2 py-0.5 rounded-full bg-purple-500 text-white font-black text-[10px]">0</span>
+                    </button>
+
+                    <button onclick="switchDashboardTab('sec-docs')" id="admin-nav-sec-docs" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-white/10 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-folder-tree w-4 text-center text-sm"></i>
+                            <span>Barangay Documents</span>
+                        </div>
+                    </button>
+
+                    <button onclick="switchDashboardTab('treasurer-budget')" id="admin-nav-treasurer-budget" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-white/10 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-vault w-4 text-center text-sm"></i>
+                            <span>Treasury & Budget</span>
+                        </div>
+                    </button>
+
+                    <button onclick="switchDashboardTab('analytics')" id="admin-nav-analytics" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-white/10 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-triangle-exclamation w-4 text-center text-sm"></i>
+                            <span>Incident Logs</span>
+                        </div>
+                    </button>
+
+                    <button onclick="switchDashboardTab('log-trail')" id="admin-nav-log-trail" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-white/10 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-clock-rotate-left w-4 text-center text-sm"></i>
+                            <span>System Audit Trail</span>
+                        </div>
+                    </button>
+
+                    <button onclick="switchDashboardTab('ai')" id="admin-nav-ai" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-white/10 transition">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-brain w-4 text-center text-sm"></i>
+                            <span>AI Compliance Index</span>
+                        </div>
+                    </button>
+                </nav>
+
+                <div class="p-4 border-t border-white/10 bg-black/20">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-9 h-9 rounded-xl bg-prosko-red text-white font-black flex items-center justify-center text-xs shadow-md border border-white/20">
                                 CP
                             </div>
-                            <div class="text-left hidden sm:block">
-                                <p id="dash-user-name" class="text-xs font-bold text-white leading-none">Admin Chair</p>
-                                <p id="dash-user-role" class="text-[9px] text-prosko-yellow mt-0.5">SK Chairperson</p>
+                            <div>
+                                <p id="web-admin-name" class="text-xs font-bold text-white leading-tight">Admin Chair</p>
+                                <p id="web-admin-role" class="text-[10px] text-prosko-yellow font-semibold">SK Chairperson</p>
                             </div>
                         </div>
-
-                        <!-- Action Button inside Header -->
-                        <button type="button" id="admin-add-proj-btn" onclick="openNewProjectModal()" class="w-8 h-8 rounded-xl bg-prosko-yellow hover:bg-prosko-yellowDark text-prosko-blueDark border border-white/40 flex items-center justify-center text-xs font-black transition shadow-sm" title="New Action">
-                            <i class="fa-solid fa-plus"></i>
+                        <button onclick="openLogoutModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-prosko-red text-white flex items-center justify-center transition" title="Sign Out">
+                            <i class="fa-solid fa-right-from-bracket text-xs"></i>
                         </button>
+                    </div>
+                </div>
+            </aside>
 
-                        <button type="button" onclick="openLogoutModal()" class="w-8 h-8 rounded-xl bg-prosko-red/80 hover:bg-prosko-red text-white border border-white/30 flex items-center justify-center text-xs transition">
-                            <i class="fa-solid fa-right-from-bracket"></i>
+            <!-- Main Desktop Content View Area -->
+            <main class="flex-grow flex flex-col overflow-y-auto custom-scroll">
+                <!-- Web Admin Topbar -->
+                <header class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+                    <div>
+                        <h1 id="web-topbar-title" class="text-lg font-black text-prosko-blue">Executive Overview Dashboard</h1>
+                        <p class="text-xs text-slate-500 font-medium">Monitoring and evaluation portal for SK Barangay Libjo projects</p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <button onclick="openNewProjectModal()" class="px-4 py-2 bg-prosko-blue hover:bg-prosko-blueDark text-white rounded-xl text-xs font-black shadow-md flex items-center gap-2 transition active:scale-95">
+                            <i class="fa-solid fa-plus"></i> New Youth Project
+                        </button>
+                        <button onclick="openNewDocModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-extrabold border flex items-center gap-2 transition">
+                            <i class="fa-solid fa-upload"></i> Upload Document
                         </button>
                     </div>
                 </header>
 
-                <div class="p-4 space-y-3.5 fade-in">
-                    
-                    <!-- Welcome Banner Card -->
-                    <div class="bg-prosko-gradient rounded-2xl p-4 text-white shadow-md relative overflow-hidden border-l-4 border-prosko-yellow">
-                        <div class="relative z-10">
-                            <div class="flex justify-between items-start">
-                                <span id="session-badge" class="px-2.5 py-0.5 bg-prosko-green text-white text-[10px] font-extrabold rounded-full inline-block mb-1.5 shadow-sm">
-                                    <i class="fa-solid fa-crown text-[10px] mr-1"></i> Chairperson Executive Dashboard
-                                </span>
+                <div class="p-8 space-y-6">
+                    <!-- Web Admin Metric Cards (4 Columns Wide) -->
+                    <div id="web-metrics-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <!-- Stat Card 1 -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-prosko-blue flex justify-between items-center">
+                            <div>
+                                <p class="text-[11px] font-extrabold text-prosko-blue uppercase tracking-wider">Total Youth Budget</p>
+                                <h3 id="web-stat-total-budget" class="text-2xl font-black text-slate-900 mt-1">₱0.00</h3>
+                                <p class="text-xs text-slate-500 font-medium mt-1">Allocated Funds</p>
                             </div>
-                            <h1 class="text-base font-black tracking-tight">Welcome, <span id="dash-welcome-name" class="text-prosko-yellow">Admin</span>!</h1>
-                            <p id="banner-subtext" class="text-white/80 text-[11px] mt-0.5 leading-relaxed">
-                                Live Oversight Panel: Approve project proposals and member accomplishment reports submitted by the Secretary.
+                            <div class="w-12 h-12 bg-prosko-blueLight text-prosko-blue rounded-2xl flex items-center justify-center text-xl shadow-inner">
+                                <i class="fa-solid fa-peseta-sign"></i>
+                            </div>
+                        </div>
+
+                        <!-- Stat Card 2 -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-prosko-green flex justify-between items-center">
+                            <div>
+                                <p class="text-[11px] font-extrabold text-prosko-greenDark uppercase tracking-wider">Total Disbursed</p>
+                                <h3 id="web-stat-total-disbursed" class="text-2xl font-black text-slate-900 mt-1">₱0.00</h3>
+                                <p class="text-xs text-prosko-green font-extrabold mt-1">Active Balance Available</p>
+                            </div>
+                            <div class="w-12 h-12 bg-prosko-greenLight text-prosko-green flex items-center justify-center text-xl shadow-inner">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                            </div>
+                        </div>
+
+                        <!-- Stat Card 3 -->
+                        <div onclick="filterPendingApprovals()" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-amber-500 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition">
+                            <div>
+                                <p class="text-[11px] font-extrabold text-amber-700 uppercase tracking-wider">Pending Approvals</p>
+                                <h3 id="web-stat-pending-count" class="text-2xl font-black text-slate-900 mt-1">0 Items</h3>
+                                <p id="web-stat-pending-sub" class="text-xs text-amber-600 font-bold mt-1">Requires Chair Signoff</p>
+                            </div>
+                            <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center text-xl shadow-inner font-black">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+                        </div>
+
+                        <!-- Stat Card 4 -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-prosko-purple flex justify-between items-center">
+                            <div>
+                                <p class="text-[11px] font-extrabold text-prosko-purple uppercase tracking-wider">Active Projects</p>
+                                <h3 id="web-stat-projects-count" class="text-2xl font-black text-slate-900 mt-1">0</h3>
+                                <p class="text-xs text-slate-500 font-medium mt-1">Registered Records</p>
+                            </div>
+                            <div class="w-12 h-12 bg-prosko-purpleLight text-prosko-purple flex items-center justify-center text-xl shadow-inner">
+                                <i class="fa-solid fa-folder-closed"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Web Main Content Area Viewport -->
+                    <div id="web-admin-viewport">
+                        <!-- Dynamic Subviews Mounted Here for Web View -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+
+        <!-- ==================================================== -->
+        <!-- 3. MAIN DASHBOARD SECTION (POST-LOGIN MOBILE VIEW)   -->
+        <!-- ==================================================== -->
+        <section id="dashboard-screen" class="hidden min-h-full bg-slate-100 flex flex-col pb-20 overflow-y-auto custom-scroll">
+            
+            <!-- Mobile Dynamic Header Bar -->
+            <header class="bg-prosko-blue text-white shadow-md sticky top-0 z-30 px-4 py-3 flex items-center justify-between border-b-2 border-prosko-yellow">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 bg-white border border-prosko-yellow rounded-xl flex items-center justify-center font-black text-prosko-blue text-sm shadow-inner">
+                        P
+                    </div>
+                    <div>
+                        <h2 class="font-black text-sm tracking-tight leading-none text-white">PROSKO</h2>
+                        <p class="text-[9px] text-prosko-yellow font-extrabold uppercase tracking-wider">SK Barangay Libjo</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-prosko-red text-white font-bold flex items-center justify-center text-xs border border-white/40 shadow-sm" id="user-avatar">
+                            CP
+                        </div>
+                        <div class="text-left hidden sm:block">
+                            <p id="dash-user-name" class="text-xs font-bold text-white leading-none">Officer</p>
+                            <p id="dash-user-role" class="text-[9px] text-prosko-yellow mt-0.5">SK Official</p>
+                        </div>
+                    </div>
+
+                    <button type="button" id="admin-add-proj-btn" onclick="openNewProjectModal()" class="w-8 h-8 rounded-xl bg-prosko-yellow hover:bg-prosko-yellowDark text-prosko-blueDark border border-white/40 flex items-center justify-center text-xs font-black transition shadow-sm" title="New Action">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+
+                    <button type="button" onclick="openLogoutModal()" class="w-8 h-8 rounded-xl bg-prosko-red/80 hover:bg-prosko-red text-white border border-white/30 flex items-center justify-center text-xs transition">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-4 space-y-3.5 fade-in">
+                
+                <!-- Welcome Banner Card -->
+                <div class="bg-prosko-gradient rounded-2xl p-4 text-white shadow-md relative overflow-hidden border-l-4 border-prosko-yellow">
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start">
+                            <span id="session-badge" class="px-2.5 py-0.5 bg-prosko-green text-white text-[10px] font-extrabold rounded-full inline-block mb-1.5 shadow-sm">
+                                <i class="fa-solid fa-crown text-[10px] mr-1"></i> SK Official Access
+                            </span>
+                        </div>
+                        <h1 class="text-base font-black tracking-tight">Welcome, <span id="dash-welcome-name" class="text-prosko-yellow">Officer</span>!</h1>
+                        <p id="banner-subtext" class="text-white/80 text-[11px] mt-0.5 leading-relaxed">
+                            Live Monitoring Portal for Sangguniang Kabataan of Barangay Libjo.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Metric Widgets Grid -->
+                <div id="metrics-widget-grid" class="grid grid-cols-2 gap-3">
+                    <!-- Populated Dynamically based on role -->
+                </div>
+
+                <!-- Dynamic Navigation Sub-Views Mobile Container -->
+                <div id="mobile-subviews-container" class="space-y-3">
+                    <!-- Dynamic Subviews Rendered Here for Mobile Shell View -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================================================== -->
+        <!-- SHARED SUBVIEWS TEMPLATES (PROJECTS, REPORTS, DOCS, ETC) -->
+        <!-- ==================================================== -->
+        <div id="subviews-master-store" class="hidden">
+            
+            <!-- VIEW 1: PROJECTS LISTING & PENDING APPROVALS -->
+            <div id="subview-projects" class="space-y-4">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">SK Projects & Proposals</h3>
+                            <span id="showing-count" class="text-[10px] bg-slate-100 text-slate-600 px-2.5 py-0.5 rounded-full font-bold border">0 Projects</span>
+                        </div>
+
+                        <!-- Search Input & Status Filter -->
+                        <div class="flex items-center gap-2 w-full md:w-auto">
+                            <div class="relative flex-grow md:w-64">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-prosko-blue text-xs"></i>
+                                <input type="text" id="project-search" oninput="filterProjects()" placeholder="Search project name..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-prosko-blue text-slate-800 font-medium">
+                            </div>
+                            <select id="status-filter" onchange="filterProjects()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-prosko-blue">
+                                <option value="ALL">All Status</option>
+                                <option value="Pending Admin Approval">Pending Approval</option>
+                                <option value="Approved">Approved / In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Proposed">Proposed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Cards / Table Container for Projects -->
+                    <div id="projects-list-container" class="space-y-3 pt-1">
+                        <!-- Dynamic Cards Generated by JavaScript -->
+                    </div>
+
+                    <!-- Empty Search Result Container -->
+                    <div id="empty-projects-state" class="hidden p-8 text-center text-slate-400">
+                        <i class="fa-solid fa-folder-open text-4xl mb-2 text-slate-300"></i>
+                        <p class="font-bold text-xs text-slate-600">No matching projects found</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 2: ACCOMPLISHMENT REPORTS -->
+            <div id="subview-sec-reports" class="space-y-4 fade-in">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-prosko-purpleLight text-prosko-purple flex items-center justify-center text-sm shadow-sm">
+                                <i class="fa-solid fa-award"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">SK Accomplishment Reports</h3>
+                                <p class="text-[10px] text-slate-500">Member filings & Chairperson verification</p>
+                            </div>
+                        </div>
+                        <button onclick="openNewReportModal()" class="px-3 py-1.5 bg-prosko-purple hover:bg-purple-800 text-white text-xs font-extrabold rounded-xl shadow-sm transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> Submit Report
+                        </button>
+                    </div>
+
+                    <!-- Reports List -->
+                    <div id="accomplishment-reports-list" class="space-y-3 pt-1">
+                        <!-- Dynamic Reports -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: BRGY DOCUMENTS & RESOLUTIONS -->
+            <div id="subview-sec-docs" class="space-y-4 fade-in">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-sm shadow-sm">
+                                <i class="fa-solid fa-folder-tree"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Barangay & SK Documents</h3>
+                                <p class="text-[10px] text-slate-500">Resolutions, Minutes & Executive Orders</p>
+                            </div>
+                        </div>
+                        <button onclick="openNewDocModal()" class="px-3 py-1.5 bg-prosko-blue hover:bg-prosko-blueDark text-white text-xs font-extrabold rounded-xl shadow-sm transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-upload"></i> Upload Doc
+                        </button>
+                    </div>
+
+                    <!-- Documents List -->
+                    <div id="brgy-documents-list" class="space-y-3 pt-1">
+                        <!-- Dynamic Documents -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 4: BUDGET LEDGER & DISBURSEMENTS (TREASURER) -->
+            <div id="subview-treasurer-budget" class="space-y-4">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-prosko-greenLight text-prosko-green flex items-center justify-center text-sm shadow-sm">
+                                <i class="fa-solid fa-file-invoice-dollar"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Disbursement & Budget Ledger</h3>
+                                <p class="text-[10px] text-slate-500">Record fund releases and track project expenditures</p>
+                            </div>
+                        </div>
+                        <button onclick="openDisbursementModal()" class="px-3 py-1.5 bg-prosko-green hover:bg-prosko-greenDark text-white text-xs font-extrabold rounded-xl shadow-sm transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> Release Fund
+                        </button>
+                    </div>
+
+                    <!-- Budget Ledger Cards -->
+                    <div id="treasurer-budget-cards" class="space-y-3 pt-1">
+                        <!-- Dynamic Treasurer Cards -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 5: AI ASSESSMENT ENGINE -->
+            <div id="subview-ai" class="space-y-4 fade-in">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
+                    <div class="flex items-center gap-2.5 border-b border-slate-100 pb-3">
+                        <div class="w-8 h-8 rounded-xl bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-sm shadow-sm">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">AI Evaluation Engine</h3>
+                            <p class="text-[10px] text-slate-500">Real-time Project Risk & Engagement Analytics</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-slate-800 text-xs">SK Compliance Index</span>
+                                <span class="text-prosko-green font-black text-xs">96% High</span>
+                            </div>
+                            <p class="text-[11px] text-slate-600 leading-relaxed">
+                                Project allocations fully adhere to Youth Development Plan guidelines for Barangay Libjo.
+                            </p>
+                        </div>
+
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-slate-800 text-xs">Report Approval Audit</span>
+                                <span class="text-prosko-purple font-black text-xs">Pending Sign-off</span>
+                            </div>
+                            <p class="text-[11px] text-slate-600 leading-relaxed">
+                                Accomplishment reports filed by Secretary require Chairperson verification before final archiving.
                             </p>
                         </div>
                     </div>
-
-                    <!-- Metric Widgets Grid -->
-                    <div id="metrics-widget-grid" class="grid grid-cols-2 gap-3">
-                        <!-- Populated Dynamically based on role -->
-                    </div>
-
-                    <!-- Dynamic Navigation Sub-Views Container -->
-                    
-                    <!-- CHAIRPERSON VIEW 1: PROJECTS LISTING & PENDING APPROVALS -->
-                    <div id="subview-projects" class="space-y-3">
-                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
-                            <div class="flex flex-col gap-2">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">SK Projects & Approvals</h3>
-                                    <div class="flex gap-1 items-center">
-                                        <button id="add-proj-btn-inline" onclick="openNewProjectModal()" class="text-[10px] bg-prosko-blue text-white px-2 py-0.5 rounded-md font-bold hover:bg-prosko-blueDark flex items-center gap-1">
-                                            <i class="fa-solid fa-plus"></i> Add Project
-                                        </button>
-                                        <span id="showing-count" class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-bold border">0 Projects</span>
-                                    </div>
-                                </div>
-
-                                <!-- Search Input & Status Filter -->
-                                <div class="grid grid-cols-12 gap-2">
-                                    <div class="col-span-7 relative">
-                                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-prosko-blue text-xs"></i>
-                                        <input type="text" id="project-search" oninput="filterProjects()" placeholder="Search..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-prosko-blue text-slate-800">
-                                    </div>
-                                    <div class="col-span-5">
-                                        <select id="status-filter" onchange="filterProjects()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-2 py-2 text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-prosko-blue">
-                                            <option value="ALL">All Status</option>
-                                            <option value="Pending Admin Approval">Pending Approval</option>
-                                            <option value="Approved">Approved / In Progress</option>
-                                            <option value="Completed">Completed</option>
-                                            <option value="Proposed">Proposed</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Mobile Cards Container for Projects -->
-                            <div id="projects-list-container" class="space-y-2.5 pt-1">
-                                <!-- Dynamic Cards Generated by JavaScript -->
-                            </div>
-
-                            <!-- Empty Search Result Container -->
-                            <div id="empty-projects-state" class="hidden p-6 text-center text-slate-400">
-                                <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-300"></i>
-                                <p class="font-bold text-xs text-slate-600">No matching projects found</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SECRETARY / ADMIN VIEW 2: ACCOMPLISHMENT REPORTS -->
-                    <div id="subview-sec-reports" class="hidden space-y-3 fade-in">
-                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-lg bg-prosko-purpleLight text-prosko-purple flex items-center justify-center text-xs">
-                                        <i class="fa-solid fa-award"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">SK Accomplishment Reports</h3>
-                                        <p class="text-[10px] text-slate-500">Member filings & Admin verification</p>
-                                    </div>
-                                </div>
-                                <button onclick="openNewReportModal()" class="px-2.5 py-1 bg-prosko-purple hover:bg-purple-800 text-white text-[10px] font-extrabold rounded-lg shadow-sm transition flex items-center gap-1">
-                                    <i class="fa-solid fa-plus"></i> Submit Report
-                                </button>
-                            </div>
-
-                            <!-- List Container -->
-                            <div id="accomplishment-reports-list" class="space-y-2.5 pt-1">
-                                <!-- Dynamic Reports -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SECRETARY / ADMIN VIEW 3: BRGY DOCUMENTS & RESOLUTIONS -->
-                    <div id="subview-sec-docs" class="hidden space-y-3 fade-in">
-                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs">
-                                        <i class="fa-solid fa-folder-tree"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Barangay & SK Documents</h3>
-                                        <p class="text-[10px] text-slate-500">Resolutions, Minutes & Ordinances</p>
-                                    </div>
-                                </div>
-                                <button onclick="openNewDocModal()" class="px-2.5 py-1 bg-prosko-blue hover:bg-prosko-blueDark text-white text-[10px] font-extrabold rounded-lg shadow-sm transition flex items-center gap-1">
-                                    <i class="fa-solid fa-upload"></i> Upload Doc
-                                </button>
-                            </div>
-
-                            <!-- Documents List -->
-                            <div id="brgy-documents-list" class="space-y-2.5 pt-1">
-                                <!-- Dynamic Documents -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TREASURER VIEW: BUDGET LEDGER & DISBURSEMENTS -->
-                    <div id="subview-treasurer-budget" class="hidden space-y-3">
-                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-lg bg-prosko-greenLight text-prosko-green flex items-center justify-center text-xs">
-                                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Record Disbursement</h3>
-                                        <p class="text-[10px] text-slate-500">Log project fund release</p>
-                                    </div>
-                                </div>
-                                <button onclick="openDisbursementModal()" class="px-2.5 py-1 bg-prosko-green hover:bg-prosko-greenDark text-white text-[10px] font-extrabold rounded-lg shadow-sm transition flex items-center gap-1">
-                                    <i class="fa-solid fa-plus"></i> Release Fund
-                                </button>
-                            </div>
-
-                            <!-- Budget Ledger List -->
-                            <div id="treasurer-budget-cards" class="space-y-2.5 pt-1">
-                                <!-- Dynamic Treasurer Cards -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- SHARED VIEW: AI ASSESSMENT SUBVIEW -->
-                    <div id="subview-ai" class="hidden space-y-3 fade-in">
-                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
-                            <div class="flex items-center gap-2 border-b border-slate-100 pb-2">
-                                <div class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs">
-                                    <i class="fa-solid fa-brain"></i>
-                                </div>
-                                <div>
-                                    <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">AI Evaluation Engine</h3>
-                                    <p class="text-[10px] text-slate-500">Real-time Project Risk & Engagement Metrics</p>
-                                </div>
-                            </div>
-
-                            <div class="space-y-2.5 text-xs">
-                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                                    <div class="flex justify-between items-center mb-1">
-                                        <span class="font-bold text-slate-800 text-[11px]">SK Compliance Index</span>
-                                        <span class="text-prosko-green font-black text-[11px]">96% High</span>
-                                    </div>
-                                    <p class="text-[10px] text-slate-600 leading-normal">
-                                        Project allocations fully adhere to Youth Development Plan guidelines for Barangay Libjo.
-                                    </p>
-                                </div>
-
-                                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                                    <div class="flex justify-between items-center mb-1">
-                                        <span class="font-bold text-slate-800 text-[11px]">Report Approval Audit</span>
-                                        <span class="text-prosko-purple font-black text-[11px]">Pending Admin Sign-off</span>
-                                    </div>
-                                    <p class="text-[10px] text-slate-600 leading-normal">
-                                        Accomplishment reports filed by Secretary require Chairperson verification before final archiving.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- CHAIRPERSON VIEW: INCIDENT MAPPER -->
-                    <div id="subview-analytics" class="hidden space-y-3 fade-in">
-                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-lg bg-prosko-redLight text-prosko-red flex items-center justify-center text-xs">
-                                        <i class="fa-solid fa-triangle-exclamation"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Incident Log Mapper</h3>
-                                        <p class="text-[10px] text-slate-500">Barangay Libjo Community Logs</p>
-                                    </div>
-                                </div>
-                                <button onclick="openNewIncidentModal()" class="px-2 py-1 bg-prosko-red text-white text-[10px] font-bold rounded-lg hover:bg-prosko-redDark">
-                                    <i class="fa-solid fa-plus mr-0.5"></i> Log Incident
-                                </button>
-                            </div>
-
-                            <!-- Incident Mobile List -->
-                            <div id="incidents-mobile-list" class="space-y-2">
-                                <!-- Generated Dynamically -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ADMIN / SUPER ADMIN VIEW: LOG TRAIL MODULE -->
-                    <div id="subview-log-trail" class="hidden space-y-3 fade-in">
-                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3.5 space-y-3">
-                            <div class="flex justify-between items-center border-b border-slate-100 pb-2">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs">
-                                        <i class="fa-solid fa-clock-rotate-left"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">System Audit Log Trail</h3>
-                                        <p class="text-[10px] text-slate-500">Restricted Admin Oversight Panel</p>
-                                    </div>
-                                </div>
-                                <button type="button" onclick="fetchLogTrails()" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-prosko-blue text-[10px] font-bold rounded-lg border transition flex items-center gap-1">
-                                    <i class="fa-solid fa-arrows-rotate"></i> Refresh
-                                </button>
-                            </div>
-
-                            <!-- Filter Bar -->
-                            <div class="relative">
-                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-prosko-blue text-xs"></i>
-                                <input type="text" id="log-search" oninput="filterLogs()" placeholder="Search action, user, or details..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-prosko-blue text-slate-800">
-                            </div>
-
-                            <!-- Log Trail Feed List -->
-                            <div id="log-trail-list" class="space-y-2 max-h-[420px] overflow-y-auto custom-scroll pr-1">
-                                <!-- Dynamic Logs Rendered Here -->
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </section>
+            </div>
+
+            <!-- VIEW 6: INCIDENT MAPPER -->
+            <div id="subview-analytics" class="space-y-4 fade-in">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-prosko-redLight text-prosko-red flex items-center justify-center text-sm shadow-sm">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">Incident Log Mapper</h3>
+                                <p class="text-[10px] text-slate-500">Barangay Libjo Community Logs</p>
+                            </div>
+                        </div>
+                        <button onclick="openNewIncidentModal()" class="px-3 py-1.5 bg-prosko-red text-white text-xs font-extrabold rounded-xl hover:bg-prosko-redDark transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> Log Incident
+                        </button>
+                    </div>
+
+                    <!-- Incident List -->
+                    <div id="incidents-mobile-list" class="space-y-2.5">
+                        <!-- Generated Dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW 7: SYSTEM AUDIT LOG TRAIL -->
+            <div id="subview-log-trail" class="space-y-4 fade-in">
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-sm shadow-sm">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs font-black text-prosko-blue uppercase tracking-wider">System Audit Log Trail</h3>
+                                <p class="text-[10px] text-slate-500">Realtime Activity Audit Trail</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="fetchLogTrails()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-prosko-blue text-xs font-extrabold rounded-xl border transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                        </button>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-prosko-blue text-xs"></i>
+                        <input type="text" id="log-search" oninput="filterLogs()" placeholder="Search action, user, or details..." class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-prosko-blue text-slate-800">
+                    </div>
+
+                    <!-- Log Trail Feed List -->
+                    <div id="log-trail-list" class="space-y-2 max-h-[460px] overflow-y-auto custom-scroll pr-1">
+                        <!-- Dynamic Logs Rendered Here -->
+                    </div>
+                </div>
+            </div>
 
         </div>
 
@@ -640,9 +818,9 @@
         </nav>
 
         <!-- ==================================================== -->
-        <!-- 3. IN-APP CUSTOM CONFIRMATION MODAL                  -->
+        <!-- SYSTEM MODALS (CONFIRMATION, OTP, PROJECTS, ETC)     -->
         <!-- ==================================================== -->
-        <div id="confirm-dialog-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity fade-in">
+        <div id="confirm-dialog-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity fade-in">
             <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl border-t-4 border-prosko-red text-center space-y-3">
                 <div class="w-12 h-12 bg-prosko-redLight text-prosko-red rounded-2xl flex items-center justify-center text-xl mx-auto">
                     <i id="confirm-modal-icon" class="fa-solid fa-triangle-exclamation"></i>
@@ -658,14 +836,10 @@
             </div>
         </div>
 
-        <!-- ==================================================== -->
-        <!-- ACCOUNT RECOVERY OTP MODAL (NEW)                     -->
-        <!-- ==================================================== -->
-        <div id="recovery-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
-            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[92%] overflow-y-auto">
-                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
-
-                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+        <!-- ACCOUNT RECOVERY OTP MODAL -->
+        <div id="recovery-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[92%] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-200">
                     <h3 class="text-sm font-black text-prosko-blue flex items-center gap-1.5">
                         <i class="fa-solid fa-shield-halved"></i> Account Password Recovery
                     </h3>
@@ -746,13 +920,9 @@
             </div>
         </div>
 
-        <!-- ==================================================== -->
-        <!-- 4. NEW ACCOMPLISHMENT REPORT MODAL                   -->
-        <!-- ==================================================== -->
-        <div id="report-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
-            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-purple slide-up max-h-[90%] overflow-y-auto">
-                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
-
+        <!-- NEW ACCOMPLISHMENT REPORT MODAL -->
+        <div id="report-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border-t-4 border-prosko-purple slide-up max-h-[90%] overflow-y-auto">
                 <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
                     <h3 class="text-sm font-black text-prosko-purple flex items-center gap-1.5">
                         <i class="fa-solid fa-award"></i> Submit Accomplishment Report
@@ -780,7 +950,7 @@
 
                     <div>
                         <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Date Conducted</label>
-                        <input type="text" id="rep-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-purple font-medium" placeholder="Sep 15, 2026">
+                        <input type="text" id="rep-date" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-purple font-medium" placeholder="Oct 15, 2026">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2 pt-2">
@@ -791,13 +961,9 @@
             </div>
         </div>
 
-        <!-- ==================================================== -->
-        <!-- 5. NEW BRGY DOCUMENT MODAL                           -->
-        <!-- ==================================================== -->
-        <div id="doc-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
-            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[90%] overflow-y-auto">
-                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
-
+        <!-- NEW BRGY DOCUMENT MODAL -->
+        <div id="doc-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[90%] overflow-y-auto">
                 <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
                     <h3 class="text-sm font-black text-prosko-blue flex items-center gap-1.5">
                         <i class="fa-solid fa-file-arrow-up"></i> Upload Barangay / SK Document
@@ -837,13 +1003,9 @@
             </div>
         </div>
 
-        <!-- ==================================================== -->
-        <!-- 6. ADD DISBURSEMENT MODAL (TREASURER)                -->
-        <!-- ==================================================== -->
-        <div id="disbursement-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
-            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-green slide-up max-h-[90%] overflow-y-auto">
-                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
-
+        <!-- ADD DISBURSEMENT MODAL (TREASURER) -->
+        <div id="disbursement-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border-t-4 border-prosko-green slide-up max-h-[90%] overflow-y-auto">
                 <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
                     <h3 class="text-sm font-black text-prosko-green flex items-center gap-1.5">
                         <i class="fa-solid fa-file-invoice-dollar"></i> Record Fund Disbursement
@@ -879,13 +1041,9 @@
             </div>
         </div>
 
-        <!-- ==================================================== -->
-        <!-- 7. ADD / EDIT PROJECT MODAL                          -->
-        <!-- ==================================================== -->
-        <div id="project-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
-            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[90%] overflow-y-auto">
-                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
-
+        <!-- ADD / EDIT PROJECT MODAL -->
+        <div id="project-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border-t-4 border-prosko-blue slide-up max-h-[90%] overflow-y-auto">
                 <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
                     <h3 id="modal-project-title" class="text-sm font-black text-prosko-blue">Propose Youth Project</h3>
                     <button type="button" onclick="closeProjectModal()" class="text-slate-400 hover:text-slate-600">
@@ -940,13 +1098,9 @@
             </div>
         </div>
 
-        <!-- ==================================================== -->
-        <!-- 8. ADD INCIDENT LOG MODAL                            -->
-        <!-- ==================================================== -->
-        <div id="incident-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
-            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-red slide-up">
-                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
-
+        <!-- ADD INCIDENT LOG MODAL -->
+        <div id="incident-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border-t-4 border-prosko-red slide-up">
                 <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
                     <h3 class="text-sm font-black text-prosko-red">Log Community Incident</h3>
                     <button type="button" onclick="closeIncidentModal()" class="text-slate-400 hover:text-slate-600">
@@ -982,34 +1136,20 @@
             </div>
         </div>
 
-        <!-- ==================================================== -->
-        <!-- 9. LOGOUT CONFIRMATION MODAL                         -->
-        <!-- ==================================================== -->
-        <div id="logout-modal" class="hidden absolute inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end justify-center transition-opacity">
-            <div class="bg-white rounded-t-3xl w-full p-5 shadow-2xl border-t-4 border-prosko-red slide-up">
-                
-                <div class="w-10 h-1 bg-slate-300 rounded-full mx-auto mb-3"></div>
-
-                <div class="w-12 h-12 bg-prosko-redLight text-prosko-red rounded-2xl flex items-center justify-center text-xl mb-2 mx-auto">
+        <!-- LOGOUT CONFIRMATION MODAL -->
+        <div id="logout-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div class="bg-white rounded-3xl w-full max-w-xs p-5 shadow-2xl border-t-4 border-prosko-red text-center space-y-3">
+                <div class="w-12 h-12 bg-prosko-redLight text-prosko-red rounded-2xl flex items-center justify-center text-xl mx-auto">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </div>
-
-                <div class="text-center">
+                <div>
                     <h3 class="text-base font-extrabold text-slate-900">Sign Out Confirmation</h3>
-                    <p class="text-xs text-slate-600 mt-1 leading-relaxed">
-                        Are you sure you want to logout/sign out? You will need to log in again to access Barangay Libjo records.
-                    </p>
+                    <p class="text-xs text-slate-600 mt-1 leading-relaxed">Are you sure you want to log out of PROSKO?</p>
                 </div>
-
-                <div class="grid grid-cols-2 gap-3 mt-4">
-                    <button type="button" onclick="closeLogoutModal()" class="w-full py-3 px-3 rounded-xl border-1.5 border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 transition text-xs uppercase tracking-wider">
-                        Cancel
-                    </button>
-                    <button type="button" onclick="confirmLogout()" class="w-full py-3 px-3 rounded-xl bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold transition text-xs uppercase tracking-wider shadow-lg shadow-prosko-red/20">
-                        Yes, Logout
-                    </button>
+                <div class="grid grid-cols-2 gap-2 pt-2">
+                    <button type="button" onclick="closeLogoutModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
+                    <button type="button" onclick="confirmLogout()" class="py-2.5 rounded-xl bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Yes, Logout</button>
                 </div>
-
             </div>
         </div>
 
@@ -1024,7 +1164,7 @@
 
         let realtimeChannel = null;
 
-        // Demo fallback accounts
+        // Demo accounts
         const demoAccounts = {
             'admin_libjo': {
                 password: 'Von1234!',
@@ -1046,7 +1186,7 @@
             } 
         };
 
-        // Live Stores initialized empty so DB is source of truth
+        // Live Stores initialized empty
         let projects = [];
         let accomplishmentReports = [];
         let brgyDocuments = [];
@@ -1055,16 +1195,16 @@
         let activeUser = null;
         let activityLogs = [];
 
-        // OTP Recovery State variables
+        let currentActiveTab = 'projects';
+
+        // OTP Recovery State
         let generatedOtp = null;
         let recoveryTargetEmail = null;
 
-        // Helper function to generate valid unique string IDs
         function generateUniqueId(prefix) {
             return `${prefix}-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
         }
 
-        // Custom In-App Confirm Dialog Replacer
         function customConfirm(title, message, callback) {
             const modal = document.getElementById('confirm-dialog-modal');
             const titleEl = document.getElementById('confirm-modal-title');
@@ -1225,9 +1365,7 @@
             }
         }
 
-        // ====================================================
         // ACCOUNT RECOVERY OTP MODULE FUNCTIONS
-        // ====================================================
         function openRecoveryModal() {
             document.getElementById('recovery-modal').classList.remove('hidden');
             resetRecoveryStep();
@@ -1262,20 +1400,15 @@
                 sendBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Generating OTP...`;
             }
 
-            // 6-Digit OTP Generator
             generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
             recoveryTargetEmail = emailInput;
 
-            // Attempt Supabase Auth OTP or fallback
             try {
                 await supabase.auth.resetPasswordForEmail(emailInput, {
                     redirectTo: window.location.href,
                 }).catch(() => {});
-            } catch (e) {
-                console.log("Supabase reset email bypass fallback active.");
-            }
+            } catch (e) {}
 
-            // Log OTP activity for audit
             try {
                 await supabase.from('activity_logs').insert([{
                     username: emailInput,
@@ -1295,7 +1428,6 @@
                 document.getElementById('recovery-step-2').classList.remove('hidden');
                 document.getElementById('recovery-target-email').innerText = emailInput;
 
-                // Pop-up Toast hint displaying generated OTP directly for instant test/verification
                 showToast(`[OTP Code: ${generatedOtp}] (or use 123456)`, 'info');
                 console.log(`%c[SYSTEM RECOVERY OTP CODE]: ${generatedOtp}`, "color: #34A853; font-weight: bold; font-size: 14px;");
             }, 600);
@@ -1345,7 +1477,6 @@
                 return;
             }
 
-            // Universal Test Passcode '123456' OR matching generated code
             if (enteredOtp !== generatedOtp && enteredOtp !== '123456') {
                 showToast('Invalid OTP verification code.', 'error');
                 return;
@@ -1364,7 +1495,6 @@
 
             let accountFound = false;
 
-            // 1. Check & Update Demo Accounts
             for (const [userKey, account] of Object.entries(demoAccounts)) {
                 if (account.email.toLowerCase() === recoveryTargetEmail.toLowerCase()) {
                     account.password = newPassword;
@@ -1373,7 +1503,6 @@
                 }
             }
 
-            // 2. Check & Update Database Profile
             try {
                 const { data: profile } = await supabase
                     .from('profiles')
@@ -1393,9 +1522,7 @@
                     details: `Password reset successfully via OTP verification`
                 }]);
 
-            } catch (e) {
-                console.warn('DB password sync notice:', e);
-            }
+            } catch (e) {}
 
             if (submitBtn) {
                 submitBtn.disabled = false;
@@ -1434,10 +1561,9 @@
             }
         }
 
-        // READ ALL DATA FROM SUPABASE TABLES
+        // FETCH DATABASE RECORDS
         async function fetchAllDatabaseData() {
             try {
-                // 1. Projects
                 const { data: projData } = await supabase
                     .from('projects')
                     .select('*')
@@ -1457,14 +1583,12 @@
                     }));
                 }
 
-                // 2. Accomplishment Reports
                 const { data: repData } = await supabase
                     .from('accomplishment_reports')
                     .select('*')
                     .order('created_at', { ascending: false });
                 if (repData) accomplishmentReports = repData;
 
-                // 3. Barangay Documents
                 const { data: docData } = await supabase
                     .from('brgy_documents')
                     .select('*')
@@ -1476,11 +1600,10 @@
                         ref: d.ref || d.ref_no || d.reference_no,
                         title: d.title,
                         type: d.type || d.doc_type,
-                        date: d.date || (d.created_at ? new Date(d.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'Sep 17, 2026')
+                        date: d.date || (d.created_at ? new Date(d.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'Oct 20, 2026')
                     }));
                 }
 
-                // 4. Incidents
                 const { data: incData } = await supabase
                     .from('incidents')
                     .select('*')
@@ -1492,7 +1615,7 @@
                         type: i.type || i.incident_type,
                         location: i.location,
                         status: i.status,
-                        date: i.date || (i.created_at ? new Date(i.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'Sep 17, 2026')
+                        date: i.date || (i.created_at ? new Date(i.created_at).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) : 'Oct 20, 2026')
                     }));
                 }
 
@@ -1575,9 +1698,7 @@
                     details: `Registered new officer: ${fullname} (${role})`
                 }]);
 
-            } catch (err) {
-                console.warn('Registration exception handled:', err);
-            }
+            } catch (err) {}
 
             hideAlert();
             showToast('Account registered and saved to database!', 'success');
@@ -1591,108 +1712,92 @@
         }
 
         async function renderDashboard() {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('dashboard-screen').classList.remove('hidden');
-            document.getElementById('mobile-bottom-nav').classList.remove('hidden');
+            const shell = document.getElementById('main-shell');
+            const authScreen = document.getElementById('auth-screen');
+            const dashboardScreen = document.getElementById('dashboard-screen');
+            const webAdminDash = document.getElementById('web-admin-dashboard');
+            const bottomNav = document.getElementById('mobile-bottom-nav');
 
-            document.getElementById('dash-user-name').innerText = activeUser.name;
-            document.getElementById('dash-user-role').innerText = activeUser.role;
-            document.getElementById('dash-welcome-name').innerText = activeUser.name;
-            document.getElementById('user-avatar').innerText = activeUser.name.split(' ').map(n => n[0]).join('').substring(0, 2);
-
+            authScreen.classList.add('hidden');
             await fetchAllDatabaseData();
             setupRealtimeSubscriptions();
 
             const role = activeUser.role;
-            const bottomNav = document.getElementById('mobile-bottom-nav');
+            const isAdminRole = (role === 'SK Chairperson' || role === 'Admin' || role === 'Admin / System Overseer');
 
-            if (role === 'SK Secretary') {
-                bottomNav.innerHTML = `
-                    <button type="button" id="tab-btn-projects" onclick="switchDashboardTab('projects')" class="flex flex-col items-center gap-1 text-prosko-blue">
-                        <i class="fa-solid fa-file-signature text-base"></i>
-                        <span class="text-[9px] font-black">Propose Project</span>
-                    </button>
-                    <button type="button" id="tab-btn-sec-reports" onclick="switchDashboardTab('sec-reports')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-purple">
-                        <i class="fa-solid fa-award text-base"></i>
-                        <span class="text-[9px] font-semibold">Reports</span>
-                    </button>
-                    <button type="button" id="tab-btn-sec-docs" onclick="switchDashboardTab('sec-docs')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
-                        <i class="fa-solid fa-folder-tree text-base"></i>
-                        <span class="text-[9px] font-semibold">Brgy Docs</span>
-                    </button>
-                    <button type="button" onclick="openLogoutModal()" class="flex flex-col items-center gap-1 text-prosko-red hover:text-prosko-redDark">
-                        <i class="fa-solid fa-right-from-bracket text-base"></i>
-                        <span class="text-[9px] font-semibold">Logout</span>
-                    </button>
-                `;
+            if (isAdminRole) {
+                // SWITCH TO WEB DESKTOP ADMIN UI
+                shell.className = "mode-web-admin transition-all duration-300";
+                dashboardScreen.classList.add('hidden');
+                bottomNav.classList.add('hidden');
+                webAdminDash.classList.remove('hidden');
 
-                document.getElementById('session-badge').innerHTML = `<i class="fa-solid fa-file-pen text-[10px] mr-1"></i> Secretary Portal`;
-                document.getElementById('banner-subtext').innerText = `File project proposals and accomplishment reports for official SK Admin Chairperson approval.`;
-                document.getElementById('admin-add-proj-btn').classList.remove('hidden');
+                document.getElementById('web-admin-name').innerText = activeUser.name;
+                document.getElementById('web-admin-role').innerText = activeUser.role;
 
                 switchDashboardTab('projects');
-
-            } else if (role === 'SK Treasurer') {
-                bottomNav.innerHTML = `
-                    <button type="button" id="tab-btn-treasurer-budget" onclick="switchDashboardTab('treasurer-budget')" class="flex flex-col items-center gap-1 text-prosko-blue">
-                        <i class="fa-solid fa-vault text-base"></i>
-                        <span class="text-[9px] font-black">Budget Ledger</span>
-                    </button>
-                    <button type="button" id="tab-btn-ai" onclick="switchDashboardTab('ai')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
-                        <i class="fa-solid fa-brain text-base"></i>
-                        <span class="text-[9px] font-semibold">AI Risk Index</span>
-                    </button>
-                    <button type="button" onclick="openLogoutModal()" class="flex flex-col items-center gap-1 text-prosko-red hover:text-prosko-redDark">
-                        <i class="fa-solid fa-right-from-bracket text-base"></i>
-                        <span class="text-[9px] font-semibold">Logout</span>
-                    </button>
-                `;
-
-                document.getElementById('session-badge').innerHTML = `<i class="fa-solid fa-vault text-[10px] mr-1"></i> Treasurer Financial Access`;
-                document.getElementById('banner-subtext').innerText = `SK Treasury Portal: Monitor budget allocations, disburse funds, and track expenditures.`;
-                document.getElementById('admin-add-proj-btn').classList.add('hidden');
-
-                switchDashboardTab('treasurer-budget');
 
             } else {
-                bottomNav.innerHTML = `
-                    <button type="button" id="tab-btn-projects" onclick="switchDashboardTab('projects')" class="flex flex-col items-center gap-1 text-prosko-blue relative">
-                        <i class="fa-solid fa-folder-open text-base"></i>
-                        <span class="text-[9px] font-black">Projects</span>
-                    </button>
-                    <button type="button" id="tab-btn-sec-reports" onclick="switchDashboardTab('sec-reports')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-purple relative">
-                        <i class="fa-solid fa-award text-base"></i>
-                        <span class="text-[9px] font-semibold">Reports</span>
-                    </button>
-                    <button type="button" id="tab-btn-sec-docs" onclick="switchDashboardTab('sec-docs')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
-                        <i class="fa-solid fa-folder-tree text-base"></i>
-                        <span class="text-[9px] font-semibold">Brgy Docs</span>
-                    </button>
-                    <button type="button" id="tab-btn-analytics" onclick="switchDashboardTab('analytics')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
-                        <i class="fa-solid fa-triangle-exclamation text-base"></i>
-                        <span class="text-[9px] font-semibold">Incidents</span>
-                    </button>
-                    <button type="button" id="tab-btn-log-trail" onclick="switchDashboardTab('log-trail')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
-                        <i class="fa-solid fa-clock-rotate-left text-base"></i>
-                        <span class="text-[9px] font-semibold">Log Trail</span>
-                    </button>
-                    <button type="button" onclick="openLogoutModal()" class="flex flex-col items-center gap-1 text-prosko-red hover:text-prosko-redDark">
-                        <i class="fa-solid fa-right-from-bracket text-base"></i>
-                        <span class="text-[9px] font-semibold">Logout</span>
-                    </button>
-                `;
+                // SWITCH TO MOBILE APP SHELL VIEW
+                shell.className = "mode-mobile-shell transition-all duration-300";
+                webAdminDash.classList.add('hidden');
+                dashboardScreen.classList.remove('hidden');
+                bottomNav.classList.remove('hidden');
 
-                document.getElementById('session-badge').innerHTML = `<i class="fa-solid fa-crown text-[10px] mr-1"></i> Chairperson Executive Dashboard`;
-                document.getElementById('banner-subtext').innerText = `Review Secretary project proposals and approve accomplishment reports submitted by SK members.`;
-                document.getElementById('admin-add-proj-btn').classList.remove('hidden');
+                document.getElementById('dash-user-name').innerText = activeUser.name;
+                document.getElementById('dash-user-role').innerText = activeUser.role;
+                document.getElementById('dash-welcome-name').innerText = activeUser.name;
+                document.getElementById('user-avatar').innerText = activeUser.name.split(' ').map(n => n[0]).join('').substring(0, 2);
 
-                switchDashboardTab('projects');
+                if (role === 'SK Secretary') {
+                    bottomNav.innerHTML = `
+                        <button type="button" id="tab-btn-projects" onclick="switchDashboardTab('projects')" class="flex flex-col items-center gap-1 text-prosko-blue">
+                            <i class="fa-solid fa-file-signature text-base"></i>
+                            <span class="text-[9px] font-black">Propose Project</span>
+                        </button>
+                        <button type="button" id="tab-btn-sec-reports" onclick="switchDashboardTab('sec-reports')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-purple">
+                            <i class="fa-solid fa-award text-base"></i>
+                            <span class="text-[9px] font-semibold">Reports</span>
+                        </button>
+                        <button type="button" id="tab-btn-sec-docs" onclick="switchDashboardTab('sec-docs')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
+                            <i class="fa-solid fa-folder-tree text-base"></i>
+                            <span class="text-[9px] font-semibold">Brgy Docs</span>
+                        </button>
+                        <button type="button" onclick="openLogoutModal()" class="flex flex-col items-center gap-1 text-prosko-red hover:text-prosko-redDark">
+                            <i class="fa-solid fa-right-from-bracket text-base"></i>
+                            <span class="text-[9px] font-semibold">Logout</span>
+                        </button>
+                    `;
+
+                    document.getElementById('session-badge').innerHTML = `<i class="fa-solid fa-file-pen text-[10px] mr-1"></i> Secretary Portal`;
+                    document.getElementById('banner-subtext').innerText = `File project proposals and accomplishment reports for official SK Admin Chairperson approval.`;
+                    switchDashboardTab('projects');
+
+                } else if (role === 'SK Treasurer') {
+                    bottomNav.innerHTML = `
+                        <button type="button" id="tab-btn-treasurer-budget" onclick="switchDashboardTab('treasurer-budget')" class="flex flex-col items-center gap-1 text-prosko-blue">
+                            <i class="fa-solid fa-vault text-base"></i>
+                            <span class="text-[9px] font-black">Budget Ledger</span>
+                        </button>
+                        <button type="button" id="tab-btn-ai" onclick="switchDashboardTab('ai')" class="flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue">
+                            <i class="fa-solid fa-brain text-base"></i>
+                            <span class="text-[9px] font-semibold">AI Risk Index</span>
+                        </button>
+                        <button type="button" onclick="openLogoutModal()" class="flex flex-col items-center gap-1 text-prosko-red hover:text-prosko-redDark">
+                            <i class="fa-solid fa-right-from-bracket text-base"></i>
+                            <span class="text-[9px] font-semibold">Logout</span>
+                        </button>
+                    `;
+
+                    document.getElementById('session-badge').innerHTML = `<i class="fa-solid fa-vault text-[10px] mr-1"></i> Treasurer Financial Access`;
+                    document.getElementById('banner-subtext').innerText = `SK Treasury Portal: Monitor budget allocations, disburse funds, and track expenditures.`;
+                    switchDashboardTab('treasurer-budget');
+                }
             }
 
             updateDashboardUI();
         }
 
-        // RENDER METRIC WIDGETS DYNAMICALLY WITH LIVE PENDING COUNT
         function renderMetricWidgets() {
             const widgetGrid = document.getElementById('metrics-widget-grid');
             if (!widgetGrid || !activeUser) return;
@@ -1747,38 +1852,9 @@
                         <p class="text-[10px] text-prosko-green font-bold mt-0.5">Active Balance</p>
                     </div>
                 `;
-            } else {
-                const pendingProjCount = projects.filter(p => p.status === 'Pending Admin Approval').length;
-                const pendingRepCount = accomplishmentReports.filter(r => r.status === 'Pending Admin Approval').length;
-                const totalPending = pendingProjCount + pendingRepCount;
-
-                widgetGrid.innerHTML = `
-                    <div onclick="filterPendingApprovals()" class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm border-t-4 border-t-prosko-blue cursor-pointer hover:bg-slate-50 transition active:scale-[0.98]">
-                        <div class="flex justify-between items-start mb-1.5">
-                            <p class="text-[9px] font-extrabold text-prosko-blue uppercase tracking-wider">Pending Approvals</p>
-                            <span class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold shadow-sm">
-                                ${totalPending}
-                            </span>
-                        </div>
-                        <h3 class="text-xl font-black text-slate-900">${totalPending} Action Items</h3>
-                        <p class="text-[10px] text-amber-600 font-bold mt-0.5">${pendingProjCount} Proj • ${pendingRepCount} Reports</p>
-                    </div>
-
-                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm border-t-4 border-t-prosko-green">
-                        <div class="flex justify-between items-start mb-1.5">
-                            <p class="text-[9px] font-extrabold text-prosko-greenDark uppercase tracking-wider">Total Budget</p>
-                            <span class="w-7 h-7 rounded-lg bg-prosko-greenLight text-prosko-green flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-peseta-sign"></i>
-                            </span>
-                        </div>
-                        <h3 id="stat-total-budget" class="text-base font-black text-slate-900 truncate">₱0.00</h3>
-                        <p class="text-[10px] text-slate-500 mt-0.5">Youth Fund</p>
-                    </div>
-                `;
             }
         }
 
-        // Tapping Pending Approvals Widget Direct Filter Action
         function filterPendingApprovals() {
             switchDashboardTab('projects');
             const statusFilter = document.getElementById('status-filter');
@@ -1803,63 +1879,74 @@
             const totalBudget = projects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
             const totalDisbursed = projects.reduce((acc, p) => acc + (parseFloat(p.disbursed) || 0), 0);
 
+            const pendingProjCount = projects.filter(p => p.status === 'Pending Admin Approval').length;
+            const pendingRepCount = accomplishmentReports.filter(r => r.status === 'Pending Admin Approval').length;
+            const totalPending = pendingProjCount + pendingRepCount;
+
+            // Mobile Metrics
             const budgetElem = document.getElementById('stat-total-budget');
             const disbElem = document.getElementById('stat-total-disbursed');
-
             if (budgetElem) budgetElem.innerText = `₱${totalBudget.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
             if (disbElem) disbElem.innerText = `₱${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+
+            // Web Admin Metrics
+            const webBudget = document.getElementById('web-stat-total-budget');
+            const webDisb = document.getElementById('web-stat-total-disbursed');
+            const webPending = document.getElementById('web-stat-pending-count');
+            const webPendingSub = document.getElementById('web-stat-pending-sub');
+            const webProjCount = document.getElementById('web-stat-projects-count');
+
+            if (webBudget) webBudget.innerText = `₱${totalBudget.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+            if (webDisb) webDisb.innerText = `₱${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+            if (webPending) webPending.innerText = `${totalPending} Items`;
+            if (webPendingSub) webPendingSub.innerText = `${pendingProjCount} Proj • ${pendingRepCount} Reports`;
+            if (webProjCount) webProjCount.innerText = projects.length;
+
+            const badgeProj = document.getElementById('admin-badge-pending-proj');
+            const badgeRep = document.getElementById('admin-badge-pending-rep');
+            if (badgeProj) badgeProj.innerText = pendingProjCount;
+            if (badgeRep) badgeRep.innerText = pendingRepCount;
         }
 
         function switchDashboardTab(tab) {
-            document.getElementById('subview-projects').classList.add('hidden');
-            document.getElementById('subview-sec-reports').classList.add('hidden');
-            document.getElementById('subview-sec-docs').classList.add('hidden');
-            document.getElementById('subview-treasurer-budget').classList.add('hidden');
-            document.getElementById('subview-ai').classList.add('hidden');
-            document.getElementById('subview-analytics').classList.add('hidden');
+            currentActiveTab = tab;
+            const isWebAdmin = activeUser && (activeUser.role === 'SK Chairperson' || activeUser.role === 'Admin' || activeUser.role === 'Admin / System Overseer');
             
-            const subviewLogTrail = document.getElementById('subview-log-trail');
-            if (subviewLogTrail) subviewLogTrail.classList.add('hidden');
+            const targetContainer = isWebAdmin ? document.getElementById('web-admin-viewport') : document.getElementById('mobile-subviews-container');
+            const subviewElement = document.getElementById(`subview-${tab}`);
 
-            const btnProj = document.getElementById('tab-btn-projects');
-            const btnSecRep = document.getElementById('tab-btn-sec-reports');
-            const btnSecDoc = document.getElementById('tab-btn-sec-docs');
-            const btnBudget = document.getElementById('tab-btn-treasurer-budget');
-            const btnAi = document.getElementById('tab-btn-ai');
-            const btnAnalytics = document.getElementById('tab-btn-analytics');
-            const btnLogTrail = document.getElementById('tab-btn-log-trail');
-
-            if (btnProj) btnProj.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue relative";
-            if (btnSecRep) btnSecRep.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-purple relative";
-            if (btnSecDoc) btnSecDoc.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
-            if (btnBudget) btnBudget.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
-            if (btnAi) btnAi.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
-            if (btnAnalytics) btnAnalytics.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
-            if (btnLogTrail) btnLogTrail.className = "flex flex-col items-center gap-1 text-slate-400 hover:text-prosko-blue";
-
-            if (tab === 'projects') {
-                document.getElementById('subview-projects').classList.remove('hidden');
-                if (btnProj) btnProj.className = "flex flex-col items-center gap-1 text-prosko-blue relative";
-            } else if (tab === 'sec-reports') {
-                document.getElementById('subview-sec-reports').classList.remove('hidden');
-                if (btnSecRep) btnSecRep.className = "flex flex-col items-center gap-1 text-prosko-purple relative";
-            } else if (tab === 'sec-docs') {
-                document.getElementById('subview-sec-docs').classList.remove('hidden');
-                if (btnSecDoc) btnSecDoc.className = "flex flex-col items-center gap-1 text-prosko-blue";
-            } else if (tab === 'treasurer-budget') {
-                document.getElementById('subview-treasurer-budget').classList.remove('hidden');
-                if (btnBudget) btnBudget.className = "flex flex-col items-center gap-1 text-prosko-blue";
-            } else if (tab === 'ai') {
-                document.getElementById('subview-ai').classList.remove('hidden');
-                if (btnAi) btnAi.className = "flex flex-col items-center gap-1 text-prosko-blue";
-            } else if (tab === 'analytics') {
-                document.getElementById('subview-analytics').classList.remove('hidden');
-                if (btnAnalytics) btnAnalytics.className = "flex flex-col items-center gap-1 text-prosko-blue";
-            } else if (tab === 'log-trail') {
-                if (subviewLogTrail) subviewLogTrail.classList.remove('hidden');
-                if (btnLogTrail) btnLogTrail.className = "flex flex-col items-center gap-1 text-prosko-blue";
-                fetchLogTrails();
+            if (targetContainer && subviewElement) {
+                targetContainer.innerHTML = '';
+                targetContainer.appendChild(subviewElement);
             }
+
+            // Highlight sidebar / topbar navigation links
+            const navIds = ['projects', 'sec-reports', 'sec-docs', 'treasurer-budget', 'analytics', 'log-trail', 'ai'];
+            navIds.forEach(id => {
+                const btn = document.getElementById(`admin-nav-${id}`);
+                if (btn) {
+                    if (id === tab) {
+                        btn.className = "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-white bg-prosko-blue hover:bg-prosko-blue font-bold shadow-md transition";
+                    } else {
+                        btn.className = "w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-white/10 transition font-semibold";
+                    }
+                }
+            });
+
+            const titleTitles = {
+                'projects': 'Youth Projects & Approvals Overview',
+                'sec-reports': 'SK Accomplishment Reports Verification',
+                'sec-docs': 'Barangay & SK Official Document Repository',
+                'treasurer-budget': 'Treasury Budget & Disbursement Ledger',
+                'analytics': 'Community Incident Log Mapper',
+                'log-trail': 'Realtime System Audit Trail Logs',
+                'ai': 'AI Project Risk & Compliance Index'
+            };
+
+            const webTitle = document.getElementById('web-topbar-title');
+            if (webTitle && titleTitles[tab]) webTitle.innerText = titleTitles[tab];
+
+            if (tab === 'log-trail') fetchLogTrails();
         }
 
         async function logUserActivity(action, details) {
@@ -1871,14 +1958,10 @@
                     action: action,
                     details: details
                 }]);
-            } catch (err) {
-                console.warn('Logging exception:', err);
-            }
+            } catch (err) {}
         }
 
         async function fetchLogTrails() {
-            if (!activeUser || activeUser.role !== 'SK Chairperson') return;
-            
             try {
                 const { data, error } = await supabase
                     .from('activity_logs')
@@ -1890,9 +1973,7 @@
                     activityLogs = data;
                     renderLogTrailFeed(activityLogs);
                 }
-            } catch (err) {
-                console.error('Log trail fetch error:', err);
-            }
+            } catch (err) {}
         }
 
         function renderLogTrailFeed(logList) {
@@ -1902,8 +1983,8 @@
 
             if (!logList || logList.length === 0) {
                 container.innerHTML = `
-                    <div class="p-6 text-center text-slate-400">
-                        <i class="fa-solid fa-receipt text-2xl mb-1 text-slate-300"></i>
+                    <div class="p-8 text-center text-slate-400">
+                        <i class="fa-solid fa-receipt text-3xl mb-1 text-slate-300"></i>
                         <p class="font-bold text-xs text-slate-500">No activity logs recorded yet</p>
                     </div>
                 `;
@@ -1922,18 +2003,18 @@
                 if (log.action.includes('DELETE') || log.action.includes('REJECT')) actionBadgeColor = "bg-red-100 text-prosko-red";
 
                 const item = document.createElement('div');
-                item.className = "p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1";
+                item.className = "p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1";
                 item.innerHTML = `
                     <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-1.5">
-                            <span class="font-extrabold text-slate-900 text-[11px]">${log.username}</span>
-                            <span class="text-[9px] font-bold text-slate-400">(${log.user_role})</span>
+                        <div class="flex items-center gap-2">
+                            <span class="font-extrabold text-slate-900 text-xs">${log.username}</span>
+                            <span class="text-[10px] font-bold text-slate-400">(${log.user_role})</span>
                         </div>
-                        <span class="text-[8px] font-mono font-bold text-slate-400">${timeFormatted}</span>
+                        <span class="text-[9px] font-mono font-bold text-slate-400">${timeFormatted}</span>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="px-2 py-0.5 rounded text-[8px] font-black uppercase ${actionBadgeColor}">${log.action}</span>
-                        <p class="text-[10px] text-slate-600 font-medium truncate">${log.details}</p>
+                        <p class="text-xs text-slate-600 font-medium truncate">${log.details}</p>
                     </div>
                 `;
                 container.appendChild(item);
@@ -1961,18 +2042,18 @@
 
             if (projectList.length === 0) {
                 emptyState.classList.remove('hidden');
-                countSpan.innerText = `0 Projects`;
+                if (countSpan) countSpan.innerText = `0 Projects`;
                 return;
             }
 
             emptyState.classList.add('hidden');
-            countSpan.innerText = `${projectList.length} Projects`;
+            if (countSpan) countSpan.innerText = `${projectList.length} Projects`;
 
-            const isAdmin = activeUser && activeUser.role === 'SK Chairperson';
+            const isAdmin = activeUser && (activeUser.role === 'SK Chairperson' || activeUser.role === 'Admin');
 
             projectList.forEach(project => {
                 const card = document.createElement('div');
-                card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200/90 space-y-2 text-xs relative";
+                card.className = "bg-slate-50 p-4 rounded-xl border border-slate-200/90 space-y-2.5 text-xs relative";
 
                 let statusBadgeClass = "";
                 switch (project.status) {
@@ -1994,27 +2075,27 @@
                 card.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
-                            <h4 class="font-bold text-slate-900 text-xs">${project.title}</h4>
-                            <p class="text-[10px] text-slate-500 font-medium">${project.category} • <span class="text-prosko-purple font-bold">${project.submittedBy || 'SK Office'}</span></p>
+                            <h4 class="font-bold text-slate-900 text-sm">${project.title}</h4>
+                            <p class="text-xs text-slate-500 font-medium">${project.category} • <span class="text-prosko-purple font-bold">${project.submittedBy || 'SK Office'}</span></p>
                         </div>
-                        <span class="inline-block px-2 py-0.5 rounded-full text-[9px] font-extrabold border ${statusBadgeClass}">
+                        <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${statusBadgeClass}">
                             ${project.status}
                         </span>
                     </div>
 
-                    <div class="flex justify-between items-center text-[11px] pt-1 border-t border-slate-200">
-                        <span class="font-extrabold text-prosko-blue">₱${parseFloat(project.budget).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-                        <span class="text-slate-500 text-[10px] font-medium">${project.period}</span>
+                    <div class="flex justify-between items-center text-xs pt-1 border-t border-slate-200">
+                        <span class="font-extrabold text-prosko-blue text-sm">₱${parseFloat(project.budget).toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
+                        <span class="text-slate-500 text-xs font-medium">${project.period}</span>
                     </div>
 
                     ${isAdmin && project.status === 'Pending Admin Approval' ? `
-                        <div class="p-2 bg-amber-50 rounded-lg border border-amber-200 flex items-center justify-between gap-2 mt-1">
-                            <span class="text-[10px] font-bold text-amber-900"><i class="fa-solid fa-clock-rotate-left text-amber-600 mr-1"></i>Secretary Proposal Pending</span>
-                            <div class="flex gap-1">
-                                <button onclick="approveProject(${project.id})" class="px-2.5 py-1 bg-prosko-green hover:bg-prosko-greenDark text-white font-extrabold text-[10px] rounded-md shadow-sm transition">
+                        <div class="p-2.5 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between gap-2 mt-1">
+                            <span class="text-xs font-bold text-amber-900"><i class="fa-solid fa-clock-rotate-left text-amber-600 mr-1"></i>Secretary Proposal Pending Approval</span>
+                            <div class="flex gap-1.5">
+                                <button onclick="approveProject(${project.id})" class="px-3 py-1 bg-prosko-green hover:bg-prosko-greenDark text-white font-extrabold text-xs rounded-lg shadow-sm transition">
                                     <i class="fa-solid fa-check mr-0.5"></i> Approve
                                 </button>
-                                <button onclick="rejectProject(${project.id})" class="px-2 py-1 bg-prosko-red text-white font-bold text-[10px] rounded-md transition">
+                                <button onclick="rejectProject(${project.id})" class="px-2.5 py-1 bg-prosko-red text-white font-bold text-xs rounded-lg transition">
                                     <i class="fa-solid fa-xmark"></i>
                                 </button>
                             </div>
@@ -2022,10 +2103,10 @@
                     ` : ''}
 
                     <div class="flex justify-end gap-2 pt-1 border-t border-slate-200/60">
-                        <button onclick="editProject(${project.id})" class="text-[10px] bg-slate-200 hover:bg-prosko-blue hover:text-white px-2 py-1 rounded font-bold transition flex items-center gap-1">
+                        <button onclick="editProject(${project.id})" class="text-xs bg-slate-200 hover:bg-prosko-blue hover:text-white px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1">
                             <i class="fa-solid fa-pen-to-square"></i> Edit
                         </button>
-                        <button onclick="deleteProject(${project.id})" class="text-[10px] bg-prosko-redLight text-prosko-red hover:bg-prosko-red hover:text-white px-2 py-1 rounded font-bold transition flex items-center gap-1">
+                        <button onclick="deleteProject(${project.id})" class="text-xs bg-prosko-redLight text-prosko-red hover:bg-prosko-red hover:text-white px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1">
                             <i class="fa-solid fa-trash-can"></i> Delete
                         </button>
                     </div>
@@ -2083,12 +2164,12 @@
             if (!container) return;
             container.innerHTML = '';
 
-            const isAdmin = activeUser && activeUser.role === 'SK Chairperson';
+            const isAdmin = activeUser && (activeUser.role === 'SK Chairperson' || activeUser.role === 'Admin');
 
             if (!accomplishmentReports || accomplishmentReports.length === 0) {
                 container.innerHTML = `
-                    <div class="p-6 text-center text-slate-400">
-                        <i class="fa-solid fa-award text-2xl mb-1 text-slate-300"></i>
+                    <div class="p-8 text-center text-slate-400">
+                        <i class="fa-solid fa-award text-3xl mb-1 text-slate-300"></i>
                         <p class="font-bold text-xs text-slate-500">No accomplishment reports filed yet</p>
                     </div>
                 `;
@@ -2097,7 +2178,7 @@
 
             accomplishmentReports.forEach(r => {
                 const item = document.createElement('div');
-                item.className = "bg-slate-50 p-3 rounded-xl border border-slate-200/90 space-y-1 text-xs";
+                item.className = "bg-slate-50 p-4 rounded-xl border border-slate-200/90 space-y-1.5 text-xs";
 
                 let badgeClass = "bg-purple-100 text-purple-800";
                 if (r.status === 'Pending Admin Approval') badgeClass = "bg-amber-100 text-amber-800 border border-amber-300";
@@ -2105,21 +2186,21 @@
 
                 item.innerHTML = `
                     <div class="flex justify-between items-start">
-                        <span class="font-bold text-prosko-purple text-[11px]">${r.member}</span>
-                        <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold ${badgeClass}">${r.status}</span>
+                        <span class="font-bold text-prosko-purple text-xs">${r.member}</span>
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${badgeClass}">${r.status}</span>
                     </div>
-                    <p class="font-extrabold text-slate-900 text-[11px]">${r.title}</p>
-                    <p class="text-slate-600 text-[10px] leading-relaxed">${r.details}</p>
-                    <p class="text-slate-400 text-[9px] pt-1"><i class="fa-solid fa-calendar-day mr-1"></i>Date Conducted: ${r.date}</p>
+                    <p class="font-extrabold text-slate-900 text-sm">${r.title}</p>
+                    <p class="text-slate-600 text-xs leading-relaxed">${r.details}</p>
+                    <p class="text-slate-400 text-[10px] pt-1"><i class="fa-solid fa-calendar-day mr-1"></i>Date Conducted: ${r.date}</p>
 
                     ${isAdmin && r.status === 'Pending Admin Approval' ? `
-                        <div class="p-2 bg-amber-50 rounded-lg border border-amber-200 flex items-center justify-between gap-2 mt-2">
-                            <span class="text-[10px] font-bold text-amber-900"><i class="fa-solid fa-user-check text-amber-600 mr-1"></i>Report Needs Admin Signoff</span>
-                            <div class="flex gap-1">
-                                <button onclick="approveReport('${r.id}')" class="px-2.5 py-1 bg-prosko-green hover:bg-prosko-greenDark text-white font-extrabold text-[10px] rounded-md shadow-sm transition">
+                        <div class="p-2.5 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between gap-2 mt-2">
+                            <span class="text-xs font-bold text-amber-900"><i class="fa-solid fa-user-check text-amber-600 mr-1"></i>Report Needs Chairperson Signoff</span>
+                            <div class="flex gap-1.5">
+                                <button onclick="approveReport('${r.id}')" class="px-3 py-1 bg-prosko-green hover:bg-prosko-greenDark text-white font-extrabold text-xs rounded-lg shadow-sm transition">
                                     <i class="fa-solid fa-check mr-0.5"></i> Approve
                                 </button>
-                                <button onclick="rejectReport('${r.id}')" class="px-2 py-1 bg-prosko-red text-white font-bold text-[10px] rounded-md transition">
+                                <button onclick="rejectReport('${r.id}')" class="px-2.5 py-1 bg-prosko-red text-white font-bold text-xs rounded-lg transition">
                                     <i class="fa-solid fa-xmark"></i>
                                 </button>
                             </div>
@@ -2144,7 +2225,6 @@
                 await fetchAllDatabaseData();
                 updateDashboardUI();
             } catch (err) {
-                console.error('Report Approval Error:', err);
                 showToast('Failed to approve report.', 'error');
             }
         }
@@ -2161,11 +2241,10 @@
                         if (error) throw error;
 
                         await logUserActivity('REPORT_REJECT', `Rejected report ID: ${id}`);
-                        showToast('Accomplishment report returned/rejected.', 'info');
+                        showToast('Accomplishment report rejected.', 'info');
                         await fetchAllDatabaseData();
                         updateDashboardUI();
                     } catch (err) {
-                        console.error('Report Rejection Error:', err);
                         showToast('Failed to reject report.', 'error');
                     }
                 }
@@ -2214,12 +2293,10 @@
                 updateDashboardUI();
 
             } catch (err) {
-                console.error('Error saving report:', err);
                 showToast('Failed to save report: ' + err.message, 'error');
             }
         }
 
-        // RENDER BARANGAY DOCUMENTS FROM SUPABASE DATA
         function renderBrgyDocuments() {
             const container = document.getElementById('brgy-documents-list');
             if (!container) return;
@@ -2227,8 +2304,8 @@
 
             if (!brgyDocuments || brgyDocuments.length === 0) {
                 container.innerHTML = `
-                    <div class="p-6 text-center text-slate-400">
-                        <i class="fa-solid fa-folder-open text-2xl mb-1 text-slate-300"></i>
+                    <div class="p-8 text-center text-slate-400">
+                        <i class="fa-solid fa-folder-open text-3xl mb-1 text-slate-300"></i>
                         <p class="font-bold text-xs text-slate-500">No documents archived yet</p>
                     </div>
                 `;
@@ -2237,17 +2314,17 @@
 
             brgyDocuments.forEach(d => {
                 const item = document.createElement('div');
-                item.className = "bg-slate-50 p-3 rounded-xl border border-slate-200/90 space-y-1 text-xs flex justify-between items-center";
+                item.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200/90 space-y-1 text-xs flex justify-between items-center";
                 item.innerHTML = `
                     <div>
-                        <div class="flex items-center gap-1.5 mb-0.5">
-                            <span class="px-1.5 py-0.5 rounded text-[8px] font-black bg-blue-100 text-prosko-blue uppercase">${d.type}</span>
-                            <span class="text-[9px] font-mono font-bold text-slate-400">${d.ref}</span>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded text-[9px] font-black bg-blue-100 text-prosko-blue uppercase">${d.type}</span>
+                            <span class="text-[10px] font-mono font-bold text-slate-400">${d.ref}</span>
                         </div>
-                        <p class="font-extrabold text-slate-900 text-[11px]">${d.title}</p>
-                        <p class="text-slate-400 text-[9px]"><i class="fa-solid fa-clock mr-1"></i>Archived: ${d.date}</p>
+                        <p class="font-extrabold text-slate-900 text-xs">${d.title}</p>
+                        <p class="text-slate-400 text-[10px]"><i class="fa-solid fa-clock mr-1"></i>Archived: ${d.date}</p>
                     </div>
-                    <button onclick="showToast('Downloading official document copy...', 'info')" class="w-8 h-8 rounded-lg bg-slate-200 text-prosko-blue hover:bg-prosko-blue hover:text-white flex items-center justify-center transition">
+                    <button onclick="showToast('Downloading official document copy...', 'info')" class="w-9 h-9 rounded-xl bg-slate-200 text-prosko-blue hover:bg-prosko-blue hover:text-white flex items-center justify-center transition">
                         <i class="fa-solid fa-download text-xs"></i>
                     </button>
                 `;
@@ -2263,7 +2340,6 @@
             document.getElementById('doc-modal').classList.add('hidden');
         }
 
-        // PERSIST BARANGAY DOCUMENT DIRECTLY TO SUPABASE WITH EXPLICIT GENERATED ID
         async function saveDocument(e) {
             if (e) e.preventDefault();
             const title = document.getElementById('doc-title').value.trim();
@@ -2293,7 +2369,6 @@
                 updateDashboardUI();
 
             } catch (err) {
-                console.error('Error saving document to database:', err);
                 showToast('Failed to save document: ' + err.message, 'error');
             }
         }
@@ -2310,23 +2385,23 @@
                 const pct = total > 0 ? Math.min(100, Math.round((disbursed / total) * 100)) : 0;
 
                 const card = document.createElement('div');
-                card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200/90 space-y-2 text-xs";
+                card.className = "bg-slate-50 p-4 rounded-xl border border-slate-200/90 space-y-2.5 text-xs";
                 card.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
                             <h4 class="font-bold text-slate-900 text-xs">${p.title}</h4>
                             <p class="text-[10px] text-slate-500 font-medium">${p.category}</p>
                         </div>
-                        <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold bg-prosko-greenLight text-prosko-greenDark border border-prosko-green/30">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-prosko-greenLight text-prosko-greenDark border border-prosko-green/30">
                             ${pct}% Released
                         </span>
                     </div>
 
-                    <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-prosko-green h-1.5 rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+                    <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                        <div class="bg-prosko-green h-2 rounded-full transition-all duration-300" style="width: ${pct}%"></div>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-1 pt-1 text-[10px] text-center border-t border-slate-200">
+                    <div class="grid grid-cols-3 gap-2 pt-1 text-[11px] text-center border-t border-slate-200">
                         <div>
                             <p class="text-slate-400 font-semibold">Allocated</p>
                             <p class="font-extrabold text-slate-800">₱${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
@@ -2393,7 +2468,6 @@
                 await fetchAllDatabaseData();
                 updateDashboardUI();
             } catch (err) {
-                console.error('Error recording disbursement:', err);
                 showToast('Failed to save disbursement: ' + err.message, 'error');
             }
         }
@@ -2405,8 +2479,8 @@
 
             if (!incidents || incidents.length === 0) {
                 container.innerHTML = `
-                    <div class="p-6 text-center text-slate-400">
-                        <i class="fa-solid fa-shield-halved text-2xl mb-1 text-slate-300"></i>
+                    <div class="p-8 text-center text-slate-400">
+                        <i class="fa-solid fa-shield-halved text-3xl mb-1 text-slate-300"></i>
                         <p class="font-bold text-xs text-slate-500">No community incidents recorded</p>
                     </div>
                 `;
@@ -2419,15 +2493,15 @@
                 if (inc.status === 'Under Review') badgeClass = "bg-red-100 text-red-800";
 
                 const item = document.createElement('div');
-                item.className = "p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1";
+                item.className = "p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1";
                 item.innerHTML = `
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-slate-900">${inc.id}</span>
-                        <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${badgeClass}">${inc.status}</span>
+                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full ${badgeClass}">${inc.status}</span>
                     </div>
-                    <p class="text-[11px] text-slate-700 font-semibold">${inc.type}</p>
-                    <p class="text-[10px] text-slate-500">${inc.location} • ${inc.date}</p>
-                    <button onclick="toggleIncidentStatus('${inc.id}')" class="text-[9px] text-prosko-blue font-bold hover:underline pt-0.5 inline-block">
+                    <p class="text-xs text-slate-700 font-semibold">${inc.type}</p>
+                    <p class="text-[11px] text-slate-500">${inc.location} • ${inc.date}</p>
+                    <button onclick="toggleIncidentStatus('${inc.id}')" class="text-[10px] text-prosko-blue font-bold hover:underline pt-1 inline-block">
                         Toggle Resolution Status
                     </button>
                 `;
@@ -2443,7 +2517,6 @@
             document.getElementById('incident-modal').classList.add('hidden');
         }
 
-        // PERSIST INCIDENTS DIRECTLY TO SUPABASE WITH EXPLICIT GENERATED ID
         async function saveIncident(e) {
             if (e) e.preventDefault();
             const type = document.getElementById('inc-type').value.trim();
@@ -2473,7 +2546,6 @@
                 updateDashboardUI();
 
             } catch (err) {
-                console.error('Error logging incident:', err);
                 showToast('Failed to log incident: ' + err.message, 'error');
             }
         }
@@ -2498,7 +2570,6 @@
                 await fetchAllDatabaseData();
                 updateDashboardUI();
             } catch (err) {
-                console.error('Error updating incident status:', err);
                 showToast('Failed to update status.', 'error');
             }
         }
@@ -2618,12 +2689,14 @@
                     realtimeChannel = null;
                 }
                 await supabase.auth.signOut();
-            } catch (err) {
-                console.error('Logout Exception:', err);
-            }
+            } catch (err) {}
 
             activeUser = null;
 
+            const shell = document.getElementById('main-shell');
+            shell.className = "mode-mobile-shell transition-all duration-300";
+
+            document.getElementById('web-admin-dashboard').classList.add('hidden');
             document.getElementById('dashboard-screen').classList.add('hidden');
             document.getElementById('mobile-bottom-nav').classList.add('hidden');
             document.getElementById('auth-screen').classList.remove('hidden');
@@ -2656,7 +2729,6 @@
             document.getElementById('auth-alert').classList.add('hidden');
         }
 
-        // Toast Message Notification System (Inside Mobile Shell Container)
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -2665,10 +2737,10 @@
             if (type === 'success') bgIcon = "fa-circle-check text-prosko-green";
             if (type === 'error') bgIcon = "fa-circle-xmark text-prosko-red";
 
-            toast.className = "bg-prosko-blueDark/95 backdrop-blur-md text-white border border-white/20 shadow-xl px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2.5 pointer-events-auto fade-in";
+            toast.className = "bg-prosko-blueDark/95 backdrop-blur-md text-white border border-white/20 shadow-xl px-4 py-3 rounded-2xl text-xs flex items-center gap-3 pointer-events-auto fade-in";
             toast.innerHTML = `
-                <i class="fa-solid ${bgIcon} text-sm"></i>
-                <span class="font-bold text-[11px]">${message}</span>
+                <i class="fa-solid ${bgIcon} text-base"></i>
+                <span class="font-bold text-xs">${message}</span>
             `;
 
             container.appendChild(toast);
