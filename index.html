@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -200,10 +200,10 @@
         <!-- 1. AUTHENTICATION SECTION (MOBILE / DESKTOP SIGN IN) -->
         <!-- ==================================================== -->
         <section id="auth-screen" class="w-full flex-grow flex flex-col min-h-full bg-slate-50 overflow-y-auto custom-scroll">
-            
+
             <div class="bg-prosko-gradient p-6 pt-7 text-white relative overflow-hidden rounded-b-[2.5rem] shadow-xl border-b-4 border-prosko-yellow">
                 <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-prosko-blueLight/10 rounded-full blur-2xl pointer-events-none"></div>
-                
+
                 <div class="relative z-10">
                     <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-2.5">
@@ -292,7 +292,7 @@
                         <h3 id="form-title" class="text-sm font-extrabold text-prosko-blue">Sign In to Dashboard</h3>
                         <p id="form-subtitle" class="text-slate-500 text-[11px] mt-0.5">Access Barangay Libjo project records.</p>
                     </div>
-                    
+
                     <div class="bg-slate-200/80 p-1 rounded-xl flex gap-1 text-[11px] font-bold">
                         <button id="tab-login-btn" onclick="switchAuthTab('login')" class="px-2.5 py-1 rounded-lg bg-prosko-blue text-white shadow-sm transition">Login</button>
                         <button id="tab-register-btn" onclick="switchAuthTab('register')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition">Register</button>
@@ -305,7 +305,7 @@
                 </div>
 
                 <!-- LOGIN FORM -->
-                
+
                 <!-- IAS D: LOCKOUT & ATTEMPTS NOTICES -->
                 <div id="login-lockout-alert" class="hidden mb-3 p-3 rounded-2xl text-xs flex items-center gap-2.5 border bg-red-100 text-red-800 border-red-300 font-semibold fade-in">
                     <i class="fa-solid fa-lock text-sm text-red-600"></i>
@@ -351,7 +351,7 @@
                         </a>
                     </div>
 
-                    
+
                     <!-- IAS D: CAPTCHA VERIFICATION IF REPEATED FAILED ATTEMPTS -->
                     <div id="login-captcha-box" class="hidden space-y-2 p-3.5 bg-amber-50/90 border-2 border-amber-300 rounded-2xl shadow-sm fade-in transition-all">
                         <div class="flex justify-between items-center">
@@ -447,10 +447,9 @@
                 <div class="mt-auto pt-3 text-center text-[10px] text-slate-400 flex items-center justify-between border-t border-slate-200">
                     <span>SK Libjo PMES &copy; 2026 • System Owner: Belly Jean Montecillo</span>
                     <span class="text-prosko-green font-bold"><i class="fa-solid fa-circle-check"></i> Live System</span>
-                </div>  
+                </div>
             </div>
         </section>
-
 
         <!-- ==================================================== -->
         <!-- 2. WEB DESKTOP ADMIN UI (CHAIRPERSON / ADMIN ONLY)    -->
@@ -470,7 +469,7 @@
 
                 <nav class="p-4 space-y-1.5 flex-grow text-xs font-semibold">
                     <div class="px-3 py-1.5 text-[10px] font-black uppercase text-slate-400 tracking-wider">Management Views</div>
-                    
+
                     <button onclick="switchDashboardTab('projects')" id="admin-nav-projects" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-white bg-prosko-blue hover:bg-prosko-blue transition">
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-folder-open w-4 text-center text-sm"></i>
@@ -530,7 +529,7 @@
                         </div>
                         <span class="px-2 py-0.5 rounded-full bg-cyan-500/30 text-cyan-200 font-black text-[10px]">5 Diagrams</span>
                     </button>
-                
+
                     <button onclick="switchDashboardTab('users')" id="admin-nav-users" class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-white/10 transition">
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-users-gear w-4 text-center text-sm"></i>
@@ -559,7 +558,7 @@
                                 <p id="web-admin-role" class="text-[10px] text-prosko-yellow font-semibold">SK Chairperson</p>
                             </div>
                         </div>
-                        
+
                         <div class="flex items-center gap-1.5">
                             <button onclick="openAccountSettingsModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-prosko-blue text-white flex items-center justify-center transition" title="Account Security Settings">
                                 <i class="fa-solid fa-user-shield text-xs"></i>
@@ -652,12 +651,11 @@
             </main>
         </div>
 
-
         <!-- ==================================================== -->
         <!-- 3. MAIN DASHBOARD SECTION (POST-LOGIN MOBILE VIEW)   -->
         <!-- ==================================================== -->
         <section id="dashboard-screen" class="hidden h-full flex-1 min-h-0 bg-slate-100 flex flex-col overflow-y-auto custom-scroll relative">
-            
+
             <!-- Mobile Dynamic Header Bar -->
             <header class="bg-prosko-blue text-white shadow-md sticky top-0 z-30 px-4 py-3 flex items-center justify-between border-b-2 border-prosko-yellow shrink-0">
                 <div class="flex items-center gap-2.5">
@@ -684,7 +682,7 @@
                     <button type="button" id="admin-add-proj-btn" onclick="openNewProjectModal()" class="w-8 h-8 rounded-xl bg-prosko-yellow hover:bg-prosko-yellowDark text-prosko-blueDark border border-white/40 flex items-center justify-center text-xs font-black transition shadow-sm" title="New Action">
                         <i class="fa-solid fa-plus"></i>
                     </button>
-                    
+
                     <button type="button" onclick="openAccountSettingsModal()" class="w-8 h-8 rounded-xl bg-white/20 hover:bg-white/30 text-white border border-white/30 flex items-center justify-center text-xs transition" title="Security Settings">
                         <i class="fa-solid fa-user-shield"></i>
                     </button>
@@ -696,7 +694,7 @@
             </header>
 
             <div class="p-4 space-y-3.5 fade-in pb-24">
-                
+
                 <!-- Welcome Banner Card -->
                 <div class="bg-prosko-gradient rounded-2xl p-4 sm:p-5 text-white shadow-md relative overflow-hidden border-l-4 border-prosko-yellow">
                     <div class="relative z-10 space-y-1">
@@ -730,7 +728,7 @@
         <!-- SHARED SUBVIEWS TEMPLATES (PROJECTS, REPORTS, DOCS, ETC) -->
         <!-- ==================================================== -->
         <div id="subviews-master-store" class="hidden">
-            
+
             <!-- VIEW 1: PROJECTS LISTING & PENDING APPROVALS -->
             <div id="subview-projects" class="space-y-4">
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
@@ -821,10 +819,10 @@
                 </div>
             </div>
 
-            
+
             <!-- VIEW 4: BUDGET LEDGER & DISBURSEMENTS (TREASURY MODULE) -->
             <div id="subview-treasurer-budget" class="space-y-4 fade-in">
-                
+
                 <!-- Fiscal Year & Annual SK Youth Budget Control Banner -->
                 <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 space-y-3.5">
                     <div class="fiscal-ledger-header flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-slate-100 pb-3">
@@ -998,7 +996,6 @@
 
             </div>
 
-
             <!-- VIEW 5: IAS SECURITY & AI COMPLIANCE ENGINE (MR. ROEL DANIOT EVALUATION) -->
             <div id="subview-ai" class="space-y-4 fade-in">
                 <!-- IAS HEADER HERO CARD -->
@@ -1056,7 +1053,7 @@
 
                 <!-- 8 IAS COMPLIANCE INDICATORS CARDS (A THROUGH H) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
-                    
+
                     <!-- INDICATOR A -->
                     <div class="p-4 bg-white rounded-2xl border border-slate-200 shadow-sm space-y-2 hover:border-blue-400 transition">
                         <div class="flex justify-between items-start">
@@ -1295,7 +1292,7 @@
                 </div>
             </div>
 
-        
+
             <!-- VIEW 8: SK USER & ROLE MANAGEMENT (ADMIN ONLY - IAS REQUIREMENT A) -->
             <div id="subview-users" class="space-y-4 fade-in">
                 <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-4">
@@ -1342,8 +1339,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             <!-- VIEW 9: BACKUP & DISASTER RECOVERY (ADMIN ONLY - IAS REQUIREMENT H) -->
             <div id="subview-backup" class="space-y-4 fade-in">
@@ -1425,10 +1420,9 @@
                 </div>
             </div>
 
-
             <!-- VIEW 10: SIA ARCHITECTURE & DIAGRAMS (SYSTEM INTEGRATION AND ARCHITECTURE) -->
             <div id="subview-sia" class="space-y-4 fade-in">
-                
+
                 <!-- SIA HEADER BANNER -->
                 <div class="bg-gradient-to-r from-slate-900 via-cyan-950 to-blue-950 rounded-2xl border border-cyan-800/60 shadow-xl p-5 text-white space-y-4">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-white/10 pb-4">
@@ -1495,7 +1489,7 @@
 
                 <!-- INTERACTIVE PAN & DRAG CANVAS CONTAINER -->
                 <div id="sia-canvas-wrapper" class="relative w-full h-[620px] bg-slate-950 rounded-2xl border-2 border-slate-800 shadow-2xl overflow-hidden cursor-grab active:cursor-grabbing select-none">
-                    
+
                     <!-- Floating Help Pill (Exactly as shown in user screenshot) -->
                     <div class="absolute top-3 left-4 z-20 pointer-events-none bg-slate-900/85 backdrop-blur-md border border-cyan-500/30 text-slate-200 text-[11px] font-semibold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2">
                         <span>💡</span>
@@ -1518,7 +1512,7 @@
 
                     <!-- Inner Pannable & Zoomable Transform Layer -->
                     <div id="sia-transform-layer" class="w-full h-full flex items-center justify-center origin-center transition-transform duration-75">
-                        
+
                         <!-- 1. USE CASE DIAGRAM SVG -->
                         <div id="sia-diagram-use-case" class="w-full h-full flex items-center justify-center p-4">
                             <svg viewBox="0 0 1200 800" class="w-full h-full max-h-[760px] drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
@@ -1744,7 +1738,7 @@
                                     <rect x="0" y="0" width="280" height="230" rx="12" fill="#0f172a" stroke="#0284c7" stroke-width="2"/>
                                     <rect x="0" y="0" width="280" height="35" rx="12" fill="#0369a1"/>
                                     <text x="140" y="23" fill="#ffffff" font-size="13" font-weight="900" text-anchor="middle">PROFILES (Users)</text>
-                                    
+
                                     <text x="15" y="60" fill="#38bdf8" font-size="11" font-weight="700">PK  id : UUID</text>
                                     <text x="15" y="82" fill="#f8fafc" font-size="11">UK  username : TEXT</text>
                                     <text x="15" y="104" fill="#f8fafc" font-size="11">    full_name : TEXT</text>
@@ -1760,7 +1754,7 @@
                                     <rect x="0" y="0" width="280" height="260" rx="12" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
                                     <rect x="0" y="0" width="280" height="35" rx="12" fill="#047857"/>
                                     <text x="140" y="23" fill="#ffffff" font-size="13" font-weight="900" text-anchor="middle">PROJECTS (Proposals)</text>
-                                    
+
                                     <text x="15" y="60" fill="#4ade80" font-size="11" font-weight="700">PK  id : BIGINT (IDENTITY)</text>
                                     <text x="15" y="82" fill="#f8fafc" font-size="11">    title : TEXT</text>
                                     <text x="15" y="104" fill="#f8fafc" font-size="11">    description : TEXT</text>
@@ -1777,7 +1771,7 @@
                                     <rect x="0" y="0" width="280" height="230" rx="12" fill="#0f172a" stroke="#eab308" stroke-width="2"/>
                                     <rect x="0" y="0" width="280" height="35" rx="12" fill="#b45309"/>
                                     <text x="140" y="23" fill="#ffffff" font-size="13" font-weight="900" text-anchor="middle">DISBURSEMENTS (Vouchers)</text>
-                                    
+
                                     <text x="15" y="60" fill="#fde047" font-size="11" font-weight="700">PK  id : TEXT (DV-YYYY-SEQ)</text>
                                     <text x="15" y="82" fill="#f8fafc" font-size="11">    voucher_no : TEXT</text>
                                     <text x="15" y="104" fill="#fde047" font-size="11" font-weight="700">FK  project_id : BIGINT</text>
@@ -1793,7 +1787,7 @@
                                     <rect x="0" y="0" width="280" height="190" rx="12" fill="#0f172a" stroke="#818cf8" stroke-width="2"/>
                                     <rect x="0" y="0" width="280" height="35" rx="12" fill="#4338ca"/>
                                     <text x="140" y="23" fill="#ffffff" font-size="13" font-weight="900" text-anchor="middle">FISCAL_BUDGET (Ledger)</text>
-                                    
+
                                     <text x="15" y="60" fill="#a5b4fc" font-size="11" font-weight="700">PK  fiscal_year : TEXT</text>
                                     <text x="15" y="85" fill="#f8fafc" font-size="11">    annual_budget : NUMERIC(12,2)</text>
                                     <text x="15" y="110" fill="#f8fafc" font-size="11">    continuing_approp : NUMERIC</text>
@@ -1806,7 +1800,7 @@
                                     <rect x="0" y="0" width="280" height="190" rx="12" fill="#0f172a" stroke="#f43f5e" stroke-width="2"/>
                                     <rect x="0" y="0" width="280" height="35" rx="12" fill="#be123c"/>
                                     <text x="140" y="23" fill="#ffffff" font-size="13" font-weight="900" text-anchor="middle">AUDIT_LOGS (Log Trail)</text>
-                                    
+
                                     <text x="15" y="60" fill="#fda4af" font-size="11" font-weight="700">PK  id : TEXT</text>
                                     <text x="15" y="85" fill="#f8fafc" font-size="11">    user_name : TEXT</text>
                                     <text x="15" y="110" fill="#f8fafc" font-size="11">    action : TEXT</text>
@@ -1819,7 +1813,7 @@
                                     <rect x="0" y="0" width="280" height="190" rx="12" fill="#0f172a" stroke="#c084fc" stroke-width="2"/>
                                     <rect x="0" y="0" width="280" height="35" rx="12" fill="#7e22ce"/>
                                     <text x="140" y="23" fill="#ffffff" font-size="13" font-weight="900" text-anchor="middle">ACCOMPLISHMENT_REPORTS</text>
-                                    
+
                                     <text x="15" y="60" fill="#e9d5ff" font-size="11" font-weight="700">PK  id : TEXT</text>
                                     <text x="15" y="85" fill="#f8fafc" font-size="11">    title : TEXT</text>
                                     <text x="15" y="110" fill="#f8fafc" font-size="11">    member : TEXT</text>
@@ -1908,7 +1902,7 @@
                                 <line x1="680" y1="285" x2="760" y2="285" stroke="#f59e0b" stroke-width="2"/>
                                 <line x1="600" y1="330" x2="600" y2="360" stroke="#38bdf8" stroke-width="2"/>
                                 <line x1="600" y1="450" x2="600" y2="480" stroke="#38bdf8" stroke-width="2"/>
-                                
+
                                 <line x1="530" y1="530" x2="270" y2="570" stroke="#c084fc" stroke-width="2"/>
                                 <line x1="600" y1="530" x2="600" y2="570" stroke="#38bdf8" stroke-width="2"/>
                                 <line x1="670" y1="530" x2="940" y2="570" stroke="#4ade80" stroke-width="2"/>
@@ -2061,7 +2055,6 @@
                 </div>
 
             </div>
-
 
         </div>
 
@@ -2409,7 +2402,7 @@
             </div>
         </div>
 
-    
+
         <!-- IAS E: INACTIVITY AUTO-LOGOUT WARNING MODAL (60-SECOND COUNTDOWN) -->
         <div id="inactivity-modal" class="hidden fixed inset-0 z-[100] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity fade-in">
             <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl border-t-4 border-amber-500 text-center space-y-4">
@@ -2503,7 +2496,7 @@
                 <!-- TAB 3: CHANGE EMAIL WITH OTP (IAS B) -->
                 <div id="acc-panel-email" class="hidden space-y-3 text-xs">
                     <p class="text-[11px] text-slate-600">A 6-digit verification OTP will be sent to verify your new email address before updating.</p>
-                    
+
                     <div id="change-email-step-1" class="space-y-3">
                         <div>
                             <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">New Email Address</label>
@@ -3357,7 +3350,7 @@ function switchAuthTab(tab) {
     const regBtn = document.getElementById('tab-register-btn');
     const title = document.getElementById('form-title');
     const subtitle = document.getElementById('form-subtitle');
-    
+
     hideAlert();
 
     if (tab === 'login') {
@@ -3394,7 +3387,7 @@ function getCanonicalUserKey(rawInput) {
     if (!rawInput) return '';
     const clean = rawInput.trim().toLowerCase();
     if (typeof usersStore !== 'undefined' && Array.isArray(usersStore)) {
-        const found = usersStore.find(u => 
+        const found = usersStore.find(u =>
             (u.username && u.username.toLowerCase() === clean) ||
             (u.email && u.email.toLowerCase() === clean)
         );
@@ -3570,7 +3563,7 @@ async function handleLogin(e) {
     const inputHash = await hashPassword(passwordInput);
 
     // 1. Check local Users Store first
-    const matchedUser = usersStore.find(u => 
+    const matchedUser = usersStore.find(u =>
         (u.username.toLowerCase() === userKey || u.email.toLowerCase() === userKey)
     );
 
@@ -3664,10 +3657,10 @@ async function handleLogin(e) {
     } else {
         // INCREMENT FAILED ATTEMPTS (IAS Requirement D)
         record.failedAttempts = (record.failedAttempts || 0) + 1;
-        
+
         if (record.failedAttempts >= 3) {
             record.lockoutCount = (record.lockoutCount || 0) + 1;
-            
+
             // Progressive Lockout Periods: 1 min (60s), 5 min (300s), 15 min (900s)
             let lockoutDurationSec = 60;
             if (record.lockoutCount === 2) lockoutDurationSec = 300;
@@ -3693,7 +3686,7 @@ async function handleLogin(e) {
             }
             map[userKey] = record;
             saveLockoutMap(map);
-            
+
             const attemptsLeft = 3 - record.failedAttempts;
             showAlert('Incorrect credentials. ' + attemptsLeft + ' attempt(s) remaining before lockout.', 'error');
             generateNewCaptcha();
@@ -3891,8 +3884,8 @@ async function handleRegister(e) {
     }
 
     // Check unique username and email (IAS Requirement A)
-    const existingUser = usersStore.find(u => 
-        u.username.toLowerCase() === username.toLowerCase() || 
+    const existingUser = usersStore.find(u =>
+        u.username.toLowerCase() === username.toLowerCase() ||
         u.email.toLowerCase() === email.toLowerCase()
     );
 
@@ -4698,7 +4691,7 @@ async function renderDashboard() {
 function switchDashboardTab(tab) {
     currentActiveTab = tab;
     const isWebAdmin = activeUser && (activeUser.role === 'SK Chairperson' || activeUser.role === 'Admin' || activeUser.role === 'Admin / System Overseer');
-    
+
     const targetContainer = isWebAdmin ? document.getElementById('web-admin-viewport') : document.getElementById('mobile-subviews-container');
     const subviewElement = document.getElementById('subview-' + tab);
     const masterStore = document.getElementById('subviews-master-store');
@@ -4977,11 +4970,11 @@ function openSetAnnualBudgetModal() {
     const yrDisp = document.getElementById('sab-year-disp');
     const yrSelect = document.getElementById('sab-fiscal-year');
     const amtInput = document.getElementById('sab-amount');
-    
+
     if (yrDisp) yrDisp.innerText = currentFiscalYear;
     if (yrSelect) yrSelect.value = currentFiscalYear;
     if (amtInput) amtInput.value = annualBudgets[currentFiscalYear] || 1500000;
-    
+
     document.getElementById('set-annual-budget-modal').classList.remove('hidden');
 }
 
@@ -5145,7 +5138,7 @@ function filterDisbursements() {
     tbody.innerHTML = '';
 
     const fyDisbursements = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear);
-    const filtered = fyDisbursements.filter(d => 
+    const filtered = fyDisbursements.filter(d =>
         (d.voucherNo && d.voucherNo.toLowerCase().includes(query)) ||
         (d.projectTitle && d.projectTitle.toLowerCase().includes(query)) ||
         (d.payee && d.payee.toLowerCase().includes(query)) ||
@@ -5351,7 +5344,7 @@ function openNewProjectModal() {
     const statusContainer = document.getElementById('proj-status-container');
     const modalTitle = document.getElementById('modal-project-title');
     const statusSelect = document.getElementById('proj-status');
-    
+
     // Secretary / Non-Admin submits proposals for Admin approval; Admin creates Approved projects
     if (isSecretary || !isAdmin) {
         modalTitle.innerText = "Propose Youth Project (Awaiting Admin Approval)";
@@ -5368,7 +5361,7 @@ function openNewProjectModal() {
             statusSelect.value = "Approved";
         }
     }
-    
+
     document.getElementById('project-modal').classList.remove('hidden');
 }
 
@@ -5386,7 +5379,7 @@ async function saveProject(e) {
     const period = document.getElementById('proj-period').value.trim();
     const isAdmin = activeUser && (activeUser.role === 'SK Chairperson' || activeUser.role === 'Admin' || activeUser.role === 'Admin / System Overseer');
     const isSecretary = activeUser && activeUser.role === 'SK Secretary';
-    
+
     if (!title) {
         showToast('Please enter a project title.', 'error');
         return;
@@ -5644,7 +5637,7 @@ async function approveProject(id) {
 
     await logUserActivity('PROJECT_APPROVE', 'SK Chairperson approved project proposal: ' + (p ? p.title : id));
     showToast('Project proposal APPROVED! Budget allocated and awaiting SK Treasurer fund release.', 'success');
-    
+
     updateDashboardUI();
 }
 
@@ -5734,15 +5727,15 @@ function openCancelProjectModal(id) {
     document.getElementById('cancel-proj-id').value = p.id;
     document.getElementById('cancel-modal-proj-title').innerText = p.title;
     document.getElementById('cancel-modal-proj-budget').innerText = '₱' + (parseFloat(p.budget) || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
-    
+
     const released = parseFloat(p.disbursed) || 0;
     document.getElementById('cancel-modal-proj-released').innerText = '₱' + released.toLocaleString('en-US', { minimumFractionDigits: 2 });
     document.getElementById('cancel-disp-released').innerText = '₱' + released.toLocaleString('en-US', { minimumFractionDigits: 2 });
-    
+
     document.getElementById('cancel-amount-spent').value = '0.00';
     document.getElementById('cancel-amount-spent').max = released;
     document.getElementById('cancel-disp-returned').innerText = '₱' + released.toLocaleString('en-US', { minimumFractionDigits: 2 });
-    
+
     document.getElementById('cancel-proj-reason').value = 'Event cancelled due to severe weather.';
     document.getElementById('cancel-project-modal').classList.remove('hidden');
 }
@@ -6056,7 +6049,7 @@ async function saveReport(e) {
     await logUserActivity('REPORT_SUBMIT', 'Submitted report: ' + title);
     closeReportModal();
     showToast(isSecretary ? 'Report submitted for Admin approval!' : 'Accomplishment report saved!', 'success');
-    
+
     updateDashboardUI();
 }
 
@@ -6137,7 +6130,7 @@ async function saveDocument(e) {
     await logUserActivity('DOC_UPLOAD', 'Uploaded document: ' + title + ' (' + ref + ')');
     closeDocModal();
     showToast('Barangay Document archived successfully!', 'success');
-    
+
     updateDashboardUI();
 }
 
@@ -6209,7 +6202,7 @@ function filterUsersList() {
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    const filtered = usersStore.filter(u => 
+    const filtered = usersStore.filter(u =>
         u.fullName.toLowerCase().includes(query) ||
         u.username.toLowerCase().includes(query) ||
         u.email.toLowerCase().includes(query) ||
@@ -6576,7 +6569,7 @@ function renderLogTrailFeed(logList) {
 
 function filterLogs() {
     const query = (document.getElementById('log-search').value || '').toLowerCase();
-    const filtered = activityLogs.filter(log => 
+    const filtered = activityLogs.filter(log =>
         log.username.toLowerCase().includes(query) ||
         log.action.toLowerCase().includes(query) ||
         log.details.toLowerCase().includes(query) ||
@@ -6778,7 +6771,7 @@ let siaStartY = 0;
 function switchSiaDiagram(diagramKey) {
     siaCurrentDiagram = diagramKey;
     const diagramKeys = ['use-case', 'swimlane', 'erd', 'flowchart', 'network'];
-    
+
     diagramKeys.forEach(key => {
         const el = document.getElementById('sia-diagram-' + key);
         const tabBtn = document.getElementById('sia-tab-' + key);
