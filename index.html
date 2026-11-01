@@ -752,6 +752,7 @@
                                 <option value="Approved">Approved</option>
                                 <option value="In Progress">In Progress</option>
                                 <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
                                 <option value="Proposed">Proposed</option>
                             </select>
                         </div>
@@ -2338,6 +2339,7 @@
                             <option value="Proposed">Proposed</option>
                             <option value="In Progress">In Progress (Treasurer Released)</option>
                             <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
                             <option value="Pending Admin Approval">Pending Admin Approval</option>
                         </select>
                         <p id="proj-status-help" class="text-[10px] text-slate-400 mt-1">Approved projects transition to 'In Progress' when the SK Treasurer releases funds via a voucher.</p>
@@ -2594,7 +2596,11 @@
                 <form onsubmit="saveAnnualBudgetSetting(event)" class="space-y-3 text-xs">
                     <div>
                         <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Fiscal Year</label>
-                        <input type="text" id="sab-fiscal-year" readonly class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-100 font-bold text-slate-700">
+                        <select id="sab-fiscal-year" onchange="syncSetAnnualBudgetYear(this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-bold text-slate-800 text-xs focus:ring-2 focus:ring-prosko-blue">
+                            <option value="2026">FY 2026 (Active Budget Year)</option>
+                            <option value="2025">FY 2025 (Previous Fiscal Year)</option>
+                            <option value="2024">FY 2024 (Archived Fiscal Year)</option>
+                        </select>
                     </div>
                     <div>
                         <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Total Annual SK Budget (₱)</label>
@@ -2641,6 +2647,75 @@
                     <button type="button" onclick="closeYearEndRolloverModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
                     <button type="button" onclick="executeYearEndRollover()" class="py-2.5 rounded-xl bg-prosko-blue hover:bg-prosko-blueDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px]">Execute Roll-Over</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- CANCEL PROJECT & RETURN FUNDS MODAL (SK CHAIRPERSON & TREASURER DUAL CONTROL) -->
+        <div id="cancel-project-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border-t-4 border-prosko-red slide-up max-h-[90%] overflow-y-auto">
+                <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                    <h3 class="text-sm font-black text-prosko-red flex items-center gap-1.5">
+                        <i class="fa-solid fa-ban"></i> Cancel Youth Project &amp; Return Funds
+                    </h3>
+                    <button type="button" onclick="closeCancelProjectModal()" class="text-slate-400 hover:text-slate-600">
+                        <i class="fa-solid fa-xmark text-sm"></i>
+                    </button>
+                </div>
+
+                <form id="cancel-project-form" onsubmit="executeCancelProject(event)" class="space-y-3.5 text-xs">
+                    <input type="hidden" id="cancel-proj-id">
+
+                    <!-- Project Info Summary Banner -->
+                    <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+                        <p class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Target Project</p>
+                        <h4 id="cancel-modal-proj-title" class="font-black text-slate-900 text-sm">Project Title</h4>
+                        <div class="flex items-center gap-2 pt-1 text-[11px]">
+                            <span class="text-slate-500">Allocated Budget: <strong id="cancel-modal-proj-budget" class="text-prosko-blue font-black">₱0.00</strong></span>
+                            <span class="text-slate-400">•</span>
+                            <span class="text-slate-500">Released: <strong id="cancel-modal-proj-released" class="text-emerald-700 font-black">₱0.00</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Cancellation Reason -->
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Official Cancellation Reason</label>
+                        <textarea id="cancel-proj-reason" rows="2" required class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-prosko-red font-medium text-xs text-slate-800" placeholder="e.g. Event cancelled due to severe weather."></textarea>
+                    </div>
+
+                    <!-- Financial Return Settlement Card (COA Compliance) -->
+                    <div class="p-3.5 bg-amber-50 rounded-2xl border border-amber-200 space-y-2.5">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider">Treasury Fund Return Settlement</span>
+                            <span class="px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-900 text-[10px] font-bold">COA Circular 2020-004</span>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                            <div class="bg-white p-2 rounded-xl border border-amber-200">
+                                <span class="text-slate-400 font-bold block">Released</span>
+                                <span id="cancel-disp-released" class="font-black text-emerald-700 text-xs block mt-0.5">₱0.00</span>
+                            </div>
+                            <div class="bg-white p-2 rounded-xl border border-amber-200">
+                                <span class="text-slate-400 font-bold block">Actual Spent</span>
+                                <input type="number" id="cancel-amount-spent" step="0.01" min="0" value="0.00" oninput="recalculateCancelReturn()" class="w-full text-center font-black text-red-600 text-xs border border-slate-300 rounded-lg py-0.5 mt-0.5 focus:ring-1 focus:ring-prosko-blue">
+                            </div>
+                            <div class="bg-white p-2 rounded-xl border border-amber-300 bg-amber-50/50">
+                                <span class="text-amber-800 font-bold block">To Return</span>
+                                <span id="cancel-disp-returned" class="font-black text-prosko-blue text-xs block mt-0.5">₱0.00</span>
+                            </div>
+                        </div>
+
+                        <p class="text-[10px] text-amber-800 leading-relaxed">
+                            💡 The returned amount will be <strong>automatically refunded back into the Available Youth Budget</strong>, and a reverse settlement transaction will be logged in the Disbursement Ledger &amp; System Audit Trail.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2">
+                        <button type="button" onclick="closeCancelProjectModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Keep Project</button>
+                        <button type="submit" class="py-2.5 rounded-xl bg-prosko-red hover:bg-prosko-redDark text-white font-extrabold shadow-md uppercase tracking-wider text-[11px] flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-ban"></i> Confirm Cancellation
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -4886,7 +4961,9 @@ function updateDashboardUI() {
 // 11. TREASURY, BUDGET LEDGER & DISBURSEMENT LOGS (TASK REQ 1 & 4)
 // =========================================================================
 function changeFiscalYear(year) {
-    currentFiscalYear = year;
+    currentFiscalYear = String(year);
+    const select = document.getElementById('budget-fiscal-year');
+    if (select) select.value = currentFiscalYear;
     updateCalculatedMetrics();
     renderTreasurerBudgetCards();
     renderDisbursementLogsTable();
@@ -4894,9 +4971,22 @@ function changeFiscalYear(year) {
 }
 
 function openSetAnnualBudgetModal() {
-    document.getElementById('sab-year-disp').innerText = currentFiscalYear;
-    document.getElementById('sab-amount').value = annualBudgets[currentFiscalYear] || 1500000;
+    const yrDisp = document.getElementById('sab-year-disp');
+    const yrSelect = document.getElementById('sab-fiscal-year');
+    const amtInput = document.getElementById('sab-amount');
+    
+    if (yrDisp) yrDisp.innerText = currentFiscalYear;
+    if (yrSelect) yrSelect.value = currentFiscalYear;
+    if (amtInput) amtInput.value = annualBudgets[currentFiscalYear] || 1500000;
+    
     document.getElementById('set-annual-budget-modal').classList.remove('hidden');
+}
+
+function syncSetAnnualBudgetYear(year) {
+    const yrDisp = document.getElementById('sab-year-disp');
+    const amtInput = document.getElementById('sab-amount');
+    if (yrDisp) yrDisp.innerText = year;
+    if (amtInput) amtInput.value = annualBudgets[year] || 1500000;
 }
 
 function closeSetAnnualBudgetModal() {
@@ -4906,7 +4996,8 @@ function closeSetAnnualBudgetModal() {
 async function saveAnnualBudgetSetting(e) {
     e.preventDefault();
     const amt = parseFloat(document.getElementById('sab-amount').value);
-    const year = currentFiscalYear;
+    const yrSelect = document.getElementById('sab-fiscal-year');
+    const year = yrSelect ? yrSelect.value : currentFiscalYear;
 
     if (!amt || amt <= 0) {
         showToast('Please enter a valid budget amount.', 'error');
@@ -4916,7 +5007,11 @@ async function saveAnnualBudgetSetting(e) {
     annualBudgets[year] = amt;
     localStorage.setItem('prosko_annual_budgets', JSON.stringify(annualBudgets));
 
-    await supabaseInsert('fiscal_budget', { year: year, allocated_budget: amt });
+    // Live Supabase sync for fiscal_budget with self-healing
+    try {
+        await supabaseInsert('fiscal_budget', { year: year, allocated_budget: amt });
+    } catch (err) {}
+
     await logUserActivity('ANNUAL_BUDGET_UPDATE', 'Updated FY ' + year + ' Annual SK Budget to ₱' + amt.toLocaleString('en-US'));
 
     closeSetAnnualBudgetModal();
@@ -5455,6 +5550,9 @@ function renderProjectsCards(projectList) {
             case "Completed":
                 statusBadgeClass = "bg-purple-100 text-purple-800 border-purple-300";
                 break;
+            case "Cancelled":
+                statusBadgeClass = "bg-rose-100 text-rose-800 border-rose-300";
+                break;
             case "Proposed":
                 statusBadgeClass = "bg-slate-100 text-slate-800 border-slate-300";
                 break;
@@ -5502,6 +5600,11 @@ function renderProjectsCards(projectList) {
             ` : ''}
 
             <div class="flex justify-end gap-2 pt-1 border-t border-slate-200/60">
+                ${isAdmin && project.status !== 'Cancelled' ? `
+                    <button onclick="openCancelProjectModal('${project.id}')" class="text-xs bg-amber-50 hover:bg-amber-500 hover:text-white text-amber-800 border border-amber-300 px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1">
+                        <i class="fa-solid fa-ban"></i> Cancel Project
+                    </button>
+                ` : ''}
                 ${isAdmin || (isSecretary && project.status === 'Pending Admin Approval') ? `
                     <button onclick="editProject('${project.id}')" class="text-xs bg-slate-200 hover:bg-prosko-blue hover:text-white px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1">
                         <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -5577,9 +5680,18 @@ function deleteProject(id) {
         return;
     }
 
-    customConfirm("Delete Project", "Permanently remove this project and its budget allocation?", async (confirmed) => {
+    const rawId = String(id);
+    const p = projects.find(item => String(item.id) === rawId);
+    const disbursed = p ? (parseFloat(p.disbursed) || 0) : 0;
+
+    if (disbursed > 0 && p.status !== 'Cancelled') {
+        showToast('Accounting Protection: Cannot simply delete a funded project! Please use "Cancel Project" to document fund return.', 'warning');
+        openCancelProjectModal(id);
+        return;
+    }
+
+    customConfirm("Delete Project", "Permanently remove this project from records?", async (confirmed) => {
         if (confirmed) {
-            const rawId = String(id);
             const idx = projects.findIndex(item => String(item.id) === rawId);
             if (idx !== -1) projects.splice(idx, 1);
 
@@ -5598,6 +5710,141 @@ function deleteProject(id) {
             updateDashboardUI();
         }
     });
+}
+
+// =========================================================================
+// PROJECT CANCELLATION & TREASURY FUND RETURN (COA CIRCULAR 2020-004)
+// =========================================================================
+function openCancelProjectModal(id) {
+    if (!activeUser || (activeUser.role !== 'SK Chairperson' && activeUser.role !== 'Admin')) {
+        showToast('Permission Denied: Only the SK Chairperson / Admin can authorize project cancellation.', 'error');
+        return;
+    }
+
+    const rawId = String(id);
+    const p = projects.find(item => String(item.id) === rawId);
+    if (!p) {
+        showToast('Project not found.', 'error');
+        return;
+    }
+
+    document.getElementById('cancel-proj-id').value = p.id;
+    document.getElementById('cancel-modal-proj-title').innerText = p.title;
+    document.getElementById('cancel-modal-proj-budget').innerText = '₱' + (parseFloat(p.budget) || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
+    
+    const released = parseFloat(p.disbursed) || 0;
+    document.getElementById('cancel-modal-proj-released').innerText = '₱' + released.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    document.getElementById('cancel-disp-released').innerText = '₱' + released.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    
+    document.getElementById('cancel-amount-spent').value = '0.00';
+    document.getElementById('cancel-amount-spent').max = released;
+    document.getElementById('cancel-disp-returned').innerText = '₱' + released.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    
+    document.getElementById('cancel-proj-reason').value = 'Event cancelled due to severe weather.';
+    document.getElementById('cancel-project-modal').classList.remove('hidden');
+}
+
+function closeCancelProjectModal() {
+    document.getElementById('cancel-project-modal').classList.add('hidden');
+}
+
+function recalculateCancelReturn() {
+    const rawId = document.getElementById('cancel-proj-id').value;
+    const p = projects.find(item => String(item.id) === String(rawId));
+    const released = p ? (parseFloat(p.disbursed) || 0) : 0;
+    const spent = Math.max(0, Math.min(released, parseFloat(document.getElementById('cancel-amount-spent').value) || 0));
+    const returned = Math.max(0, released - spent);
+    document.getElementById('cancel-disp-returned').innerText = '₱' + returned.toLocaleString('en-US', { minimumFractionDigits: 2 });
+}
+
+async function executeCancelProject(e) {
+    if (e) e.preventDefault();
+
+    if (!activeUser || (activeUser.role !== 'SK Chairperson' && activeUser.role !== 'Admin')) {
+        showToast('Permission Denied: Only the SK Chairperson / Admin can authorize project cancellation.', 'error');
+        return;
+    }
+
+    const rawId = document.getElementById('cancel-proj-id').value;
+    const reason = document.getElementById('cancel-proj-reason').value.trim();
+    const p = projects.find(item => String(item.id) === String(rawId));
+
+    if (!p) {
+        showToast('Target project not found.', 'error');
+        return;
+    }
+
+    if (!reason) {
+        showToast('Please provide an official cancellation reason.', 'error');
+        return;
+    }
+
+    const released = parseFloat(p.disbursed) || 0;
+    let spent = parseFloat(document.getElementById('cancel-amount-spent').value) || 0;
+    if (spent < 0) spent = 0;
+    if (spent > released) spent = released;
+    const returned = Math.max(0, released - spent);
+
+    // 1. Update project status and adjust disbursed amount to reflect actual net expenditure
+    p.status = 'Cancelled';
+    p.cancellationReason = reason;
+    p.amountReleased = released;
+    p.amountSpent = spent;
+    p.amountReturned = returned;
+    p.disbursed = spent; // Only actual spent amount remains deducted; returned money is refunded!
+
+    saveProjectsToLocal();
+
+    // 2. Record Return Settlement in Disbursements Journal if money was returned
+    if (returned > 0) {
+        const fyDisbCount = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear).length;
+        const returnVoucherNum = 'CR-' + currentFiscalYear + '-' + String(fyDisbCount + 1).padStart(3, '0');
+        const returnRecord = {
+            id: returnVoucherNum,
+            voucherNo: returnVoucherNum,
+            projectId: p.id,
+            projectTitle: p.title,
+            payee: 'SK Treasury (Refund / Return)',
+            purpose: 'Refund from cancelled project: ' + p.title + ' (Reason: ' + reason + ')',
+            amount: -returned, // Negative disbursement to refund Available Youth Budget
+            fiscalYear: currentFiscalYear,
+            disbursedBy: activeUser.name,
+            disbursedAt: new Date().toISOString(),
+            status: 'Returned'
+        };
+
+        disbursements.unshift(returnRecord);
+        saveDisbursementsToLocal();
+
+        await supabaseInsert('disbursements', {
+            id: returnVoucherNum,
+            voucher_no: returnVoucherNum,
+            project_id: isNaN(Number(p.id)) ? null : Number(p.id),
+            project_title: p.title,
+            payee: 'SK Treasury (Refund / Return)',
+            purpose: 'Refund from cancelled project: ' + p.title + ' (Reason: ' + reason + ')',
+            amount: -returned,
+            fiscal_year: currentFiscalYear,
+            disbursed_by: activeUser.name,
+            status: 'Returned'
+        });
+    }
+
+    // 3. Live Supabase update for project
+    await supabaseUpdate('projects', {
+        status: 'Cancelled',
+        disbursed: spent,
+        description: (p.description ? p.description + '\n' : '') + '[CANCELLED: ' + reason + ' | Released: ₱' + released.toLocaleString('en-US') + ' | Spent: ₱' + spent.toLocaleString('en-US') + ' | Returned: ₱' + returned.toLocaleString('en-US') + ']'
+    }, 'id', p.id);
+
+    // 4. Log detailed transaction in System Audit Trail
+    await logUserActivity('PROJECT_CANCELLED', 'Cancelled project: ' + p.title + ' (Reason: ' + reason + ' | Released: ₱' + released.toLocaleString('en-US') + ' | Spent: ₱' + spent.toLocaleString('en-US') + ' | Returned: ₱' + returned.toLocaleString('en-US') + ' returned to Available Budget)');
+
+    closeCancelProjectModal();
+    await fetchAllDatabaseData();
+    updateDashboardUI();
+
+    showToast('Project cancelled! ₱' + returned.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' successfully returned to the Available Youth Budget.', 'success');
 }
 
 function editProject(id) {
