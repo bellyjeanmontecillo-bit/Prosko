@@ -597,9 +597,9 @@
                         <!-- Stat Card 1 -->
                         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm border-l-4 border-l-prosko-blue flex justify-between items-center">
                             <div>
-                                <p class="text-[11px] font-extrabold text-prosko-blue uppercase tracking-wider">Available Youth Budget</p>
+                                <p class="text-[11px] font-extrabold text-prosko-blue uppercase tracking-wider">Available for Allocation</p>
                                 <h3 id="web-stat-total-budget" class="text-2xl font-black text-slate-900 mt-1">₱0.00</h3>
-                                <p id="web-stat-total-budget-sub" class="text-xs text-slate-500 font-medium mt-1">Remaining Balance</p>
+                                <p id="web-stat-total-budget-sub" class="text-xs text-slate-500 font-medium mt-1">Remaining for New Projects</p>
                             </div>
                             <div class="w-12 h-12 bg-prosko-blueLight text-prosko-blue rounded-2xl flex items-center justify-center text-xl shadow-inner">
                                 <i class="fa-solid fa-peseta-sign"></i>
@@ -874,9 +874,9 @@
                         </div>
 
                         <div class="p-3 sm:p-3.5 bg-gradient-to-br from-slate-50 to-amber-50/40 rounded-xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between">
-                            <p class="text-[9px] sm:text-[10px] font-extrabold text-amber-700 uppercase tracking-wider">Unexpended Balance</p>
-                            <h4 id="tb-unexpended-balance" class="text-sm sm:text-base font-black text-amber-800 mt-1 truncate" title="Unexpended Balance">₱1,500,000.00</h4>
-                            <p class="text-[10px] text-amber-600 font-medium mt-0.5">Remaining Youth Fund</p>
+                            <p class="text-[9px] sm:text-[10px] font-extrabold text-amber-700 uppercase tracking-wider">Undisbursed Allocated</p>
+                            <h4 id="tb-unexpended-balance" class="text-sm sm:text-base font-black text-amber-800 mt-1 truncate" title="Undisbursed Allocated Funds">₱0.00</h4>
+                            <p class="text-[10px] text-amber-600 font-medium mt-0.5">Committed Awaiting Release</p>
                         </div>
                     </div>
                 </div>
@@ -2578,11 +2578,11 @@
             </div>
         </div>
 
-        <!-- SET ANNUAL SK YOUTH BUDGET MODAL -->
+        <!-- SET / ADJUST ANNUAL SK YOUTH BUDGET MODAL -->
         <div id="set-annual-budget-modal" class="hidden fixed inset-0 z-[90] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
             <div class="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl border-t-4 border-prosko-blue slide-up">
                 <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
-                    <h3 class="text-sm font-black text-prosko-blue">Configure Annual SK Youth Budget (<span id="sab-year-disp">2026</span>)</h3>
+                    <h3 class="text-sm font-black text-prosko-blue">Configure / Adjust Annual SK Youth Budget (<span id="sab-year-disp">2026</span>)</h3>
                     <button type="button" onclick="closeSetAnnualBudgetModal()" class="text-slate-400 hover:text-slate-600">
                         <i class="fa-solid fa-xmark text-sm"></i>
                     </button>
@@ -2599,8 +2599,16 @@
                     </div>
                     <div>
                         <label class="block text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider mb-1">Total Annual SK Budget (₱)</label>
-                        <input type="number" id="sab-amount" step="1000" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-black text-sm text-prosko-blue focus:ring-2 focus:ring-prosko-blue" placeholder="1500000.00">
+                        <input type="number" id="sab-amount" step="1000" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 font-black text-sm text-prosko-blue focus:ring-2 focus:ring-prosko-blue" placeholder="1600000.00">
                         <p class="text-[10px] text-slate-500 mt-1">Under RA 10742, this represents the 10% Barangay IRA allocation for Youth Development.</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-700 uppercase tracking-wider mb-1">Resolution / Ordinance Ref</label>
+                        <input type="text" id="sab-resolution-ref" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-medium text-xs text-slate-800 focus:ring-2 focus:ring-prosko-blue" placeholder="e.g. SK-RES-2026-001 (Annual Budget)">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-extrabold text-slate-700 uppercase tracking-wider mb-1">Reason for Adjustment / Note</label>
+                        <input type="text" id="sab-reason" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-medium text-xs text-slate-800 focus:ring-2 focus:ring-prosko-blue" placeholder="e.g. Approved Annual Barangay Youth Investment Plan">
                     </div>
                     <div class="grid grid-cols-2 gap-2 pt-2">
                         <button type="button" onclick="closeSetAnnualBudgetModal()" class="py-2.5 rounded-xl border border-slate-300 font-extrabold text-slate-700 hover:bg-slate-50 uppercase tracking-wider text-[11px]">Cancel</button>
@@ -3027,7 +3035,7 @@ let backupLogs = [];
 // Annual SK Youth Budgets (10% of Barangay IRA)
 let annualBudgets = {
     '2027': 1600000.00,
-    '2026': 1500000.00,
+    '2026': 1600000.00,
     '2025': 1200000.00,
     '2024': 1000000.00
 };
@@ -4809,15 +4817,19 @@ function switchDashboardTab(tab) {
 // =========================================================================
 function updateCalculatedMetrics() {
     // 1. Annual SK Youth Budget (10% Barangay IRA allocation)
-    const annualBudget = annualBudgets[currentFiscalYear] || 1500000.00;
+    const annualBudget = annualBudgets[currentFiscalYear] || 1600000.00;
 
-    // 2. Total Allocated: Sum of approved / active youth projects
-    // (Pending Secretary proposals and unapproved proposals do not commit allocated funds!)
-    const approvedProjects = projects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
+    // 2. Total Allocated: Sum of approved / active youth projects for SELECTED FISCAL YEAR
+    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear));
+    const approvedProjects = fyProjects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
     const totalAllocated = approvedProjects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
 
-    // 3. Total Disbursed: Sum of positive released vouchers for active fiscal year
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear);
+    // 3. Available for Allocation: Remaining youth budget available to fund NEW projects
+    // FORMULA: Annual Youth Budget - Total Allocated Budget
+    const availableForAllocation = Math.max(0, annualBudget - totalAllocated);
+
+    // 4. Total Disbursed: Sum of positive released vouchers for active fiscal year
+    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || String(d.fiscalYear) === String(currentFiscalYear));
     const releasedVouchers = fyDisbursements.filter(d => d.status !== 'Returned' && (parseFloat(d.amount) || 0) > 0);
     const totalDisbursed = releasedVouchers.reduce((acc, d) => acc + (parseFloat(d.amount) || 0), 0);
 
@@ -4825,12 +4837,15 @@ function updateCalculatedMetrics() {
     const totalRefunded = fyDisbursements.filter(d => d.status === 'Returned' || (parseFloat(d.amount) || 0) < 0)
         .reduce((acc, d) => acc + Math.abs(parseFloat(d.amount) || 0), 0);
 
-    // 4. Available Youth Budget Balance: (Annual Budget - Disbursed + Refunded)
+    // Net actual cash disbursed
     const netDisbursed = Math.max(0, totalDisbursed - totalRefunded);
-    const unexpendedBalance = Math.max(0, annualBudget - netDisbursed);
 
-    const pendingProjCount = projects.filter(p => p.status === 'Pending Admin Approval').length;
-    const pendingRepCount = accomplishmentReports.filter(r => r.status === 'Pending Admin Approval').length;
+    // 5. Undisbursed Allocated Funds: Funds committed to approved projects awaiting release
+    // FORMULA: Total Allocated - Total Disbursed
+    const undisbursedAllocated = Math.max(0, totalAllocated - netDisbursed);
+
+    const pendingProjCount = fyProjects.filter(p => p.status === 'Pending Admin Approval').length;
+    const pendingRepCount = accomplishmentReports.filter(r => (!r.fiscalYear || String(r.fiscalYear) === String(currentFiscalYear)) && r.status === 'Pending Admin Approval').length;
     const totalPending = pendingProjCount + pendingRepCount;
 
     // Web Admin Stat Cards
@@ -4842,16 +4857,26 @@ function updateCalculatedMetrics() {
     const webPendingSub = document.getElementById('web-stat-pending-sub');
     const webProjCount = document.getElementById('web-stat-projects-count');
 
-    // Available Youth Budget Balance: Deducted upon Treasurer fund release (disbursements)
-    if (webBudget) webBudget.innerText = '₱' + unexpendedBalance.toLocaleString('en-US', { minimumFractionDigits: 2 });
-    if (webBudgetSub) webBudgetSub.innerText = 'of ₱' + annualBudget.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' Annual IRA (₱' + totalAllocated.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' Allocated)';
+    // Available for Allocation: Money that can still be allocated to new projects
+    if (webBudget) {
+        webBudget.innerText = '₱' + availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        webBudget.title = 'Available for Allocation: ₱' + availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    }
+    if (webBudgetSub) {
+        webBudgetSub.innerText = 'of ₱' + annualBudget.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' Annual IRA (₱' + totalAllocated.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' Allocated)';
+    }
 
-    if (webDisb) webDisb.innerText = '₱' + totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 });
-    if (webDisbSub) webDisbSub.innerText = 'Deducted via ' + releasedVouchers.length + ' Released Voucher' + (releasedVouchers.length === 1 ? '' : 's') + (totalRefunded > 0 ? ' (₱' + totalRefunded.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' Refunded)' : '');
+    if (webDisb) {
+        webDisb.innerText = '₱' + totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        webDisb.title = 'Total Disbursed: ₱' + totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    }
+    if (webDisbSub) {
+        webDisbSub.innerText = '₱' + undisbursedAllocated.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' Committed & Undisbursed';
+    }
 
     if (webPending) webPending.innerText = totalPending + ' Items';
     if (webPendingSub) webPendingSub.innerText = pendingProjCount + ' Proj • ' + pendingRepCount + ' Reports';
-    if (webProjCount) webProjCount.innerText = projects.length;
+    if (webProjCount) webProjCount.innerText = fyProjects.length;
 
     // Treasury & Budget Subview Cards
     const tbBudget = document.getElementById('tb-annual-budget');
@@ -4872,8 +4897,9 @@ function updateCalculatedMetrics() {
         tbDisb.title = tbDisb.innerText;
     }
     if (tbUnexp) {
-        tbUnexp.innerText = '₱' + unexpendedBalance.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        tbUnexp.title = tbUnexp.innerText;
+        // Displays Undisbursed Allocated Funds (Committed awaiting release)
+        tbUnexp.innerText = '₱' + undisbursedAllocated.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        tbUnexp.title = 'Undisbursed Allocated Funds: ₱' + undisbursedAllocated.toLocaleString('en-US', { minimumFractionDigits: 2 });
     }
 
     // Mobile Shell Stat Cards
@@ -4940,13 +4966,13 @@ function renderMetricWidgets() {
         widgetGrid.innerHTML = `
             <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm border-t-4 border-t-prosko-blue flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-1.5">
-                    <p class="text-[9px] font-extrabold text-prosko-blue uppercase tracking-wider">Available Budget</p>
+                    <p class="text-[9px] font-extrabold text-prosko-blue uppercase tracking-wider">Available for Allocation</p>
                     <span class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs shadow-inner">
                         <i class="fa-solid fa-wallet"></i>
                     </span>
                 </div>
-                <h3 id="stat-total-budget" class="text-sm sm:text-base font-black text-slate-900 truncate" title="₱${unexpendedBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}">₱${unexpendedBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</h3>
-                <p class="text-[10px] text-slate-500 font-medium mt-0.5">of ₱${annualBudget.toLocaleString('en-US')} IRA</p>
+                <h3 id="stat-total-budget" class="text-sm sm:text-base font-black text-slate-900 truncate" title="₱${availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 })}">₱${availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 })}</h3>
+                <p class="text-[10px] text-slate-500 font-medium mt-0.5">FY ${currentFiscalYear} of ₱${annualBudget.toLocaleString('en-US')} IRA</p>
             </div>
 
             <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm border-t-4 border-t-prosko-green flex flex-col justify-between">
@@ -4957,7 +4983,7 @@ function renderMetricWidgets() {
                     </span>
                 </div>
                 <h3 id="stat-total-disbursed" class="text-sm sm:text-base font-black text-slate-900 truncate" title="₱${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}">₱${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}</h3>
-                <p class="text-[10px] text-prosko-green font-bold mt-0.5">Deducted from Fund</p>
+                <p class="text-[10px] text-prosko-green font-bold mt-0.5">₱${undisbursedAllocated.toLocaleString('en-US')} Committed & Undisbursed</p>
             </div>
         `;
     } else {
@@ -4965,13 +4991,13 @@ function renderMetricWidgets() {
         widgetGrid.innerHTML = `
             <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm border-t-4 border-t-prosko-blue flex flex-col justify-between">
                 <div class="flex justify-between items-start mb-1.5">
-                    <p class="text-[9px] font-extrabold text-prosko-blue uppercase tracking-wider">Available Budget</p>
+                    <p class="text-[9px] font-extrabold text-prosko-blue uppercase tracking-wider">Available for Allocation</p>
                     <span class="w-7 h-7 rounded-lg bg-prosko-blueLight text-prosko-blue flex items-center justify-center text-xs shadow-inner">
                         <i class="fa-solid fa-wallet"></i>
                     </span>
                 </div>
-                <h3 id="stat-total-budget" class="text-sm sm:text-base font-black text-slate-900 truncate" title="₱${unexpendedBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}">₱${unexpendedBalance.toLocaleString('en-US', { minimumFractionDigits: 2 })}</h3>
-                <p class="text-[10px] text-slate-500 font-medium mt-0.5">₱${totalAllocated.toLocaleString('en-US')} Allocated</p>
+                <h3 id="stat-total-budget" class="text-sm sm:text-base font-black text-slate-900 truncate" title="₱${availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 })}">₱${availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 })}</h3>
+                <p class="text-[10px] text-slate-500 font-medium mt-0.5">FY ${currentFiscalYear} • ₱${totalAllocated.toLocaleString('en-US')} Allocated</p>
             </div>
 
             <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm border-t-4 border-t-prosko-green flex flex-col justify-between">
@@ -4982,7 +5008,7 @@ function renderMetricWidgets() {
                     </span>
                 </div>
                 <h3 id="stat-total-disbursed" class="text-sm sm:text-base font-black text-slate-900 truncate" title="₱${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}">₱${totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 })}</h3>
-                <p class="text-[10px] text-prosko-green font-bold mt-0.5">Deducted from Fund</p>
+                <p class="text-[10px] text-prosko-green font-bold mt-0.5">₱${undisbursedAllocated.toLocaleString('en-US')} Undisbursed</p>
             </div>
         `;
     }
@@ -5007,8 +5033,10 @@ function changeFiscalYear(year) {
     const select = document.getElementById('budget-fiscal-year');
     if (select) select.value = currentFiscalYear;
     updateCalculatedMetrics();
+    renderMetricWidgets();
     renderTreasurerBudgetCards();
     renderDisbursementLogsTable();
+    filterProjects();
     showToast('Switched to Fiscal Year ' + year, 'info');
 }
 
@@ -5019,7 +5047,7 @@ function openSetAnnualBudgetModal() {
 
     if (yrDisp) yrDisp.innerText = currentFiscalYear;
     if (yrSelect) yrSelect.value = currentFiscalYear;
-    if (amtInput) amtInput.value = annualBudgets[currentFiscalYear] || 1500000;
+    if (amtInput) amtInput.value = annualBudgets[currentFiscalYear] || 1600000;
 
     document.getElementById('set-annual-budget-modal').classList.remove('hidden');
 }
@@ -5028,7 +5056,7 @@ function syncSetAnnualBudgetYear(year) {
     const yrDisp = document.getElementById('sab-year-disp');
     const amtInput = document.getElementById('sab-amount');
     if (yrDisp) yrDisp.innerText = year;
-    if (amtInput) amtInput.value = annualBudgets[year] || 1500000;
+    if (amtInput) amtInput.value = annualBudgets[year] || 1600000;
 }
 
 function closeSetAnnualBudgetModal() {
@@ -5040,12 +5068,29 @@ async function saveAnnualBudgetSetting(e) {
     const amt = parseFloat(document.getElementById('sab-amount').value);
     const yrSelect = document.getElementById('sab-fiscal-year');
     const year = yrSelect ? yrSelect.value : currentFiscalYear;
+    const resRef = document.getElementById('sab-resolution-ref') ? document.getElementById('sab-resolution-ref').value.trim() : '';
+    const reason = document.getElementById('sab-reason') ? document.getElementById('sab-reason').value.trim() : '';
 
     if (!amt || amt <= 0) {
         showToast('Please enter a valid budget amount.', 'error');
         return;
     }
 
+    // Protection 1: Calculate already allocated and disbursed amount for this fiscal year
+    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(year));
+    const approvedProjects = fyProjects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
+    const totalAllocated = approvedProjects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
+    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || String(d.fiscalYear) === String(year));
+    const releasedVouchers = fyDisbursements.filter(d => d.status !== 'Returned' && (parseFloat(d.amount) || 0) > 0);
+    const totalDisbursed = releasedVouchers.reduce((acc, d) => acc + (parseFloat(d.amount) || 0), 0);
+
+    const minAllowedBudget = Math.max(totalAllocated, totalDisbursed);
+    if (amt < minAllowedBudget) {
+        showToast(`Budget Protection: Cannot reduce FY ${year} budget below already committed funds (₱${minAllowedBudget.toLocaleString('en-US', { minimumFractionDigits: 2 })}).`, 'error');
+        return;
+    }
+
+    const prevAmt = annualBudgets[year] || 1600000;
     annualBudgets[year] = amt;
     localStorage.setItem('prosko_annual_budgets', JSON.stringify(annualBudgets));
 
@@ -5054,7 +5099,9 @@ async function saveAnnualBudgetSetting(e) {
         await supabaseUpsert('fiscal_budget', { year: String(year), allocated_budget: amt, updated_at: new Date().toISOString() }, 'year');
     } catch (err) {}
 
-    await logUserActivity('ANNUAL_BUDGET_UPDATE', 'Updated FY ' + year + ' Annual SK Budget to ₱' + amt.toLocaleString('en-US'));
+    // Audit Trail logging with authorized user, date, resolution, and previous vs new budget
+    const auditDetail = `Adjusted FY ${year} SK Budget from ₱${prevAmt.toLocaleString('en-US')} to ₱${amt.toLocaleString('en-US')} | Ref: ${resRef || 'N/A'} | Reason: ${reason || 'Annual IRA update'} | User: ${activeUser ? activeUser.name + ' (' + activeUser.role + ')' : 'Admin'}`;
+    await logUserActivity('ANNUAL_BUDGET_UPDATE', auditDetail);
 
     closeSetAnnualBudgetModal();
     updateDashboardUI();
@@ -5086,12 +5133,14 @@ function renderTreasurerBudgetCards() {
         }
     }
 
-    if (projects.length === 0) {
-        container.innerHTML = '<div class="p-6 text-center text-slate-400 font-bold text-xs">No projects registered in budget ledger</div>';
+    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear));
+
+    if (fyProjects.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-slate-400 font-bold text-xs">No projects registered in budget ledger for FY ${currentFiscalYear}</div>`;
         return;
     }
 
-    projects.forEach(p => {
+    fyProjects.forEach(p => {
         const total = parseFloat(p.budget) || 0;
         const disbursed = parseFloat(p.disbursed) || 0;
         const remaining = Math.max(0, total - disbursed);
@@ -5238,8 +5287,8 @@ function openDisbursementModal() {
     if (!select) return;
     select.innerHTML = '';
 
-    // Only allow disbursements for approved or in-progress projects with available balance
-    const releasableProjects = projects.filter(p => (p.status === 'Approved' || p.status === 'In Progress') && ((parseFloat(p.budget) || 0) > (parseFloat(p.disbursed) || 0)));
+    // Only allow disbursements for approved or in-progress projects in current fiscal year with available balance
+    const releasableProjects = projects.filter(p => (!p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear)) && (p.status === 'Approved' || p.status === 'In Progress') && ((parseFloat(p.budget) || 0) > (parseFloat(p.disbursed) || 0)));
 
     if (releasableProjects.length === 0) {
         showToast('No approved projects with remaining balance available for fund disbursement.', 'error');
@@ -5444,11 +5493,24 @@ async function saveProject(e) {
         return;
     }
 
+    // Protection: Validate against Available for Allocation if creating an approved project
+    const annualBudget = annualBudgets[currentFiscalYear] || 1600000.00;
+    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear));
+    const currentAllocated = fyProjects
+        .filter(p => (p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed') && String(p.id) !== String(id))
+        .reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
+    const availableForAllocation = Math.max(0, annualBudget - currentAllocated);
+
     // Force non-admin/Secretary submissions to always be "Pending Admin Approval"
     // Newly created projects default to "Approved" and cannot jump to "In Progress" until Treasurer releases funds
     let status = (!isAdmin || isSecretary) ? "Pending Admin Approval" : document.getElementById('proj-status').value;
     if (!id && (status === "In Progress" || !status)) {
         status = "Approved";
+    }
+
+    if (status !== 'Pending Admin Approval' && budget > availableForAllocation) {
+        showToast(`Budget Limit Exceeded: Only ₱${availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 })} available for allocation in FY ${currentFiscalYear}.`, 'error');
+        return;
     }
 
     closeProjectModal();
@@ -5681,7 +5743,25 @@ async function approveProject(id) {
 
     const rawId = String(id);
     const p = projects.find(item => String(item.id) === rawId);
-    if (p) p.status = 'Approved';
+
+    if (p) {
+        // Protection: Ensure approving this proposal does not exceed the remaining Available for Allocation
+        const pYear = p.fiscalYear || currentFiscalYear;
+        const annualBudget = annualBudgets[pYear] || 1600000.00;
+        const fyProjects = projects.filter(item => (!item.fiscalYear || String(item.fiscalYear) === String(pYear)) && String(item.id) !== rawId);
+        const currentAllocated = fyProjects
+            .filter(item => item.status === 'Approved' || item.status === 'In Progress' || item.status === 'Completed')
+            .reduce((acc, item) => acc + (parseFloat(item.budget) || 0), 0);
+        const availableForAllocation = Math.max(0, annualBudget - currentAllocated);
+        const projBudget = parseFloat(p.budget) || 0;
+
+        if (projBudget > availableForAllocation) {
+            showToast(`Cannot Approve: Project budget (₱${projBudget.toLocaleString('en-US', { minimumFractionDigits: 2 })}) exceeds FY ${pYear} Available for Allocation (₱${availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 })}).`, 'error');
+            return;
+        }
+
+        p.status = 'Approved';
+    }
 
     saveProjectsToLocal();
 
