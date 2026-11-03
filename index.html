@@ -138,7 +138,7 @@
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
         .mode-web-admin .treasury-metrics-grid {
-            grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
         }
 
         /* Mobile Shell Layout overrides to prevent cramped elements */
@@ -853,12 +853,18 @@
                         </div>
                     </div>
 
-                    <!-- 4-Metric Grid for Financial Overview -->
-                    <div class="treasury-metrics-grid grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-xs">
+                    <!-- 5-Metric Grid for Financial Overview (Matching SK Chairperson Layout) -->
+                    <div class="treasury-metrics-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3 text-xs">
                         <div class="p-3 sm:p-3.5 bg-gradient-to-br from-slate-50 to-blue-50/40 rounded-xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between">
                             <p class="text-[9px] sm:text-[10px] font-extrabold text-prosko-blue uppercase tracking-wider">Annual Youth Budget</p>
                             <h4 id="tb-annual-budget" class="text-sm sm:text-base font-black text-slate-900 mt-1 truncate" title="Annual Youth Budget">₱1,500,000.00</h4>
                             <p class="text-[10px] text-slate-500 font-medium mt-0.5">10% Brgy General Fund</p>
+                        </div>
+
+                        <div class="p-3 sm:p-3.5 bg-gradient-to-br from-slate-50 to-sky-50/40 rounded-xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between">
+                            <p class="text-[9px] sm:text-[10px] font-extrabold text-sky-700 uppercase tracking-wider">Available for Allocation</p>
+                            <h4 id="tb-available-budget" class="text-sm sm:text-base font-black text-sky-800 mt-1 truncate" title="Available for Allocation">₱0.00</h4>
+                            <p id="tb-available-budget-sub" class="text-[10px] text-sky-600 font-medium mt-0.5">Remaining for New Projects</p>
                         </div>
 
                         <div class="p-3 sm:p-3.5 bg-gradient-to-br from-slate-50 to-purple-50/40 rounded-xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between">
@@ -3658,7 +3664,8 @@ async function handleLogin(e) {
                 .or('username.eq.' + usernameOrEmail + ',email.eq.' + usernameOrEmail)
                 .maybeSingle();
 
-            if (profile) {
+            // Enforce SHA-256 password hash comparison against database record
+            if (profile && profile.password_hash && profile.password_hash === inputHash) {
                 activeUser = {
                     id: profile.id,
                     name: profile.full_name,
@@ -4880,6 +4887,8 @@ function updateCalculatedMetrics() {
 
     // Treasury & Budget Subview Cards
     const tbBudget = document.getElementById('tb-annual-budget');
+    const tbAvailable = document.getElementById('tb-available-budget');
+    const tbAvailableSub = document.getElementById('tb-available-budget-sub');
     const tbAlloc = document.getElementById('tb-total-allocated');
     const tbDisb = document.getElementById('tb-total-disbursed');
     const tbUnexp = document.getElementById('tb-unexpended-balance');
@@ -4887,6 +4896,13 @@ function updateCalculatedMetrics() {
     if (tbBudget) {
         tbBudget.innerText = '₱' + annualBudget.toLocaleString('en-US', { minimumFractionDigits: 2 });
         tbBudget.title = tbBudget.innerText;
+    }
+    if (tbAvailable) {
+        tbAvailable.innerText = '₱' + availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        tbAvailable.title = 'Available for Allocation: ₱' + availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    }
+    if (tbAvailableSub) {
+        tbAvailableSub.innerText = 'Remaining for FY ' + currentFiscalYear;
     }
     if (tbAlloc) {
         tbAlloc.innerText = '₱' + totalAllocated.toLocaleString('en-US', { minimumFractionDigits: 2 });
@@ -5017,7 +5033,7 @@ function renderMetricWidgets() {
 function updateDashboardUI() {
     renderMetricWidgets();
     updateCalculatedMetrics();
-    renderProjectsCards(projects);
+    filterProjects();
     renderTreasurerBudgetCards();
     renderDisbursementLogsTable();
     renderAccomplishmentReports();
@@ -6024,13 +6040,16 @@ function editProject(id) {
 }
 
 function filterProjects() {
-    const query = (document.getElementById('project-search').value || '').toLowerCase();
-    const statusFilter = document.getElementById('status-filter').value;
+    const searchEl = document.getElementById('project-search');
+    const statusEl = document.getElementById('status-filter');
+    const query = (searchEl ? searchEl.value : '').toLowerCase();
+    const statusFilter = statusEl ? statusEl.value : 'ALL';
 
     const filtered = projects.filter(project => {
-        const matchesSearch = project.title.toLowerCase().includes(query) || project.category.toLowerCase().includes(query);
+        const matchesSearch = (project.title || '').toLowerCase().includes(query) || (project.category || '').toLowerCase().includes(query);
         const matchesStatus = (statusFilter === "ALL") || (project.status === statusFilter);
-        return matchesSearch && matchesStatus;
+        const matchesYear = !project.fiscalYear || String(project.fiscalYear) === String(currentFiscalYear);
+        return matchesSearch && matchesStatus && matchesYear;
     });
 
     renderProjectsCards(filtered);
