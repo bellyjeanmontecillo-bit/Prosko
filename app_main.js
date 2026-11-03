@@ -931,7 +931,8 @@ async function handleLogin(e) {
                 .or('username.eq.' + usernameOrEmail + ',email.eq.' + usernameOrEmail)
                 .maybeSingle();
 
-            if (profile) {
+            // Enforce SHA-256 password hash comparison against database record
+            if (profile && profile.password_hash && profile.password_hash === inputHash) {
                 activeUser = {
                     id: profile.id,
                     name: profile.full_name,
@@ -2117,9 +2118,6 @@ function updateCalculatedMetrics() {
     // FORMULA: Total Allocated - Total Disbursed
     const undisbursedAllocated = Math.max(0, totalAllocated - netDisbursed);
 
-    // 6. Cash on Hand / Physical Bank Balance: (Annual Budget - Net Disbursed)
-    const cashBalance = Math.max(0, annualBudget - netDisbursed);
-
     const pendingProjCount = fyProjects.filter(p => p.status === 'Pending Admin Approval').length;
     const pendingRepCount = accomplishmentReports.filter(r => (!r.fiscalYear || String(r.fiscalYear) === String(currentFiscalYear)) && r.status === 'Pending Admin Approval').length;
     const totalPending = pendingProjCount + pendingRepCount;
@@ -2156,6 +2154,8 @@ function updateCalculatedMetrics() {
 
     // Treasury & Budget Subview Cards
     const tbBudget = document.getElementById('tb-annual-budget');
+    const tbAvailable = document.getElementById('tb-available-budget');
+    const tbAvailableSub = document.getElementById('tb-available-budget-sub');
     const tbAlloc = document.getElementById('tb-total-allocated');
     const tbDisb = document.getElementById('tb-total-disbursed');
     const tbUnexp = document.getElementById('tb-unexpended-balance');
@@ -2163,6 +2163,13 @@ function updateCalculatedMetrics() {
     if (tbBudget) {
         tbBudget.innerText = '₱' + annualBudget.toLocaleString('en-US', { minimumFractionDigits: 2 });
         tbBudget.title = tbBudget.innerText;
+    }
+    if (tbAvailable) {
+        tbAvailable.innerText = '₱' + availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        tbAvailable.title = 'Available for Allocation: ₱' + availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    }
+    if (tbAvailableSub) {
+        tbAvailableSub.innerText = 'Remaining for FY ' + currentFiscalYear;
     }
     if (tbAlloc) {
         tbAlloc.innerText = '₱' + totalAllocated.toLocaleString('en-US', { minimumFractionDigits: 2 });
@@ -2182,12 +2189,12 @@ function updateCalculatedMetrics() {
     const mBudget = document.getElementById('stat-total-budget');
     const mDisb = document.getElementById('stat-total-disbursed');
     if (mBudget) {
-        mBudget.innerText = '₱' + availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        mBudget.title = 'Available for Allocation: ₱' + availableForAllocation.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        mBudget.innerText = '₱' + unexpendedBalance.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        mBudget.title = mBudget.innerText;
     }
     if (mDisb) {
         mDisb.innerText = '₱' + totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        mDisb.title = 'Total Disbursed: ₱' + totalDisbursed.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        mDisb.title = mDisb.innerText;
     }
 
     // Badges
@@ -2202,21 +2209,17 @@ function renderMetricWidgets() {
     if (!widgetGrid || !activeUser) return;
 
     const role = activeUser.role;
-    const annualBudget = annualBudgets[currentFiscalYear] || 1600000.00;
-    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear));
-    const approvedProjects = fyProjects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
+    const annualBudget = annualBudgets[currentFiscalYear] || 1500000.00;
+    const approvedProjects = projects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
     const totalAllocated = approvedProjects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
-    const availableForAllocation = Math.max(0, annualBudget - totalAllocated);
-
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || String(d.fiscalYear) === String(currentFiscalYear));
+    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear);
     const releasedVouchers = fyDisbursements.filter(d => d.status !== 'Returned' && (parseFloat(d.amount) || 0) > 0);
     const totalDisbursed = releasedVouchers.reduce((acc, d) => acc + (parseFloat(d.amount) || 0), 0);
     const totalRefunded = fyDisbursements.filter(d => d.status === 'Returned' || (parseFloat(d.amount) || 0) < 0)
         .reduce((acc, d) => acc + Math.abs(parseFloat(d.amount) || 0), 0);
     const netDisbursed = Math.max(0, totalDisbursed - totalRefunded);
-    const undisbursedAllocated = Math.max(0, totalAllocated - netDisbursed);
-    const pendingCount = fyProjects.filter(p => p.status === 'Pending Admin Approval').length;
-    const fyReports = accomplishmentReports.filter(r => !r.fiscalYear || String(r.fiscalYear) === String(currentFiscalYear));
+    const unexpendedBalance = Math.max(0, annualBudget - netDisbursed);
+    const pendingCount = projects.filter(p => p.status === 'Pending Admin Approval').length;
 
     if (role === 'SK Secretary') {
         widgetGrid.innerHTML = `
@@ -2228,7 +2231,7 @@ function renderMetricWidgets() {
                     </span>
                 </div>
                 <h3 class="text-xl font-black text-slate-900">${pendingCount}</h3>
-                <p class="text-[10px] text-amber-600 font-bold mt-0.5">Awaiting Chair Approval (FY ${currentFiscalYear})</p>
+                <p class="text-[10px] text-amber-600 font-bold mt-0.5">Awaiting Chair Approval</p>
             </div>
 
             <div class="bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-sm border-t-4 border-t-prosko-purple flex flex-col justify-between">
@@ -2238,8 +2241,8 @@ function renderMetricWidgets() {
                         <i class="fa-solid fa-file-lines"></i>
                     </span>
                 </div>
-                <h3 class="text-xl font-black text-slate-900">${fyReports.length}</h3>
-                <p class="text-[10px] text-slate-500 font-medium mt-0.5">Accomplishments (FY ${currentFiscalYear})</p>
+                <h3 class="text-xl font-black text-slate-900">${accomplishmentReports.length}</h3>
+                <p class="text-[10px] text-slate-500 font-medium mt-0.5">Accomplishments</p>
             </div>
         `;
     } else if (role === 'SK Treasurer') {
@@ -2297,7 +2300,7 @@ function renderMetricWidgets() {
 function updateDashboardUI() {
     renderMetricWidgets();
     updateCalculatedMetrics();
-    renderProjectsCards(projects);
+    filterProjects();
     renderTreasurerBudgetCards();
     renderDisbursementLogsTable();
     renderAccomplishmentReports();
@@ -2327,7 +2330,7 @@ function openSetAnnualBudgetModal() {
 
     if (yrDisp) yrDisp.innerText = currentFiscalYear;
     if (yrSelect) yrSelect.value = currentFiscalYear;
-    if (amtInput) amtInput.value = annualBudgets[currentFiscalYear] || 1500000;
+    if (amtInput) amtInput.value = annualBudgets[currentFiscalYear] || 1600000;
 
     document.getElementById('set-annual-budget-modal').classList.remove('hidden');
 }
@@ -2336,7 +2339,7 @@ function syncSetAnnualBudgetYear(year) {
     const yrDisp = document.getElementById('sab-year-disp');
     const amtInput = document.getElementById('sab-amount');
     if (yrDisp) yrDisp.innerText = year;
-    if (amtInput) amtInput.value = annualBudgets[year] || 1500000;
+    if (amtInput) amtInput.value = annualBudgets[year] || 1600000;
 }
 
 function closeSetAnnualBudgetModal() {
@@ -3304,13 +3307,16 @@ function editProject(id) {
 }
 
 function filterProjects() {
-    const query = (document.getElementById('project-search').value || '').toLowerCase();
-    const statusFilter = document.getElementById('status-filter').value;
+    const searchEl = document.getElementById('project-search');
+    const statusEl = document.getElementById('status-filter');
+    const query = (searchEl ? searchEl.value : '').toLowerCase();
+    const statusFilter = statusEl ? statusEl.value : 'ALL';
 
     const filtered = projects.filter(project => {
-        const matchesSearch = project.title.toLowerCase().includes(query) || project.category.toLowerCase().includes(query);
+        const matchesSearch = (project.title || '').toLowerCase().includes(query) || (project.category || '').toLowerCase().includes(query);
         const matchesStatus = (statusFilter === "ALL") || (project.status === statusFilter);
-        return matchesSearch && matchesStatus;
+        const matchesYear = !project.fiscalYear || String(project.fiscalYear) === String(currentFiscalYear);
+        return matchesSearch && matchesStatus && matchesYear;
     });
 
     renderProjectsCards(filtered);
