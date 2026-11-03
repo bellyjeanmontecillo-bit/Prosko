@@ -1,3 +1,4 @@
+
 // =========================================================================
 // PROSKO - BARANGAY LIBJO SK PROJECT MONITORING & EVALUATION SYSTEM
 // System Owner / Author: Belly Jean Montecillo (Student #69)
@@ -439,6 +440,10 @@ async function initSystemStores() {
             projects = JSON.parse(savedProjects);
             let projMigrated = false;
             projects.forEach(p => {
+                if (!p.fiscalYear) {
+                    p.fiscalYear = '2026';
+                    projMigrated = true;
+                }
                 const sub = p.submittedBy || p.submitted_by || '';
                 if (!sub || /von|pilapil|sk chair admin|chair admin|sk chair|admin_libjo|^admin$|^sk chairperson$|belly jean montecillo/i.test(sub)) {
                     p.submittedBy = 'Belly Jean Montecillo (SK Chairperson)';
@@ -451,6 +456,69 @@ async function initSystemStores() {
                     projMigrated = true;
                 }
             });
+
+            // Ensure historical seed projects for FY 2024 and FY 2025 exist if missing
+            const has2025 = projects.some(p => String(p.fiscalYear) === '2025');
+            if (!has2025) {
+                projects.push(
+                    {
+                        id: 202501,
+                        title: 'Youth Leadership & Governance Summit 2025',
+                        category: 'Leadership & Development',
+                        budget: 200000.00,
+                        disbursed: 200000.00,
+                        status: 'Completed',
+                        submittedBy: 'Belly Jean Montecillo (SK Chairperson)',
+                        period: 'May 15 - May 18, 2025',
+                        aiScore: '96% Target Met',
+                        fiscalYear: '2025'
+                    },
+                    {
+                        id: 202502,
+                        title: 'Anti-Drug & Adolescent Wellness Campaign',
+                        category: 'Health & Wellness',
+                        budget: 100000.00,
+                        disbursed: 50000.00,
+                        status: 'Completed',
+                        submittedBy: 'Belly Jean Montecillo (SK Chairperson)',
+                        period: 'Oct 10 - Oct 12, 2025',
+                        aiScore: '94% High Engagement',
+                        fiscalYear: '2025'
+                    }
+                );
+                projMigrated = true;
+            }
+
+            const has2024 = projects.some(p => String(p.fiscalYear) === '2024');
+            if (!has2024) {
+                projects.push(
+                    {
+                        id: 202401,
+                        title: 'Linggo ng Kabataan Sports & Cultural Festival 2024',
+                        category: 'Sports & Culture',
+                        budget: 150000.00,
+                        disbursed: 150000.00,
+                        status: 'Completed',
+                        submittedBy: 'Belly Jean Montecillo (SK Chairperson)',
+                        period: 'Aug 12 - Aug 19, 2024',
+                        aiScore: '98% Completed',
+                        fiscalYear: '2024'
+                    },
+                    {
+                        id: 202402,
+                        title: 'SK Educational Subsidy & School Supplies Distribution 2024',
+                        category: 'Education & Technology',
+                        budget: 100000.00,
+                        disbursed: 75000.00,
+                        status: 'Completed',
+                        submittedBy: 'Belly Jean Montecillo (SK Chairperson)',
+                        period: 'Sep 5 - Sep 8, 2024',
+                        aiScore: '97% Target Met',
+                        fiscalYear: '2024'
+                    }
+                );
+                projMigrated = true;
+            }
             if (projMigrated) saveProjectsToLocal();
         } catch (e) {}
     }
@@ -504,6 +572,54 @@ async function initSystemStores() {
                 period: 'Nov 1, 2026',
                 aiScore: '92% AI Verified',
                 fiscalYear: '2026'
+            },
+            {
+                id: 202501,
+                title: 'Youth Leadership & Governance Summit 2025',
+                category: 'Leadership & Development',
+                budget: 200000.00,
+                disbursed: 200000.00,
+                status: 'Completed',
+                submittedBy: 'Belly Jean Montecillo (SK Chairperson)',
+                period: 'May 15 - May 18, 2025',
+                aiScore: '96% Target Met',
+                fiscalYear: '2025'
+            },
+            {
+                id: 202502,
+                title: 'Anti-Drug & Adolescent Wellness Campaign',
+                category: 'Health & Wellness',
+                budget: 100000.00,
+                disbursed: 50000.00,
+                status: 'Completed',
+                submittedBy: 'Belly Jean Montecillo (SK Chairperson)',
+                period: 'Oct 10 - Oct 12, 2025',
+                aiScore: '94% High Engagement',
+                fiscalYear: '2025'
+            },
+            {
+                id: 202401,
+                title: 'Linggo ng Kabataan Sports & Cultural Festival 2024',
+                category: 'Sports & Culture',
+                budget: 150000.00,
+                disbursed: 150000.00,
+                status: 'Completed',
+                submittedBy: 'Belly Jean Montecillo (SK Chairperson)',
+                period: 'Aug 12 - Aug 19, 2024',
+                aiScore: '98% Completed',
+                fiscalYear: '2024'
+            },
+            {
+                id: 202402,
+                title: 'SK Educational Subsidy & School Supplies Distribution 2024',
+                category: 'Education & Technology',
+                budget: 100000.00,
+                disbursed: 75000.00,
+                status: 'Completed',
+                submittedBy: 'Belly Jean Montecillo (SK Chairperson)',
+                period: 'Sep 5 - Sep 8, 2024',
+                aiScore: '97% Target Met',
+                fiscalYear: '2024'
             }
         ];
         saveProjectsToLocal();
@@ -512,7 +628,85 @@ async function initSystemStores() {
     // 4. Load Disbursements (strictly aligned with projects)
     const savedDisbursements = localStorage.getItem('prosko_disbursements');
     if (savedDisbursements) {
-        try { disbursements = JSON.parse(savedDisbursements); } catch (e) {}
+        try {
+            disbursements = JSON.parse(savedDisbursements);
+            let disbMigrated = false;
+            disbursements.forEach(d => {
+                if (!d.fiscalYear) {
+                    d.fiscalYear = '2026';
+                    disbMigrated = true;
+                }
+            });
+
+            // Ensure historical seed disbursements for FY 2024 and FY 2025 exist if missing
+            const hasDisb2025 = disbursements.some(d => String(d.fiscalYear) === '2025');
+            if (!hasDisb2025) {
+                disbursements.push(
+                    {
+                        id: 'DV-2025-001',
+                        voucherNo: 'DV-2025-001',
+                        projectId: 202501,
+                        projectTitle: 'Youth Leadership & Governance Summit 2025',
+                        payee: 'Batangas Leadership Training Camp',
+                        purpose: 'Venue, facilitators, and training materials',
+                        amount: 200000.00,
+                        fiscalYear: '2025',
+                        disbursedBy: 'SK Treasurer Maria',
+                        disbursedAt: '2025-05-16T10:00:00Z',
+                        status: 'Released'
+                    },
+                    {
+                        id: 'DV-2025-002',
+                        voucherNo: 'DV-2025-002',
+                        projectId: 202502,
+                        projectTitle: 'Anti-Drug & Adolescent Wellness Campaign',
+                        payee: 'Libjo Youth Healthcare & Advocacy',
+                        purpose: 'Advocacy flyers, medical personnel honoraria, and kits',
+                        amount: 50000.00,
+                        fiscalYear: '2025',
+                        disbursedBy: 'SK Treasurer Maria',
+                        disbursedAt: '2025-10-11T13:30:00Z',
+                        status: 'Released'
+                    }
+                );
+                disbMigrated = true;
+            }
+
+            const hasDisb2024 = disbursements.some(d => String(d.fiscalYear) === '2024');
+            if (!hasDisb2024) {
+                disbursements.push(
+                    {
+                        id: 'DV-2024-001',
+                        voucherNo: 'DV-2024-001',
+                        projectId: 202401,
+                        projectTitle: 'Linggo ng Kabataan Sports & Cultural Festival 2024',
+                        payee: 'Libjo Community Sports Supplier',
+                        purpose: 'Sound system, trophies, medals, and uniforms',
+                        amount: 150000.00,
+                        fiscalYear: '2024',
+                        disbursedBy: 'SK Treasurer Maria',
+                        disbursedAt: '2024-08-14T09:00:00Z',
+                        status: 'Released'
+                    },
+                    {
+                        id: 'DV-2024-002',
+                        voucherNo: 'DV-2024-002',
+                        projectId: 202402,
+                        projectTitle: 'SK Educational Subsidy & School Supplies Distribution 2024',
+                        payee: 'Batangas Academic Book & School Store',
+                        purpose: 'School bags, notebooks, and learning assistance kits',
+                        amount: 75000.00,
+                        fiscalYear: '2024',
+                        disbursedBy: 'SK Treasurer Maria',
+                        disbursedAt: '2024-09-06T11:00:00Z',
+                        status: 'Released'
+                    }
+                );
+                disbMigrated = true;
+            }
+
+            if (disbMigrated) saveDisbursementsToLocal();
+        } catch (e) {}
     }
 
     if (!disbursements || disbursements.length === 0) {
@@ -567,6 +761,58 @@ async function initSystemStores() {
                 fiscalYear: '2026',
                 disbursedBy: 'SK Treasurer Maria',
                 disbursedAt: '2026-10-29T07:11:00Z',
+                status: 'Released'
+            },
+            {
+                id: 'DV-2025-001',
+                voucherNo: 'DV-2025-001',
+                projectId: 202501,
+                projectTitle: 'Youth Leadership & Governance Summit 2025',
+                payee: 'Batangas Leadership Training Camp',
+                purpose: 'Venue, facilitators, and training materials',
+                amount: 200000.00,
+                fiscalYear: '2025',
+                disbursedBy: 'SK Treasurer Maria',
+                disbursedAt: '2025-05-16T10:00:00Z',
+                status: 'Released'
+            },
+            {
+                id: 'DV-2025-002',
+                voucherNo: 'DV-2025-002',
+                projectId: 202502,
+                projectTitle: 'Anti-Drug & Adolescent Wellness Campaign',
+                payee: 'Libjo Youth Healthcare & Advocacy',
+                purpose: 'Advocacy flyers, medical personnel honoraria, and kits',
+                amount: 50000.00,
+                fiscalYear: '2025',
+                disbursedBy: 'SK Treasurer Maria',
+                disbursedAt: '2025-10-11T13:30:00Z',
+                status: 'Released'
+            },
+            {
+                id: 'DV-2024-001',
+                voucherNo: 'DV-2024-001',
+                projectId: 202401,
+                projectTitle: 'Linggo ng Kabataan Sports & Cultural Festival 2024',
+                payee: 'Libjo Community Sports Supplier',
+                purpose: 'Sound system, trophies, medals, and uniforms',
+                amount: 150000.00,
+                fiscalYear: '2024',
+                disbursedBy: 'SK Treasurer Maria',
+                disbursedAt: '2024-08-14T09:00:00Z',
+                status: 'Released'
+            },
+            {
+                id: 'DV-2024-002',
+                voucherNo: 'DV-2024-002',
+                projectId: 202402,
+                projectTitle: 'SK Educational Subsidy & School Supplies Distribution 2024',
+                payee: 'Batangas Academic Book & School Store',
+                purpose: 'School bags, notebooks, and learning assistance kits',
+                amount: 75000.00,
+                fiscalYear: '2024',
+                disbursedBy: 'SK Treasurer Maria',
+                disbursedAt: '2024-09-06T11:00:00Z',
                 status: 'Released'
             }
         ];
@@ -1518,7 +1764,40 @@ function openAccountSettingsModal() {
     document.getElementById('acc-new-email').value = '';
     document.getElementById('acc-email-otp-input').value = '';
 
+    switchAccountSettingsTab('profile');
+
     document.getElementById('account-settings-modal').classList.remove('hidden');
+}
+
+function switchAccountSettingsTab(tab) {
+    const panels = {
+        'profile': document.getElementById('acc-panel-profile'),
+        'password': document.getElementById('acc-panel-password'),
+        'email': document.getElementById('acc-panel-email')
+    };
+
+    const tabs = {
+        'profile': document.getElementById('acc-tab-profile'),
+        'password': document.getElementById('acc-tab-pass'),
+        'email': document.getElementById('acc-tab-email')
+    };
+
+    Object.keys(panels).forEach(key => {
+        if (panels[key]) {
+            if (key === tab) {
+                panels[key].classList.remove('hidden');
+            } else {
+                panels[key].classList.add('hidden');
+            }
+        }
+        if (tabs[key]) {
+            if (key === tab) {
+                tabs[key].className = "flex-1 py-1.5 rounded-lg bg-white text-prosko-blue shadow-sm font-bold";
+            } else {
+                tabs[key].className = "flex-1 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-bold";
+            }
+        }
+    });
 }
 
 function closeAccountSettingsModal() {
@@ -1892,6 +2171,10 @@ async function renderDashboard() {
     const bottomNav = document.getElementById('mobile-bottom-nav');
 
     authScreen.classList.add('hidden');
+    // Ensure active fiscal year (2026) is always established upon logging in
+    currentFiscalYear = '2026';
+    const fySelect = document.getElementById('budget-fiscal-year');
+    if (fySelect) fySelect.value = '2026';
     await fetchAllDatabaseData();
     setupRealtimeSubscriptions();
 
@@ -2081,6 +2364,10 @@ function switchDashboardTab(tab) {
     if (tab === 'users') renderUsersTable();
     if (tab === 'backup') renderBackupHistory();
     if (tab === 'treasurer-budget') {
+        const fySelect = document.getElementById('budget-fiscal-year');
+        if (fySelect && currentFiscalYear) {
+            fySelect.value = currentFiscalYear;
+        }
         renderTreasurerBudgetCards();
         renderDisbursementLogsTable();
     }
@@ -2094,7 +2381,7 @@ function updateCalculatedMetrics() {
     const annualBudget = annualBudgets[currentFiscalYear] || 1600000.00;
 
     // 2. Total Allocated: Sum of approved / active youth projects for SELECTED FISCAL YEAR
-    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear));
+    const fyProjects = projects.filter(p => String(p.fiscalYear || '2026') === String(currentFiscalYear));
     const approvedProjects = fyProjects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
     const totalAllocated = approvedProjects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
 
@@ -2103,7 +2390,7 @@ function updateCalculatedMetrics() {
     const availableForAllocation = Math.max(0, annualBudget - totalAllocated);
 
     // 4. Total Disbursed: Sum of positive released vouchers for active fiscal year
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || String(d.fiscalYear) === String(currentFiscalYear));
+    const fyDisbursements = disbursements.filter(d => String(d.fiscalYear || '2026') === String(currentFiscalYear));
     const releasedVouchers = fyDisbursements.filter(d => d.status !== 'Returned' && (parseFloat(d.amount) || 0) > 0);
     const totalDisbursed = releasedVouchers.reduce((acc, d) => acc + (parseFloat(d.amount) || 0), 0);
 
@@ -2119,7 +2406,7 @@ function updateCalculatedMetrics() {
     const undisbursedAllocated = Math.max(0, totalAllocated - netDisbursed);
 
     const pendingProjCount = fyProjects.filter(p => p.status === 'Pending Admin Approval').length;
-    const pendingRepCount = accomplishmentReports.filter(r => (!r.fiscalYear || String(r.fiscalYear) === String(currentFiscalYear)) && r.status === 'Pending Admin Approval').length;
+    const pendingRepCount = accomplishmentReports.filter(r => String(r.fiscalYear || '2026') === String(currentFiscalYear) && r.status === 'Pending Admin Approval').length;
     const totalPending = pendingProjCount + pendingRepCount;
 
     // Web Admin Stat Cards
@@ -2209,17 +2496,20 @@ function renderMetricWidgets() {
     if (!widgetGrid || !activeUser) return;
 
     const role = activeUser.role;
-    const annualBudget = annualBudgets[currentFiscalYear] || 1500000.00;
-    const approvedProjects = projects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
+    const annualBudget = annualBudgets[currentFiscalYear] || 1600000.00;
+    const fyProjects = projects.filter(p => String(p.fiscalYear || '2026') === String(currentFiscalYear));
+    const approvedProjects = fyProjects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
     const totalAllocated = approvedProjects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear);
+    const availableForAllocation = Math.max(0, annualBudget - totalAllocated);
+    const fyDisbursements = disbursements.filter(d => String(d.fiscalYear || '2026') === String(currentFiscalYear));
     const releasedVouchers = fyDisbursements.filter(d => d.status !== 'Returned' && (parseFloat(d.amount) || 0) > 0);
     const totalDisbursed = releasedVouchers.reduce((acc, d) => acc + (parseFloat(d.amount) || 0), 0);
     const totalRefunded = fyDisbursements.filter(d => d.status === 'Returned' || (parseFloat(d.amount) || 0) < 0)
         .reduce((acc, d) => acc + Math.abs(parseFloat(d.amount) || 0), 0);
     const netDisbursed = Math.max(0, totalDisbursed - totalRefunded);
+    const undisbursedAllocated = Math.max(0, totalAllocated - netDisbursed);
     const unexpendedBalance = Math.max(0, annualBudget - netDisbursed);
-    const pendingCount = projects.filter(p => p.status === 'Pending Admin Approval').length;
+    const pendingCount = fyProjects.filter(p => p.status === 'Pending Admin Approval').length;
 
     if (role === 'SK Secretary') {
         widgetGrid.innerHTML = `
@@ -2298,6 +2588,10 @@ function renderMetricWidgets() {
 }
 
 function updateDashboardUI() {
+    const fySelect = document.getElementById('budget-fiscal-year');
+    if (fySelect && currentFiscalYear) {
+        fySelect.value = currentFiscalYear;
+    }
     renderMetricWidgets();
     updateCalculatedMetrics();
     filterProjects();
@@ -2360,10 +2654,10 @@ async function saveAnnualBudgetSetting(e) {
     }
 
     // Protection 1: Calculate already allocated and disbursed amount for this fiscal year
-    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(year));
+    const fyProjects = projects.filter(p => String(p.fiscalYear || '2026') === String(year));
     const approvedProjects = fyProjects.filter(p => p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed');
     const totalAllocated = approvedProjects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || String(d.fiscalYear) === String(year));
+    const fyDisbursements = disbursements.filter(d => String(d.fiscalYear || '2026') === String(year));
     const releasedVouchers = fyDisbursements.filter(d => d.status !== 'Returned' && (parseFloat(d.amount) || 0) > 0);
     const totalDisbursed = releasedVouchers.reduce((acc, d) => acc + (parseFloat(d.amount) || 0), 0);
 
@@ -2416,7 +2710,7 @@ function renderTreasurerBudgetCards() {
         }
     }
 
-    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear));
+    const fyProjects = projects.filter(p => String(p.fiscalYear || '2026') === String(currentFiscalYear));
 
     if (fyProjects.length === 0) {
         container.innerHTML = `<div class="p-6 text-center text-slate-400 font-bold text-xs">No projects registered in budget ledger for FY ${currentFiscalYear}</div>`;
@@ -2470,7 +2764,7 @@ function renderDisbursementLogsTable() {
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear);
+    const fyDisbursements = disbursements.filter(d => String(d.fiscalYear || '2026') === String(currentFiscalYear));
 
     if (fyDisbursements.length === 0) {
         tbody.innerHTML = `
@@ -2524,7 +2818,7 @@ function filterDisbursements() {
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear);
+    const fyDisbursements = disbursements.filter(d => String(d.fiscalYear || '2026') === String(currentFiscalYear));
     const filtered = fyDisbursements.filter(d =>
         (d.voucherNo && d.voucherNo.toLowerCase().includes(query)) ||
         (d.projectTitle && d.projectTitle.toLowerCase().includes(query)) ||
@@ -2571,7 +2865,7 @@ function openDisbursementModal() {
     select.innerHTML = '';
 
     // Only allow disbursements for approved or in-progress projects in current fiscal year with available balance
-    const releasableProjects = projects.filter(p => (!p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear)) && (p.status === 'Approved' || p.status === 'In Progress') && ((parseFloat(p.budget) || 0) > (parseFloat(p.disbursed) || 0)));
+    const releasableProjects = projects.filter(p => (String(p.fiscalYear || '2026') === String(currentFiscalYear)) && (p.status === 'Approved' || p.status === 'In Progress') && ((parseFloat(p.budget) || 0) > (parseFloat(p.disbursed) || 0)));
 
     if (releasableProjects.length === 0) {
         showToast('No approved projects with remaining balance available for fund disbursement.', 'error');
@@ -2633,7 +2927,7 @@ async function saveDisbursement(e) {
     }
 
     // Generate Voucher Entry
-    const fyDisbCount = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear).length;
+    const fyDisbCount = disbursements.filter(d => String(d.fiscalYear || '2026') === String(currentFiscalYear)).length;
     const voucherNum = 'DV-' + currentFiscalYear + '-' + String(fyDisbCount + 1).padStart(3, '0');
     const disbursementRecord = {
         id: voucherNum,
@@ -2685,7 +2979,7 @@ async function saveDisbursement(e) {
 // =========================================================================
 function openYearEndRolloverModal() {
     const annualBudget = annualBudgets[currentFiscalYear] || 1500000;
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear);
+    const fyDisbursements = disbursements.filter(d => String(d.fiscalYear || '2026') === String(currentFiscalYear));
     const totalDisbursed = fyDisbursements.reduce((acc, d) => acc + (parseFloat(d.amount) || 0), 0);
     const unexpended = Math.max(0, annualBudget - totalDisbursed);
 
@@ -2703,7 +2997,7 @@ function closeYearEndRolloverModal() {
 async function executeYearEndRollover() {
     const resRef = document.getElementById('ro-resolution-ref').value.trim() || 'SK-RES-ROLLOVER';
     const annualBudget = annualBudgets[currentFiscalYear] || 1500000;
-    const fyDisbursements = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear);
+    const fyDisbursements = disbursements.filter(d => String(d.fiscalYear || '2026') === String(currentFiscalYear));
     const totalDisbursed = fyDisbursements.reduce((acc, d) => acc + (parseFloat(d.amount) || 0), 0);
     const unexpended = Math.max(0, annualBudget - totalDisbursed);
     const nextYear = (parseInt(currentFiscalYear) + 1).toString();
@@ -2778,7 +3072,7 @@ async function saveProject(e) {
 
     // Protection: Validate against Available for Allocation if creating an approved project
     const annualBudget = annualBudgets[currentFiscalYear] || 1600000.00;
-    const fyProjects = projects.filter(p => !p.fiscalYear || String(p.fiscalYear) === String(currentFiscalYear));
+    const fyProjects = projects.filter(p => String(p.fiscalYear || '2026') === String(currentFiscalYear));
     const currentAllocated = fyProjects
         .filter(p => (p.status === 'Approved' || p.status === 'In Progress' || p.status === 'Completed') && String(p.id) !== String(id))
         .reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
@@ -3031,7 +3325,7 @@ async function approveProject(id) {
         // Protection: Ensure approving this proposal does not exceed the remaining Available for Allocation
         const pYear = p.fiscalYear || currentFiscalYear;
         const annualBudget = annualBudgets[pYear] || 1600000.00;
-        const fyProjects = projects.filter(item => (!item.fiscalYear || String(item.fiscalYear) === String(pYear)) && String(item.id) !== rawId);
+        const fyProjects = projects.filter(item => (String(item.fiscalYear || '2026') === String(pYear)) && String(item.id) !== rawId);
         const currentAllocated = fyProjects
             .filter(item => item.status === 'Approved' || item.status === 'In Progress' || item.status === 'Completed')
             .reduce((acc, item) => acc + (parseFloat(item.budget) || 0), 0);
@@ -3211,7 +3505,7 @@ async function executeCancelProject(e) {
 
     // 2. Record Return Settlement in Disbursements Journal if money was returned
     if (returned > 0) {
-        const fyDisbCount = disbursements.filter(d => !d.fiscalYear || d.fiscalYear === currentFiscalYear).length;
+        const fyDisbCount = disbursements.filter(d => String(d.fiscalYear || '2026') === String(currentFiscalYear)).length;
         const returnVoucherNum = 'CR-' + currentFiscalYear + '-' + String(fyDisbCount + 1).padStart(3, '0');
         const returnRecord = {
             id: returnVoucherNum,
@@ -3315,7 +3609,7 @@ function filterProjects() {
     const filtered = projects.filter(project => {
         const matchesSearch = (project.title || '').toLowerCase().includes(query) || (project.category || '').toLowerCase().includes(query);
         const matchesStatus = (statusFilter === "ALL") || (project.status === statusFilter);
-        const matchesYear = !project.fiscalYear || String(project.fiscalYear) === String(currentFiscalYear);
+        const matchesYear = String(project.fiscalYear || '2026') === String(currentFiscalYear);
         return matchesSearch && matchesStatus && matchesYear;
     });
 
@@ -3733,6 +4027,96 @@ async function adminResetUserPassword(userId) {
     });
 }
 
+function closeLogoutModal() {
+    const modal = document.getElementById('logout-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function openCreateUserModal() {
+    document.getElementById('usr-edit-id').value = '';
+    document.getElementById('usr-fullname').value = '';
+    document.getElementById('usr-username').value = '';
+    document.getElementById('usr-username').disabled = false;
+    document.getElementById('usr-email').value = '';
+    document.getElementById('usr-role').value = 'SK Kagawad';
+    document.getElementById('usr-password').value = 'Belly1234!';
+    document.getElementById('usr-pass-field-container').classList.remove('hidden');
+    document.getElementById('user-modal-title').innerText = 'Add New SK Official';
+    document.getElementById('user-modal').classList.remove('hidden');
+}
+
+function closeUserModal() {
+    document.getElementById('user-modal').classList.add('hidden');
+}
+
+async function saveUserAccount(e) {
+    if (e) e.preventDefault();
+
+    const editId = document.getElementById('usr-edit-id').value;
+    const fullName = document.getElementById('usr-fullname').value.trim();
+    const username = document.getElementById('usr-username').value.trim();
+    const email = document.getElementById('usr-email').value.trim();
+    const role = document.getElementById('usr-role').value;
+    const rawPass = document.getElementById('usr-password').value.trim() || 'Belly1234!';
+
+    if (!fullName || !username || !email) {
+        showToast('Please fill in all required official details.', 'error');
+        return;
+    }
+
+    if (editId) {
+        // Edit existing
+        const usr = usersStore.find(u => u.id === editId);
+        if (usr) {
+            usr.fullName = fullName;
+            usr.email = email;
+            usr.role = role;
+            saveUsersStoreToLocal();
+            await supabaseUpdate('profiles', { full_name: fullName, email: email, role: role }, 'username', usr.username);
+            showToast('Official profile updated successfully.', 'success');
+        }
+    } else {
+        // Create new
+        const exists = usersStore.some(u => u.username.toLowerCase() === username.toLowerCase() || u.email.toLowerCase() === email.toLowerCase());
+        if (exists) {
+            showToast('An official with this username or email already exists.', 'error');
+            return;
+        }
+
+        const passHash = await hashPassword(rawPass);
+        const newUser = {
+            id: generateUniqueId('USR'),
+            fullName,
+            username,
+            email,
+            role,
+            passwordHash: passHash,
+            status: 'Active',
+            isLocked: false,
+            failedAttempts: 0
+        };
+
+        usersStore.push(newUser);
+        saveUsersStoreToLocal();
+        await supabaseInsert('profiles', {
+            full_name: fullName,
+            username,
+            email,
+            role,
+            password_hash: passHash,
+            status: 'Active',
+            is_locked: false,
+            failed_attempts: 0
+        });
+
+        await logUserActivity('USER_CREATED', 'Admin added new official: ' + fullName + ' (' + role + ')');
+        showToast('New official ' + fullName + ' added successfully.', 'success');
+    }
+
+    closeUserModal();
+    renderUsersTable();
+}
+
 // =========================================================================
 // 16. BACKUP & DISASTER RECOVERY MODULE (ADMIN ONLY - IAS REQUIREMENT H)
 // =========================================================================
@@ -3792,8 +4176,16 @@ function exportDatabaseBackup() {
     renderBackupHistory();
 }
 
+function downloadDatabaseBackup() {
+    exportDatabaseBackup();
+}
+
 function triggerRestoreFileInput() {
     document.getElementById('restore-file-input').click();
+}
+
+function triggerRestoreBackup() {
+    triggerRestoreFileInput();
 }
 
 function handleBackupFileSelect(event) {
@@ -4324,3 +4716,4 @@ window.addEventListener('DOMContentLoaded', () => {
     initSystemStores();
     setupSiaCanvasInteractions();
 });
+    
