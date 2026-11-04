@@ -440,6 +440,10 @@ async function initSystemStores() {
             projects = JSON.parse(savedProjects);
             let projMigrated = false;
             projects.forEach(p => {
+                if (String(p.id) === '134' && String(p.fiscalYear) === '2027') {
+                    p.fiscalYear = '2026';
+                    projMigrated = true;
+                }
                 if (!p.fiscalYear) {
                     p.fiscalYear = '2026';
                     projMigrated = true;
@@ -2403,7 +2407,8 @@ function updateCalculatedMetrics() {
 
     // 5. Undisbursed Allocated Funds: Funds committed to approved projects awaiting release
     // FORMULA: Total Allocated - Total Disbursed
-    const undisbursedAllocated = Math.max(0, totalAllocated - netDisbursed);
+    const undisbursedAllocated = Math.max(0, totalAllocated - totalDisbursed);
+    const unexpendedBalance = Math.max(0, annualBudget - netDisbursed);
 
     const pendingProjCount = fyProjects.filter(p => p.status === 'Pending Admin Approval').length;
     const pendingRepCount = accomplishmentReports.filter(r => String(r.fiscalYear || '2026') === String(currentFiscalYear) && r.status === 'Pending Admin Approval').length;
@@ -2507,7 +2512,7 @@ function renderMetricWidgets() {
     const totalRefunded = fyDisbursements.filter(d => d.status === 'Returned' || (parseFloat(d.amount) || 0) < 0)
         .reduce((acc, d) => acc + Math.abs(parseFloat(d.amount) || 0), 0);
     const netDisbursed = Math.max(0, totalDisbursed - totalRefunded);
-    const undisbursedAllocated = Math.max(0, totalAllocated - netDisbursed);
+    const undisbursedAllocated = Math.max(0, totalAllocated - totalDisbursed);
     const unexpendedBalance = Math.max(0, annualBudget - netDisbursed);
     const pendingCount = fyProjects.filter(p => p.status === 'Pending Admin Approval').length;
 
@@ -4716,4 +4721,3 @@ window.addEventListener('DOMContentLoaded', () => {
     initSystemStores();
     setupSiaCanvasInteractions();
 });
-    
